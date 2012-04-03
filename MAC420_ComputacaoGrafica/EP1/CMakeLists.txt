@@ -47,7 +47,14 @@ set (BIN_DIR bin)
 
 
 SET(EP_SRCS
-    ./src/main.cc 
+    ./src/main.cc
+    ./src/object/camera.cc
+    ./src/object/cylinder.cc
+    ./src/object/object.cc
+    ./src/object/sphere.cc
+    ./src/simulation.cc
+    ./src/vector3D.cc
+    ./src/vectorfield.cc
 )
 
 # #define's que voce queira incluir na compilacao
