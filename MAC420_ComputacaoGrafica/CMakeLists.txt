@@ -3,14 +3,14 @@
 cmake_minimum_required (VERSION 2.6)
 
 # General definitions.
-project (ugdk CXX C)
-set (FRAMEWORK_NAME UGDK)
-set (FRAMEWORK_RELEASENAME ugdk)
-set (FRAMEWORK_DEBUGNAME ugdk_d)
-set (FRAMEWORK_VERSION 0.2.0)
+project (MAC0420_EP1 CXX C)
+set (PROJECT_NAME EP1)
+set (PROJECT_RELEASENAME ep1)
+set (PROJECT_DEBUGNAME ep1_d)
+set (PROJECT_VERSION 1.0.0)
 
 # Some output.
-message ("=== ${FRAMEWORK_NAME} version ${FRAMEWORK_VERSION} ===")
+message ("=== ${PROJECT_NAME} version ${PROJECT_VERSION} ===")
 
 # If the user did not define the parameteres, use default values.
 if (NOT BUILD_TYPE)
@@ -20,25 +20,15 @@ else (NOT BUILD_TYPE)
     message ("-- Build type: ${BUILD_TYPE}")
 endif (NOT BUILD_TYPE)
 
-if (NOT LINK_TYPE)
-    message ("-- No link type was defined, choosing default value: STATIC")
-    set (LINK_TYPE STATIC)
-else (NOT LINK_TYPE)
-    message ("-- Link type: ${LINK_TYPE}")
-endif (NOT LINK_TYPE)
-
 if (${BUILD_TYPE} STREQUAL RELEASE)
-    set (FRAMEWORK_BUILDNAME ${FRAMEWORK_RELEASENAME})
+    set (PROJECT_BUILDNAME ${PROJECT_RELEASENAME})
 elseif (${BUILD_TYPE} STREQUAL DEBUG)
-    set (FRAMEWORK_BUILDNAME ${FRAMEWORK_DEBUGNAME})
-	set (FRAMEWORK_NAME "${FRAMEWORK_NAME} (DEBUG)")
+    set (PROJECT_BUILDNAME ${PROJECT_DEBUGNAME})
+	set (PROJECT_NAME "${PROJECT_NAME} (DEBUG)")
 else ()
     message (FATAL_ERROR ">>> Unknown build type ${BUILD_TYPE}.")
 endif ()
 
-if ((NOT (${LINK_TYPE} STREQUAL STATIC)) AND (NOT (${LINK_TYPE} STREQUAL SHARED)))
-    message (FATAL_ERROR ">>> Unknown link type ${LINK_TYPE}.")
-endif ()
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET (CHECKMAC "#define ISMAC")
@@ -53,15 +43,12 @@ ENDIF ()
 
 # Important build locations.
 set (SRC_DIR src)
-set (LIB_DIR lib)
+set (BIN_DIR bin)
 
-#set (CMAKE_CURRENT_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/${MODULE_DIR}")
-#set (CMAKE_CURRENT_BINARY_DIR "${CMAKE_CURRENT_BINARY_DIR}/${WRAPPER_DIR}")
 
-include (${SRC_DIR}/src_list.cmake)
-include (${SRC_DIR}/module_list.cmake)
-include (${SRC_DIR}/lua_src_list.cmake)
-include (${SRC_DIR}/py_src_list.cmake)
+SET(EP_SRCS
+    ./src/main.cc 
+)
 
 # #define's que voce queira incluir na compilacao
 # separe por espacos
@@ -86,39 +73,13 @@ if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
 	set (LDFLAGS "${LDFLAGS} -mmacosx-version-min=10.5")
 endif ()
 
-# ${UGDK_SRC} esta' definido?
-if (NOT UGDK_SRC)
-    message (FATAL_ERROR "Error: UGDK_SRC not defined! Please do so in the file src/src_list.cmake!")
-endif (NOT UGDK_SRC)
-
 include_directories ("src")
-include (cmake/ugdk.cmake)
 
 # Encontrando as bibliotecas necessarias:
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
-find_package(SDL REQUIRED)
-include_directories(${SDL_INCLUDE_DIR})
 
-find_package(SDL_mixer REQUIRED)
-include_directories(${SDLMIXER_INCLUDE_DIR})
-
-find_package(SDL_ttf REQUIRED)
-include_directories(${SDLTTF_INCLUDE_DIR})
-
-find_package(SDL_image REQUIRED)
-include_directories(${SDLIMAGE_INCLUDE_DIR})
-
-find_package(Boost 1.48.0 REQUIRED)
-include_directories("${Boost_INCLUDE_DIRS}/boost/tr1/tr1")
-include_directories(${Boost_INCLUDE_DIRS})
-
-ugdk_setup_package (SWIG)
-if (SWIG_FOUND)
-  ugdk_setup_package (Lua51)
-  ugdk_setup_package (PythonLibs)
-endif (SWIG_FOUND)
 
 if (${BUILD_TYPE} STREQUAL DEBUG)
   set (CFLAGS_EXTRA "${CFLAGS_EXTRA} -DDEBUG")
@@ -138,13 +99,11 @@ else (MSVC)
   endforeach (d)
 endif  (MSVC)
 
-include_directories ("src/kits")
-include_directories ("externals/opengl")
 
 if (${LINK_TYPE} STREQUAL STATIC)
-    add_library (${FRAMEWORK_BUILDNAME} STATIC ${UGDK_SRC} ${GENERATED_SRC})
+    add_library (${PROJECT_BUILDNAME} STATIC ${UGDK_SRC} ${GENERATED_SRC})
 elseif (${LINK_TYPE} STREQUAL SHARED)
-    add_library (${FRAMEWORK_BUILDNAME} SHARED ${UGDK_SRC} ${GENERATED_SRC})
+    add_library (${PROJECT_BUILDNAME} SHARED ${UGDK_SRC} ${GENERATED_SRC})
 endif (${LINK_TYPE} STREQUAL STATIC)
 
 
@@ -158,66 +117,18 @@ if (WIN32)
 	set (EXTRA_LIBRARIES Ws2_32 ${EXTRA_LIBRARIES})
 endif (WIN32)
 
-set_target_properties (${FRAMEWORK_BUILDNAME} PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${LIB_DIR})
-set_target_properties (${FRAMEWORK_BUILDNAME} PROPERTIES LIBRARY_OUTPUT_DIRECTORY ${LIB_DIR})
-if (WIN32)
-	set_target_properties (${FRAMEWORK_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${LIB_DIR})
-endif (WIN32)
 
-if (PYTHONLIBS_FOUND)
-  include (cmake/asteroids.cmake)
-endif (PYTHONLIBS_FOUND)
+add_executable (${PROJECT_BUILDNAME} ${EP_SRCS})
 
-target_link_libraries (${FRAMEWORK_BUILDNAME}
-					   ${EXTRA_LIBRARIES}
-					   ${SDL_LIBRARY}
-					   ${SDLMIXER_LIBRARY}
-					   ${SDLTTF_LIBRARY}
-					   ${SDLIMAGE_LIBRARY}
-					   ${OPENGL_LIBRARIES}
-             ${UGDK_LIBRARIES})
-             #${LUA_LIBRARIES}
-             #${PYTHON_FINAL_LIB})
+set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
-set_target_properties (${FRAMEWORK_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")
-set_target_properties (${FRAMEWORK_BUILDNAME} PROPERTIES COMPILE_FLAGS "${CFLAGS} ${CFLAGS_EXTRA}")
-set_target_properties (${FRAMEWORK_BUILDNAME} PROPERTIES PROJECT_NAME "${FRAMEWORK_NAME}")
+target_link_libraries (${PROJECT_BUILDNAME}
+					        ${EXTRA_LIBRARIES}
+					        ${OPENGL_LIBRARIES})
 
-# Installing on *nix
-#if (UNIX)
-#   set (FRAMEWORK_INSTALL_DIR "/usr/lib/${FRAMEWORK_BUILDNAME}")
-# 
-#   install (CODE "message (\"Installing ${GAME_NAME} ${GAME_VERSION}... Make sure you have root privileges.\")")
-# 
-#   if (LINK_TYPE EQUAL STATIC)
-#       install (TARGETS ${FRAMEWORK_BUILDNAME} LIBRARY DESTINATION ${FRAMEWORK_INSTALL_DIR})
-#   elseif (LINK_TYPE EQUAL SHARED)
-#       install (TARGETS ${FRAMEWORK_BUILDNAME} ARCHIVE DESTINATION ${FRAMEWORK_INSTALL_DIR})
-#   else ()
-#      message (FATAL_ERROR "")
-#
-  #install ( FILES license.txt readme.html DESTINATION ${GAME_INSTALL_DIR})
-  #install ( DIRECTORY config images levels licenses musics quests samples screenshots themes languages DESTINATION ${GAME_INSTALL_DIR} PATTERN ".svn" EXCLUDE)
-  # install ( DIRECTORY data DESTINATION ${GAME_INSTALL_DIR} PATTERN ".svn" EXCLUDE)
-  #
-  # install ( CODE "message (\"Creating files at ${GAME_FINAL_DIR}...\")")
-  #install ( CODE "EXECUTE_PROCESS(COMMAND \"cmake\" \"-E\" \"copy\" \"${GAME_INSTALL_DIR}/${GAME_UNIXNAME}\" \"${GAME_FINAL_DIR}/${GAME_UNIXNAME}\")")
-  #install ( CODE "EXECUTE_PROCESS(COMMAND \"mkdir\" \"$ENV{HOME}/.horus_eye\")")
-  #install ( CODE "EXECUTE_PROCESS(COMMAND \"chmod\" \"777\" \"$ENV{HOME}/.horus_eye\")")
-  #install ( CODE "set (USER_GROUP \"\")")
-  #install ( CODE "EXECUTE_PROCESS(COMMAND \"id\" \"-g\" OUTPUT_VARIABLE USER_GROUP)")
-  #install ( CODE "EXECUTE_PROCESS(COMMAND \"chown\" \"$ENV{USER}:${USER_GROUP}\" \"$ENV{HOME}/.horus_eye\")")
-  #install ( CODE "EXECUTE_PROCESS(COMMAND \"echo\" \"-n\" \"${GAME_INSTALL_DIR}/\" OUTPUT_FILE \"$ENV{HOME}/.horus_eye/rootpath.txt\")")
 
-  #install ( CODE "message (\"Done! Please run ${GAME_UNIXNAME} to start ${GAME_NAME}.\")")
-  #endif  (UNIX)
-
-  #set (USER_HOME "$ENV{HOME}")
-
-CONFIGURE_FILE(
-    "${SRC_DIR}/ugdk/config/config.h.in"
-    "${SRC_DIR}/ugdk/config/config.h"
-)
-
+set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")
+set_target_properties (${PROJECT_BUILDNAME} PROPERTIES COMPILE_FLAGS "${CFLAGS} ${CFLAGS_EXTRA}")
+set_target_properties (${PROJECT_BUILDNAME} PROPERTIES PROJECT_NAME "${PROJECT_NAME}")
 
 
