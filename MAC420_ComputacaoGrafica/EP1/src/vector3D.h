@@ -24,10 +24,10 @@ class Vector3D {
     
     /// Returns a new vector equal to this vector normalized
     /** The normalized vector (x,y) is (x,y) / Lenght(x,y)    */
-    void Normalize() const;
+    void Normalize();
 
     /// Returns a new vector which is this vector scaled coordinate by coordinate with "scale".
-    void Scale(const Vector3D &scale) const;
+    void Scale(const Vector3D &scale);
 
     Vector3D& operator+=(const Vector3D &other);
     Vector3D& operator-=(const Vector3D &other);
@@ -67,7 +67,7 @@ class Vector3D {
        This returns a vector which is perpendicular to both A and B (the plane defined by A and B),
        with a direction given by the right-hand rule and a magnitude equal to the area of the parallelogram
        that A and B span (the area of the AB plane). */
-    static double CrossProduct(const Vector3D &a, const Vector3D &b) {
+    static Vector3D CrossProduct(const Vector3D &a, const Vector3D &b) {
         return Vector3D( (a.y * b.z) - (a.z * b.y),
                          (a.z * b.x) - (a.x * b.z),
                          (a.x * b.y) - (a.y * b.x) );

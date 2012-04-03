@@ -86,6 +86,8 @@ include_directories ("src")
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
+find_package(GLUT REQUIRED)
+include_directories()
 
 
 if (${BUILD_TYPE} STREQUAL DEBUG)
@@ -123,7 +125,8 @@ set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 
 target_link_libraries (${PROJECT_BUILDNAME}
 					        ${EXTRA_LIBRARIES}
-					        ${OPENGL_LIBRARIES})
+					        ${OPENGL_LIBRARIES}
+				            ${GLUT_LIBRARY} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")

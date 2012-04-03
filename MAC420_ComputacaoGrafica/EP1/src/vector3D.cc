@@ -7,7 +7,7 @@ double Vector3D::Length() const {
     return sqrt( (x*x) + (y*y) + (z*z) );
 }
 
-void Vector3D::Normalize() const {
+void Vector3D::Normalize() {
     double norm = Length();
     if (norm != 0.0) {
         x = x / norm;
@@ -19,7 +19,7 @@ void Vector3D::Normalize() const {
     }
 }
 
-void Vector3D::Scale(const Vector3D &scale) const {
+void Vector3D::Scale(const Vector3D &scale) {
     x *= scale.x;
     y *= scale.y;
     z *= scale.z;
@@ -58,7 +58,7 @@ Vector3D Vector3D::operator/(const double &scalar) const {
 double Vector3D::operator*(const Vector3D &right) const {
     return Vector3D::InnerProduct(*this, right);
 }
-Vector3D CrossProduct(const Vector3D &right) const {
+Vector3D Vector3D::CrossProduct(const Vector3D &right) const {
     return Vector3D::CrossProduct(*this, right);
 }
 
