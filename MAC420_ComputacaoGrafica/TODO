@@ -1,0 +1,91 @@
+################################################################################
+#
+#  EP1 de Computacao Grafica - 'Simulacao de Dinamica de Particulas Sob Campos de Forca'
+#
+################################################################################
+
+######
+# Entrada: especifica o Campo de Forcas:
+######
+Ler Arquivo-Texto:
+    -formato:
+        <Nx> <Ny> <Nz>
+        <dx> <dy> <dz>
+        <vx_1> <vy_1> <vz_1>
+        <vx_2> <vy_2> <vz_2>
+        <vx_3> <vy_3> <vz_3>
+        ...
+        <vx_Nx.Ny.Nz> <vy_Nx.Ny.Nz> <vz_Nx.Ny.Nz>
+
+    ONDE:
+        [<Nx> <Ny> <Nz>] representam as dimensões (colunas, linhas e fatias) do campo vetorial
+        [<dx> <dy> <dz>] os espaçamentos físicos entre cada vetor
+        [<vx_i> <vy_i> <vz_i>] os componentes x, y, z de cada vetor v_i
+    No arquivo, eles estão dispostos de forma linear, mas no espaço 3D, por exemplo, v_1 deverá estar localizado no canto superior
+    esquerdo da primeira fatia, enquanto v_Nx.Ny.Nz deverá estar localizado no canto inferior direito da última fatia.
+    Ou seja, nos cantos da diagonal deste paralelepípedo. 
+    
+-receber nome do arquivo como command-line arg
+
+#######
+# Visualizacao do Campo de Forcas  (30%)
+#######
+-desenhar CILINDROS mostrando cada vetor, escalados de acordo (comprimento = magnetude)
+-comprimento max = sqrt(dx^2 + dy^2 + dz^2)
+-descobrir a magnetude minima e maxima de todos os vetores do campo
+-possibilidade de LIGAR/DESLIGAR essa visualicao a qualquer momento pelo teclado
+-pode pintar como quiser os cilindros
+
+
+##########
+# Simulação da dinâmica de partículas (40%)
+##########
+-ESFERA com diametro = ao menor dos espacamentos (dx,dy,dz)
+-criar uma ESFERA em cada ponto do reticulado (posicoes do campo vetorial)
+-posicao da ESFERA = centro (esfera centralizada em cada posicao)
+-COMANDO teclado: ESFERAS deverao ser afetadas pelo campo de forcas
+-esferas podem parar se chegarem numa posicao do campo com forca nula
+-esferas devem parar se atingirem o limite fisico do campo (ou seja, nao devem desaparecer da simulacao)
+
+-Calculo de Trajetoria:
+    x(t) = posicao de uma particula no espaco no tempo t
+    x(t + dt) = x(t) + dt * f(x,t) ; onde:
+    dt = delta_t, proporcional ao tempo entre quadros (yay real time, checar GLUT)
+    f(x,t) = vetor de forca do campo na posicao x   (WAT? o calculo usa isso como se fosse vetor velocidade, nao forca)
+        x pode nao coincidir com uma posicao que tenha um vetor do campo -> estimar novo vetor nessa posicao
+        usando informacoes dos vetores vizinhos e metodo da Interpolacao Trilinear (http://en.wikipedia.org/wiki/Trilinear_interpolation)
+        
+        
+##########
+# Movimentação da câmera (15%)
+##########
+usar mouse para mexer a camera:
+-hold LEFT_BUTTON:
+    -move MouseEixoX: movimentar a camera em relacao ao eixo Y
+    -move MouseEixoY: movimentar a camera em relacao ao eixo X
+-hold RIGHT_BUTTON:
+    -move MouseEixoY: aproximar ou distanciar a camera da origem, simulando zoom in/out
+    
+-camera padrao: apontando para o centro do campo, de forma a visualiza-lo corretamente
+
+
+############
+# Observações gerais (15%)
+############
+-sempre manter razao de perspectiva dos objetos na cena, mesmo durante resize da janel
+-sempre manter cena centralizada na viewport
+-Planos Near/Far ajustados apropriadamente para dimensoes do campo lido
+-Resolucao padrao dos CILINDROS e ESFERAS a nossa escolha, mas devem poder ser alterados por command-line arg
+-troca entre projecoes (perspectiva e ortografica) a qualquer momento, por comando do teclado
+-comando do teclado: PAUSE
+-comando do teclado: restart simulation
+
+-fazer LEIAME.txt
+    -instrucoes de como compilar
+    -instrucoes de como usar o EP
+    
+-ENTREGA DO EP:
+    -pode ser feito em dupla (soh um entrega)
+    -fazer em C++ com OpenGL e GLUT
+    -pode ser freeglut e programar no windows, mas teste no linux tb e documente
+    -colocar codigo fonte e arquivos auxiliares em um arquivo .zip, com o nome dos participantes
