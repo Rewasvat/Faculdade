@@ -2,4 +2,12 @@ CMakeCache.txt
 CMakeFiles/*
 Makefile
 bin/*
+!bin/freeglut.dll
 cmake_install.cmake
+Win32/*
+ep1.dir/*
+ipch/*
+*.vcxproj*
+*.sdf
+*.sln
+*.suo

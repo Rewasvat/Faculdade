@@ -55,6 +55,12 @@ SET(EP_SRCS
     ./src/simulation.cc
     ./src/vector3D.cc
     ./src/vectorfield.cc
+    ./src/engine/engine.cc
+    ./src/engine/engineconfig.cc
+    ./src/engine/eventhandler.cc
+    ./src/engine/inputmanager.cc
+    ./src/engine/scene.cc
+    ./src/engine/timer.cc
 )
 
 # #define's que voce queira incluir na compilacao
@@ -87,7 +93,11 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 find_package(GLUT REQUIRED)
-include_directories()
+#include_directories(${GLUT_INCLUDE_DIR})
+
+#if (NOT GLUT_FOUND)
+#  message (FATAL_ERROR ">>> COULD NOT FIND GLUT.")
+#endif (NOT GLUT_FOUND)
 
 
 if (${BUILD_TYPE} STREQUAL DEBUG)
@@ -126,7 +136,7 @@ set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries (${PROJECT_BUILDNAME}
 					        ${EXTRA_LIBRARIES}
 					        ${OPENGL_LIBRARIES}
-				            ${GLUT_LIBRARY} )
+				            ${GLUT_LIBRARIES} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")

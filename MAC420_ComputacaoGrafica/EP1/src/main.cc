@@ -42,7 +42,8 @@ void display()
     glBegin(GL_TRIANGLES);
     divide_triangulo(v[0], v[1], v[2], n);
     glEnd();        
-    glFlush();
+    //glFlush();
+	glutSwapBuffers();
 }
 
 void reshape(int w, int h)
@@ -56,7 +57,7 @@ void reshape(int w, int h)
         h = w;
     }
 
-glViewport((GLint)x, (GLint)y, (GLint)w, (GLint)h); 
+	glViewport((GLint)x, (GLint)y, (GLint)w, (GLint)h); 
 }
 
 void mouse(int btn, int state, int x, int y)
@@ -80,16 +81,19 @@ void init()
 }
 
 int main(int argc, char* argv[]) {
-    printf("EP1 CG is a go!\n");
     n=0;
     glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
-    glutInitWindowSize(500, 500);
-    glutCreateWindow("Sierpinski 2D Rev 2");
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_MULTISAMPLE);
+    glutInitWindowSize(800, 600);
+    glutCreateWindow("MAC420 EP1 - Simulacao de Particulas em um Campo de Forcas");
+
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
+
     glutMouseFunc(mouse);
+
     init();
+
     glutMainLoop();
     return 0;
 }
