@@ -1,6 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
-
+#include <engine/engine.h>
 #include <GL/glut.h>
 
 /* triângulo inicial */
@@ -95,5 +95,10 @@ int main(int argc, char* argv[]) {
     init();
 
     glutMainLoop();
+
+	engine::Engine* e = engine::Engine::reference();
+
+	delete e;
+
     return 0;
 }

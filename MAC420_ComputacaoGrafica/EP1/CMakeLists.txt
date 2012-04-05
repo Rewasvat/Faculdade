@@ -136,7 +136,7 @@ set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries (${PROJECT_BUILDNAME}
 					        ${EXTRA_LIBRARIES}
 					        ${OPENGL_LIBRARIES}
-				            ${GLUT_LIBRARIES} )
+				            ${GLUT_LIBRARY} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")
