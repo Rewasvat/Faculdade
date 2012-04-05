@@ -7,10 +7,9 @@ project (MAC0420_EP1 CXX C)
 set (PROJECT_NAME EP1)
 set (PROJECT_RELEASENAME ep1)
 set (PROJECT_DEBUGNAME ep1_d)
-set (PROJECT_VERSION 1.0.0)
 
 # Some output.
-message ("=== ${PROJECT_NAME} version ${PROJECT_VERSION} ===")
+message ("=== ${PROJECT_NAME} ===")
 
 # If the user did not define the parameteres, use default values.
 if (NOT BUILD_TYPE)
@@ -76,7 +75,7 @@ set (CFLAGS "" CACHE STRING "flags enviadas ao compilador")
 set (LDFLAGS "" CACHE STRING "flags enviadas ao linker")
 if (UNIX OR MINGW)
     # se for o g++ para *nix ou o MinGW para Windows:
-    set (CFLAGS "${CFLAGS} -Wall -ansi -O3 -U_FORTIFY_SOURCE -msse2")
+    set (CFLAGS "${CFLAGS} -Wall -ansi -O3 -U_FORTIFY_SOURCE")
     if (${BUILD_TYPE} STREQUAL DEBUG)
         set (CFLAGS "${CFLAGS} -g")
     endif (${BUILD_TYPE} STREQUAL DEBUG)
@@ -110,7 +109,7 @@ if (MSVC)
     set (CFLAGS_EXTRA "${CFLAGS_EXTRA} /D${d}")
   endforeach (d)
   
-  set (CFLAGS_EXTRA "${CFLAGS_EXTRA} /D_CRT_SECURE_NO_WARNINGS /DBOOST_ALL_NO_LIB /W4 /wd4100 /wd4127 /wd4201 /wd4211 /wd4250 /wd4706 /arch:SSE2 /fp:fast")
+  set (CFLAGS_EXTRA "${CFLAGS_EXTRA} /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4127 /wd4201 /wd4211 /wd4250 /wd4706 /fp:fast")
   
 else (MSVC)
   foreach (d ${DEFS})
@@ -134,9 +133,9 @@ add_executable (${PROJECT_BUILDNAME} ${EP_SRCS})
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
 target_link_libraries (${PROJECT_BUILDNAME}
-					        ${EXTRA_LIBRARIES}
-					        ${OPENGL_LIBRARIES}
-				            ${GLUT_LIBRARY} )
+                            ${EXTRA_LIBRARIES}
+                            ${OPENGL_LIBRARIES}
+                            ${GLUT_glut_LIBRARY} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")
