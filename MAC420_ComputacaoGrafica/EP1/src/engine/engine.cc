@@ -7,6 +7,8 @@
 
 namespace engine {
 
+Engine* Engine::reference_ = NULL;
+
 Engine::Engine() : config_(NULL) {
 	input_manager_ = new InputManager;
 }

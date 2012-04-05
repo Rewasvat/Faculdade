@@ -11,8 +11,8 @@ public:
 	bool handles_mouse() { return handles_mouse_; }
 	bool handles_keyboard() { return handles_keyboard_; }
 
-	void MouseHandler(int btn, int state, int x, int y);
-	void KeyboardHandler(unsigned char key, int x, int y);
+	virtual void MouseHandler(int btn, int state, int x, int y) = 0;
+	virtual void KeyboardHandler(unsigned char key, int x, int y) = 0;
 
 private:
 	bool handles_keyboard_;
