@@ -2,12 +2,15 @@
 #ifndef OBJECT_H_
 #define OBJECT_H_
 
-namespace object {
+namespace engine {
 
 class Object {
-    public:
+public:
     Object();
     ~Object();
+
+	virtual void Update(double dt) = 0;
+	virtual void Render() = 0;
 };
 
 }

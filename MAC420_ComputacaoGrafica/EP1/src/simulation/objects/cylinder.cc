@@ -1,6 +1,7 @@
-#include <object/cylinder.h>
+#include <simulation/objects/cylinder.h>
 
-namespace object {
+namespace simulation {
+namespace objects {
 
 Cylinder::Cylinder() {
 }
@@ -8,4 +9,5 @@ Cylinder::Cylinder() {
 Cylinder::~Cylinder() {
 }
 
+}
 }

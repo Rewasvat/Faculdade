@@ -1,4 +1,4 @@
-#include <vectorfield.h>
+#include <simulation/vectorfield.h>
 
 namespace simulation {
 

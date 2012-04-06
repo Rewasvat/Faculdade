@@ -2,15 +2,17 @@
 #ifndef SPHERE_H_
 #define SPHERE_H_
 
-#include <object/object.h>
+#include <engine/object.h>
 
-namespace object {
+namespace simulation {
+namespace objects {
 
-class Sphere : public Object {
+class Sphere : public engine::Object {
     public:
     Sphere();
     ~Sphere();
 };
 
+}
 }
 #endif

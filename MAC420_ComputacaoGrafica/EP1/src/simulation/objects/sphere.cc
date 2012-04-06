@@ -1,6 +1,7 @@
-#include <object/sphere.h>
+#include <simulation/objects/sphere.h>
 
-namespace object {
+namespace simulation {
+namespace objects {
 
 Sphere::Sphere() {
 }
@@ -8,4 +9,5 @@ Sphere::Sphere() {
 Sphere::~Sphere() {
 }
 
+}
 }

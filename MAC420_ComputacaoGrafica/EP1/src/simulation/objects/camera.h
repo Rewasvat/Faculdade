@@ -2,15 +2,17 @@
 #ifndef CAMERA_H_
 #define CAMERA_H_
 
-#include <object/object.h>
+#include <engine/object.h>
 
-namespace object {
+namespace simulation {
+namespace objects {
 
-class Camera : public Object {
+class Camera : public engine::Object {
     public:
     Camera();
     ~Camera();
 };
 
+}
 }
 #endif

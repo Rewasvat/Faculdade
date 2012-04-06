@@ -1,6 +1,7 @@
-#include <object/camera.h>
+#include <simulation/objects/camera.h>
 
-namespace object {
+namespace simulation {
+namespace objects {
 
 Camera::Camera() {
 }
@@ -8,4 +9,5 @@ Camera::Camera() {
 Camera::~Camera() {
 }
 
+}
 }

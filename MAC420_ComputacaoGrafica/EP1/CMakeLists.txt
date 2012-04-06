@@ -47,19 +47,21 @@ set (BIN_DIR bin)
 
 SET(EP_SRCS
     ./src/main.cc
-    ./src/object/camera.cc
-    ./src/object/cylinder.cc
-    ./src/object/object.cc
-    ./src/object/sphere.cc
-    ./src/simulation.cc
-    ./src/vector3D.cc
-    ./src/vectorfield.cc
+
+    ./src/simulation/objects/camera.cc
+    ./src/simulation/objects/cylinder.cc
+    ./src/simulation/objects/sphere.cc
+    ./src/simulation/simulation.cc
+    ./src/simulation/vectorfield.cc
+
     ./src/engine/engine.cc
     ./src/engine/engineconfig.cc
     ./src/engine/eventhandler.cc
     ./src/engine/inputmanager.cc
     ./src/engine/scene.cc
     ./src/engine/timer.cc
+    ./src/engine/object.cc
+    ./src/engine/vector3D.cc
 )
 
 # #define's que voce queira incluir na compilacao
@@ -93,6 +95,11 @@ include_directories(${OPENGL_INCLUDE_DIR})
 
 find_package(GLUT REQUIRED)
 #include_directories(${GLUT_INCLUDE_DIR})
+if (WIN32)
+  set (GLUT_FINAL_LIB ${GLUT_LIBRARY} )
+else ()
+  set (GLUT_FINAL_LIB ${GLUT_glut_LIBRARY} )
+endif ()
 
 #if (NOT GLUT_FOUND)
 #  message (FATAL_ERROR ">>> COULD NOT FIND GLUT.")
@@ -135,7 +142,7 @@ set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries (${PROJECT_BUILDNAME}
                             ${EXTRA_LIBRARIES}
                             ${OPENGL_LIBRARIES}
-                            ${GLUT_glut_LIBRARY} )
+                            ${GLUT_FINAL_LIB} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")

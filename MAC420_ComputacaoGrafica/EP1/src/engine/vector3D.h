@@ -2,7 +2,7 @@
 #ifndef VECTOR3D_H_
 #define VECTOR3D_H_
 
-namespace math {
+namespace engine {
 
 class Vector3D {
   public:

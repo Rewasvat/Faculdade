@@ -2,15 +2,17 @@
 #ifndef CYLINDER_H_
 #define CYLINDER_H_
 
-#include <object/object.h>
+#include <engine/object.h>
 
-namespace object {
+namespace simulation {
+namespace objects {
 
-class Cylinder : public Object {
+class Cylinder : public engine::Object {
     public:
     Cylinder();
     ~Cylinder();
 };
 
+}
 }
 #endif

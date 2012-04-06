@@ -1,7 +1,7 @@
 #include <math.h>
-#include <vector3D.h>
+#include <engine/vector3D.h>
 
-namespace math {
+namespace engine {
 
 double Vector3D::Length() const {
     return sqrt( (x*x) + (y*y) + (z*z) );
