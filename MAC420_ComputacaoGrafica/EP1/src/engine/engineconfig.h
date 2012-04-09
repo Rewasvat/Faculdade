@@ -12,6 +12,7 @@ public:
 
 	std::string& window_name() { return window_name_; }
 	void set_window_name(std::string& name) { window_name_ = name; }
+	void set_window_name(const char* name) { window_name_ = std::string(name); }
 
 	void set_window_size(int width, int height) { width_ = width; height_ = height; }
 	int width() { return width_; }

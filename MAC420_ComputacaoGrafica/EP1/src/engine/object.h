@@ -6,8 +6,8 @@ namespace engine {
 
 class Object {
 public:
-    Object();
-    ~Object();
+    Object() {}
+    ~Object() {}
 
 	virtual void Update(double dt) = 0;
 	virtual void Render() = 0;

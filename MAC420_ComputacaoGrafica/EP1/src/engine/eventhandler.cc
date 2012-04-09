@@ -4,10 +4,9 @@
 
 namespace engine {
 
-EventHandler::EventHandler() : is_removed_(false) {
+EventHandler::EventHandler() : handles_keyboard_(true), handles_mouse_(true), is_removed_(false) {
 	Engine::reference()->input_manager()->AddHandler(this);
 }
-
 
 EventHandler::~EventHandler() {
 	if (!is_removed_) {

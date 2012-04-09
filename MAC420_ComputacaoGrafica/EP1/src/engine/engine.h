@@ -2,7 +2,7 @@
 #define ENGINE_H_
 
 #include <string>
-#include <vector>
+#include <list>
 #include <engine/timer.h>
 
 namespace engine {
@@ -11,7 +11,7 @@ class Scene;
 class EngineConfig;
 class InputManager;
 
-typedef std::vector<Scene*> SceneList;
+typedef std::list<Scene*> SceneList;
 
 class Engine {
 public:
@@ -29,6 +29,7 @@ public:
 	void Render();
 
 	void PushScene(Scene* scene);
+	void RemoveScene(Scene* scene);
 	void PopScene();
 
 	InputManager* input_manager() { return input_manager_; }
@@ -42,6 +43,8 @@ private:
 
 	int window_state_;
 	Timer clock_;
+	
+	void DeleteFinishedScenes();
 
 	static void visibilityCallback(int state) { reference_->window_state_ = state; }
 	static void idleCallback() { reference_->Update(); }

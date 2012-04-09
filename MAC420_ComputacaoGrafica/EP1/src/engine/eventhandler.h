@@ -14,7 +14,7 @@ public:
 	virtual void MouseHandler(int btn, int state, int x, int y) = 0;
 	virtual void KeyboardHandler(unsigned char key, int x, int y) = 0;
 
-private:
+protected:
 	bool handles_keyboard_;
 	bool handles_mouse_;
 	bool is_removed_;

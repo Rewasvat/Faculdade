@@ -5,6 +5,8 @@
 
 namespace engine {
 
+class Object;
+
 typedef std::list<Object*> ObjectList;
 
 class Scene {
@@ -12,18 +14,24 @@ public:
 	Scene();
 	~Scene();
 
-	void Update(double dt);
-	void Render();
+    virtual void Start() {}
+	virtual void Update(double dt);
+	virtual void Render();
+	virtual void End() {};
+	
+	void Finish() { End(); finished_ = true; }
 
-	void AddObject(Object* obj);
-	void RemoveObject(Object* obj);
+	virtual void AddObject(Object* obj) { objects_.push_back(obj); }
+ 	virtual void RemoveObject(Object* obj) { objects_.remove(obj); }
 
 	bool is_visible() { return is_visible_; }
 	void set_visible(bool visible) { is_visible_ = visible; }
+	bool finished() { return finished_; }
 
 protected:
 	ObjectList objects_;
 	bool is_visible_;
+	bool finished_;
 };
 
 }
