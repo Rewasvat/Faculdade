@@ -19,6 +19,11 @@ void Vector3D::Normalize() {
     }
 }
 
+void Vector3D::Scale(const double scale) {
+    x *= scale;
+    y *= scale;
+    z *= scale;
+}
 void Vector3D::Scale(const Vector3D &scale) {
     x *= scale.x;
     y *= scale.y;

@@ -27,6 +27,7 @@ class Vector3D {
     void Normalize();
 
     /// Returns a new vector which is this vector scaled coordinate by coordinate with "scale".
+    void Scale(const double scale);
     void Scale(const Vector3D &scale);
 
     Vector3D& operator+=(const Vector3D &other);
