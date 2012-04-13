@@ -33,21 +33,21 @@ void VectorField::SetVectorAtPos(int x, int y, int z, Vector3D& v) {
     Result is based on the vectors at key positions in the field and interpolation between them.
 */
 engine::Vector3D VectorField::GetVectorAtPos(const engine::Vector3D& pos) {
-    bool x_check = (pos.x % step_size_.x == 0) && (0 < pos.x) && (pos.x < nX_ * step_size_.x);
-    bool y_check = (pos.y % step_size_.y == 0) && (0 < pos.y) && (pos.y < nY_ * step_size_.y);
-    bool z_check = (pos.z % step_size_.z == 0) && (0 < pos.z) && (pos.z < nZ_ * step_size_.z);
+    bool x_check = ( (pos.x / step_size_.x) - (int)(pos.x / step_size_.x) == 0) && (0 < pos.x) && (pos.x < nX_ * step_size_.x);
+    bool y_check = ( (pos.y / step_size_.y) - (int)(pos.y / step_size_.y) == 0) && (0 < pos.y) && (pos.y < nY_ * step_size_.y);
+    bool z_check = ( (pos.z / step_size_.z) - (int)(pos.z / step_size_.z) == 0) && (0 < pos.z) && (pos.z < nZ_ * step_size_.z);
     
     int base_x = (int) (pos.x / step_size_.x);
     int base_y = (int) (pos.y / step_size_.y);
     int base_z = (int) (pos.z / step_size_.z);
     
     if (x_check && y_check && z_check) {
-        return field_[base_x][base_y][base_z]->second;
+        return field_[base_x][base_y][base_z].second;
     }
     else {
         /*interpolate near vector to get result*/
         //TODO: if not a base vector pos, interpolate to get the desired vector.
-        return field_[base_x][base_y][base_z]->second;
+        return field_[base_x][base_y][base_z].second;
     }
 }
 

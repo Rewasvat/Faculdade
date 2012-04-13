@@ -3,7 +3,7 @@
 #define VECTORFIELD_H_
 
 #include <engine/vector3D.h>
-#include <pair>
+#include <utility>
 #include <vector>
 
 namespace simulation {
@@ -24,7 +24,7 @@ public:
     
     /** Sets the base vector of the field in the given coordinates (x, y, z) as v. Remember that base vectors of the field are
         places in the positions along a discrete 3D grid in the field. */
-    void SetVectorAtPos(int x, int y, int z, Vector3D& v);
+    void SetVectorAtPos(int x, int y, int z, engine::Vector3D& v);
     
     /** Returns the 3D vector (force) of the field in the given position.
         Result is based on the vectors at key positions in the field and interpolation between them.
@@ -44,9 +44,9 @@ public:
     int nZ() { return nZ_; }
     
 protected:
+    int nX_, nY_, nZ_;
     engine::Vector3D step_size_;
     VectorCube field_;
-    int nX_, nY_, nZ_;
 };
 
 }
