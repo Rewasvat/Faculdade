@@ -51,6 +51,8 @@ void Engine::Initialize(int argc, char* argv[]) {
 	glutVisibilityFunc(Engine::visibilityCallback);
 	glutIdleFunc(Engine::idleCallback);
 
+    glEnable(GL_DEPTH_TEST);
+    
 	input_manager_->Initialize();
 }
 
@@ -79,7 +81,7 @@ void Engine::Update() {
 }
 
 void Engine::Render() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     
 	SceneList::iterator it;
 	for (it = scenes_.begin(); it != scenes_.end(); ++it)
