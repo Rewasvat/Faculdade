@@ -50,7 +50,7 @@ void Engine::Initialize(int argc, char* argv[]) {
     glutReshapeFunc(reshape);
 	glutVisibilityFunc(Engine::visibilityCallback);
 	glutIdleFunc(Engine::idleCallback);
-
+    glClearColor(0.0, 0.0, 0.0, 0.0); //transparent, I hope =P
     glEnable(GL_DEPTH_TEST);
     
 	input_manager_->Initialize();
