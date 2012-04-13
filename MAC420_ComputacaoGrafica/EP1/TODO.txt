@@ -4,13 +4,7 @@
 #
 ################################################################################
 
-Object
-    -Esfera
-    -Cilindro
-    (?)Camera
-CampoDeForca (matriz 3D dos vetores)
-Simulacao
-Vector3D
+- callbacks de saida para liberar memoria
 
 ######
 # Entrada: especifica o Campo de Forcas:
