@@ -58,7 +58,7 @@ SET(EP_SRCS
     ./src/engine/engineconfig.cc
     ./src/engine/eventhandler.cc
     ./src/engine/inputmanager.cc
-    ./src/engine/scene.cc
+    ./src/engine/object.cc
     ./src/engine/timer.cc
     ./src/engine/vector3D.cc
 )

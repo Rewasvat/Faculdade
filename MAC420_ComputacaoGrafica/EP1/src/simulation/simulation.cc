@@ -74,7 +74,7 @@ void Simulation::MouseHandler(int btn, int state, int x, int y) {
 }
 
 void Simulation::KeyboardHandler(unsigned char key, int x, int y) {
-    if (key == '\e') {
+    if (key == '\e' || key == 'q') {
         Finish();
     }
 }
