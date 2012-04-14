@@ -48,7 +48,7 @@ protected:
     engine::Vector3D step_size_;
     VectorCube field_;
 
-	engine::Vector3D& max_vector_; //used to help normalization
+	engine::Vector3D max_vector_; //used to help normalization
 
 	engine::Vector3D interpolateAtPos(const engine::Vector3D& pos);
 };

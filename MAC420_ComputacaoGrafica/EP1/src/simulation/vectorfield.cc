@@ -101,12 +101,12 @@ Vector3D VectorField::interpolateAtPos(const Vector3D& pos) {
 
 	//Getting the 8 surrounding points in the grid
 	int baseX_down, baseX_up, baseY_down, baseY_up, baseZ_down, baseZ_up;
-	baseX_down = floor(pos.x / step_size_.x);
-	baseX_up = ceil(pos.x / step_size_.x);
-	baseY_down = floor(pos.y / step_size_.y);
-	baseY_up = ceil(pos.y / step_size_.y);
-	baseZ_down = floor(pos.z / step_size_.z);
-	baseZ_up = ceil(pos.z / step_size_.z);
+	baseX_down = (int)floor(pos.x / step_size_.x);
+	baseX_up = (int)ceil(pos.x / step_size_.x);
+	baseY_down = (int)floor(pos.y / step_size_.y);
+	baseY_up = (int)ceil(pos.y / step_size_.y);
+	baseZ_down = (int)floor(pos.z / step_size_.z);
+	baseZ_up = (int)ceil(pos.z / step_size_.z);
 
 	Vector3D V000 = field_[baseX_down][baseY_down][baseZ_down].second;
 	Vector3D V001 = field_[baseX_down][baseY_down][baseZ_up].second;

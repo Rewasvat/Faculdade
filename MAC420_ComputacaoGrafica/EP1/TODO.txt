@@ -9,7 +9,7 @@
 ######
 # Entrada: especifica o Campo de Forcas:
 ######
-Ler Arquivo-Texto:
+[DONE] Ler Arquivo-Texto:
     -formato:
         <Nx> <Ny> <Nz>
         <dx> <dy> <dz>
@@ -27,7 +27,7 @@ Ler Arquivo-Texto:
     esquerdo da primeira fatia, enquanto v_Nx.Ny.Nz deverá estar localizado no canto inferior direito da última fatia.
     Ou seja, nos cantos da diagonal deste paralelepípedo. 
     
--receber nome do arquivo como command-line arg
+[DONE] -receber nome do arquivo como command-line arg
 
 #######
 # Visualizacao do Campo de Forcas  (30%)
