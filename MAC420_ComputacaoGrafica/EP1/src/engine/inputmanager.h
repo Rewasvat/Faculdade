@@ -20,10 +20,15 @@ public:
 	void RemoveHandler(EventHandler* handler);
 
 	void CallMouseHandlers(int btn, int state, int x, int y);
+	void CallMouseMotionHandlers(int x, int y);
 	void CallKeyboardHandlers(unsigned char key, int x, int y);
 
 private:
 	HandlerList handlers_;
+
+	bool buttons_[3];
+	int buttons_map_[3];
+	int last_mouse_coords_[2];
 };
 
 }

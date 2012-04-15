@@ -27,7 +27,7 @@ bool checkArgOption(const char* arg_name, char* full_arg, int* arg_size) {
 
 #define CHECK_ARG(code, argName) \
 	if ( !recognized && checkArgOption(argName, argv[i], &arg_size)) { \
-		code( atoi(&argv[i][arg_size]) ); \
+		code( atoi(&argv[i][arg_size+1]) ); \
 		recognized = true; \
 	} \
 

@@ -77,6 +77,13 @@ void VectorField::Normalize() {
 				field_[i][j][k].second.Scale(scale);
 }
 
+engine::Vector3D VectorField::GetFieldCenterPos() {
+	Vector3D center (nX_, nY_, nZ_);
+	center.Scale(0.5);
+	center.Scale(step_size_);
+	return center;
+}
+
 
 Vector3D VectorField::interpolateAtPos(const Vector3D& pos) {
 	/*  TRILINEAR INTERPOLATION:

@@ -12,6 +12,7 @@ public:
 	bool handles_keyboard() { return handles_keyboard_; }
 
 	virtual void MouseHandler(int btn, int state, int x, int y) = 0;
+	virtual void MouseMotionHandler(int btn, int dx, int dy) = 0;
 	virtual void KeyboardHandler(unsigned char key, int x, int y) = 0;
 
 protected:

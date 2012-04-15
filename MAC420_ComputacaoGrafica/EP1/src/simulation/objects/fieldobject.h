@@ -17,6 +17,7 @@ public:
 	void Render();
 
 	void MouseHandler(int btn, int state, int x, int y) {}
+	void MouseMotionHandler(int btn, int dx, int dy) {}
 	void KeyboardHandler(unsigned char key, int x, int y);
 
 protected:

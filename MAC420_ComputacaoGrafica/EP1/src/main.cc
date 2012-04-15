@@ -21,7 +21,8 @@ int main(int argc, char* argv[]) {
 	e->Configure(config);
 	e->Initialize(argc, argv);
 	
-	simulation::Simulation* scene = new simulation::Simulation();
+	simulation::Simulation* scene = new simulation::Simulation( loader.GetVectorField() );
+
     e->PushScene(scene);
     
     e->Run();

@@ -45,6 +45,8 @@ public:
     int nX() { return nX_; }
     int nY() { return nY_; }
     int nZ() { return nZ_; }
+
+	engine::Vector3D GetFieldCenterPos();
     
 protected:
     int nX_, nY_, nZ_;
