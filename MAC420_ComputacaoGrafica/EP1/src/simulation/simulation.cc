@@ -1,4 +1,5 @@
 #include <simulation/simulation.h>
+#include <simulation/vectorfield.h>
 #include <GL/glut.h>
 
 namespace simulation {
@@ -77,6 +78,16 @@ void Simulation::KeyboardHandler(unsigned char key, int x, int y) {
     if (key == '\e' || key == 'q') {
         Finish();
     }
+}
+
+void Simulation::SetVectorField(VectorField* field) {
+	field_ = field;
+	int i, j, k;
+	for (i=0; i < field_->nX(); i++)
+		for (j=0; j < field_->nY(); j++)
+			for (k=0; k < field_->nZ(); k++) {
+				
+			}
 }
 
 }

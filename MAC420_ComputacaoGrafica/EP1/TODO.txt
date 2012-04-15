@@ -5,6 +5,8 @@
 ################################################################################
 
 - callbacks de saida para liberar memoria
+- colocar/arrumar projecao para 3D
+- implementar camera
 
 ######
 # Entrada: especifica o Campo de Forcas:
@@ -33,7 +35,7 @@
 # Visualizacao do Campo de Forcas  (30%)
 #######
 -desenhar CILINDROS mostrando cada vetor, escalados de acordo (comprimento = magnetude)
--comprimento max = sqrt(dx^2 + dy^2 + dz^2)
+[DONE] -comprimento max = sqrt(dx^2 + dy^2 + dz^2)
 -descobrir a magnetude minima e maxima de todos os vetores do campo
 -possibilidade de LIGAR/DESLIGAR essa visualicao a qualquer momento pelo teclado
 -pode pintar como quiser os cilindros

@@ -8,9 +8,12 @@ namespace simulation {
 namespace objects {
 
 class Cylinder : public engine::Object {
-    public:
+public:
     Cylinder();
     ~Cylinder();
+
+	void Update(double dt);
+	void Render();
 };
 
 }

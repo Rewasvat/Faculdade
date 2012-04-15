@@ -13,7 +13,18 @@ typedef std::list<Object*> ChildList;
 class ObjectContainer {
 public:
 	ObjectContainer() {}
-	virtual ~ObjectContainer() {}
+	virtual ~ObjectContainer() {
+		ChildList to_delete;
+		for(ChildList::iterator it = childs_.begin(); it != childs_.end(); ++it)
+			to_delete.push_front(*it);
+
+		for(ChildList::iterator it = to_delete.begin(); it != to_delete.end(); ++it) {
+			delete (*it);
+			childs_.remove(*it);
+		}
+
+		childs_.clear();
+	}
 
 	void UpdateChilds(double dt) {
 		ChildList::iterator it;
@@ -30,6 +41,8 @@ public:
         }
 	}
 
+	/* If needed, this should return the Position of this entity in the 3D space,
+	   as given to the childs.*/
 	virtual Vector3D parent_position() { return Vector3D(); }
 
 protected:

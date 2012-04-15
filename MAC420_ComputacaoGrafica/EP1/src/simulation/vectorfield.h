@@ -30,6 +30,9 @@ public:
         Result is based on the vectors at key positions in the field and interpolation between them.
     */
     engine::Vector3D GetVectorAtPos(const engine::Vector3D& pos);
+
+	/*Gets the base vector of the grid at the given coordinates. Mostly used so that outside code can iterate over the grid.*/
+	Force3D GetBaseVectorInGrid(int x, int y, int z) { return field_[x][y][z]; }
     
     engine::Vector3D operator[] (const engine::Vector3D& pos) { return GetVectorAtPos(pos); }
     

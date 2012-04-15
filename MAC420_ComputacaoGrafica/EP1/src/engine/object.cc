@@ -10,7 +10,9 @@ void Object::ReparentTo(ObjectContainer* new_parent) {
 	}
 
 	parent_ = new_parent;
-	parent_->AddChild(this);
+	if (parent_ != NULL) {
+		parent_->AddChild(this);
+	}
 }
 
 }

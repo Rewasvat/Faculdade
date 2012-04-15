@@ -6,6 +6,8 @@
 
 namespace simulation {
 
+class VectorField;
+
 class Simulation : public engine::Scene, public engine::EventHandler {
 public:
     Simulation();
@@ -19,8 +21,11 @@ public:
     virtual void MouseHandler(int btn, int state, int x, int y);
 	virtual void KeyboardHandler(unsigned char key, int x, int y);
 	
+	void SetVectorField(VectorField* field);
+
 protected:
     int n;
+	VectorField* field_;
 };
 
 }
