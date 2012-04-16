@@ -53,12 +53,13 @@ SET(EP_SRCS
     ./src/simulation/objects/sphere.cc
     ./src/simulation/simulation.cc
     ./src/simulation/vectorfield.cc
+    ./src/simulation/loaderutil.cc
 
     ./src/engine/engine.cc
     ./src/engine/engineconfig.cc
     ./src/engine/eventhandler.cc
     ./src/engine/inputmanager.cc
-    ./src/engine/scene.cc
+    ./src/engine/object.cc
     ./src/engine/timer.cc
     ./src/engine/vector3D.cc
 )

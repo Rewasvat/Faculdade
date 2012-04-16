@@ -4,18 +4,16 @@
 #
 ################################################################################
 
-Object
-    -Esfera
-    -Cilindro
-    (?)Camera
-CampoDeForca (matriz 3D dos vetores)
-Simulacao
-Vector3D
+- callbacks de saida para liberar memoria
+- reshape callback pode ter que ser por-cena
+-Melhorar PERFORMANCE:
+	-colocar desenhos de objetos (como o cilindro) em display list (uma só por classe ou por objeto?) e reutiliza-la
+	-ver outros métodos para melhorar performance
 
 ######
 # Entrada: especifica o Campo de Forcas:
 ######
-Ler Arquivo-Texto:
+[DONE] Ler Arquivo-Texto:
     -formato:
         <Nx> <Ny> <Nz>
         <dx> <dy> <dz>
@@ -33,15 +31,15 @@ Ler Arquivo-Texto:
     esquerdo da primeira fatia, enquanto v_Nx.Ny.Nz deverá estar localizado no canto inferior direito da última fatia.
     Ou seja, nos cantos da diagonal deste paralelepípedo. 
     
--receber nome do arquivo como command-line arg
+[DONE] -receber nome do arquivo como command-line arg
 
 #######
 # Visualizacao do Campo de Forcas  (30%)
 #######
 -desenhar CILINDROS mostrando cada vetor, escalados de acordo (comprimento = magnetude)
--comprimento max = sqrt(dx^2 + dy^2 + dz^2)
+[DONE] -comprimento max = sqrt(dx^2 + dy^2 + dz^2)
 -descobrir a magnetude minima e maxima de todos os vetores do campo
--possibilidade de LIGAR/DESLIGAR essa visualicao a qualquer momento pelo teclado
+[DONE] -possibilidade de LIGAR/DESLIGAR essa visualicao a qualquer momento pelo teclado
 -pode pintar como quiser os cilindros
 
 
@@ -67,24 +65,24 @@ Ler Arquivo-Texto:
 ##########
 # Movimentação da câmera (15%)
 ##########
-usar mouse para mexer a camera:
--hold LEFT_BUTTON:
-    -move MouseEixoX: movimentar a camera em relacao ao eixo Y
-    -move MouseEixoY: movimentar a camera em relacao ao eixo X
--hold RIGHT_BUTTON:
-    -move MouseEixoY: aproximar ou distanciar a camera da origem, simulando zoom in/out
+[DONE] usar mouse para mexer a camera:
+[DONE] -hold LEFT_BUTTON:
+[DONE]     -move MouseEixoX: movimentar a camera em relacao ao eixo Y
+[DONE]     -move MouseEixoY: movimentar a camera em relacao ao eixo X
+[DONE] -hold RIGHT_BUTTON:
+[DONE]     -move MouseEixoY: aproximar ou distanciar a camera da origem, simulando zoom in/out
     
--camera padrao: apontando para o centro do campo, de forma a visualiza-lo corretamente
+[DONE] -camera padrao: apontando para o centro do campo, de forma a visualiza-lo corretamente
 
 
 ############
 # Observações gerais (15%)
 ############
--sempre manter razao de perspectiva dos objetos na cena, mesmo durante resize da janel
+-sempre manter razao de perspectiva dos objetos na cena, mesmo durante resize da janela
 -sempre manter cena centralizada na viewport
 -Planos Near/Far ajustados apropriadamente para dimensoes do campo lido
 -Resolucao padrao dos CILINDROS e ESFERAS a nossa escolha, mas devem poder ser alterados por command-line arg
--troca entre projecoes (perspectiva e ortografica) a qualquer momento, por comando do teclado
+[DONE] -troca entre projecoes (perspectiva e ortografica) a qualquer momento, por comando do teclado
 -comando do teclado: PAUSE
 -comando do teclado: restart simulation
 

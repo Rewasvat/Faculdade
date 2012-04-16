@@ -27,6 +27,8 @@ public:
 
 	void Update();
 	void Render();
+	
+	void WindowReshape(int w, int h);
 
 	void PushScene(Scene* scene);
 	void RemoveScene(Scene* scene);
@@ -34,9 +36,14 @@ public:
 
 	InputManager* input_manager() { return input_manager_; }
 
+	int window_width() { return width_; }
+	int window_height() { return height_; }
+
 private:
 	static Engine* reference_;
 
+	int width_;
+	int height_;
 	EngineConfig* config_;
 	SceneList scenes_;
 	InputManager* input_manager_;
@@ -49,6 +56,7 @@ private:
 	static void visibilityCallback(int state) { reference_->window_state_ = state; }
 	static void idleCallback() { reference_->Update(); }
 	static void renderCallback() { reference_->Render(); }
+	static void reshapeCallback(int w, int h) { reference_->WindowReshape(w,h); }
 };
 
 }

@@ -11,7 +11,7 @@ namespace engine {
 
 Engine* Engine::reference_ = NULL;
 
-Engine::Engine() : config_(NULL) {
+Engine::Engine() : width_(0), height_(0), config_(NULL) {
 	input_manager_ = new InputManager;
 }
 
@@ -23,19 +23,6 @@ Engine::~Engine() {
 	delete input_manager_;
 }
 
-void reshape(int w, int h)
-{
-    int x = 0, y = 0;
-    /*if (w > h) {
-        x = (w - h) / 2;
-        w = h;
-    } else if (w < h) {
-        y = (h - w) / 2; 
-        h = w;
-    }*/
-
-	glViewport((GLint)x, (GLint)y, (GLint)w, (GLint)h); 
-}
 
 void Engine::Initialize(int argc, char* argv[]) {
 	if (config_ == NULL)
@@ -47,10 +34,12 @@ void Engine::Initialize(int argc, char* argv[]) {
 	glutCreateWindow( config_->window_name().c_str() );
 
 	glutDisplayFunc(Engine::renderCallback);
-    glutReshapeFunc(reshape);
+	glutReshapeFunc(Engine::reshapeCallback);
 	glutVisibilityFunc(Engine::visibilityCallback);
 	glutIdleFunc(Engine::idleCallback);
-
+    glClearColor(0.0, 0.0, 0.0, 0.0); //transparent, I hope =P
+    glEnable(GL_DEPTH_TEST);
+    
 	input_manager_->Initialize();
 }
 
@@ -68,6 +57,7 @@ void Engine::Update() {
 
 		if (scenes_.size() > 0) {
 		    scenes_.back()->Update(dt);
+			glutPostRedisplay();
 	    }
 	    else {
 	        printf("[Engine] No Scenes to display, exiting...\n");
@@ -79,7 +69,7 @@ void Engine::Update() {
 }
 
 void Engine::Render() {
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
     
 	SceneList::iterator it;
 	for (it = scenes_.begin(); it != scenes_.end(); ++it)
@@ -88,6 +78,11 @@ void Engine::Render() {
 	glutSwapBuffers();
 }
 
+void Engine::WindowReshape(int w, int h) {
+	width_ = w;
+	height_ = h;
+	glViewport(0, 0, (GLint)w, (GLint)h); 
+}
 
 void Engine::PushScene(Scene* scene) {
 	scenes_.push_back(scene);

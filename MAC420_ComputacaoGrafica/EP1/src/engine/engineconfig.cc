@@ -14,7 +14,7 @@ EngineConfig::~EngineConfig() {
 }
 
 unsigned int EngineConfig::display_mode() const {
-	unsigned int mode = GLUT_DOUBLE | GLUT_RGB;
+	unsigned int mode = GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH;
 	if (do_multisampling_)
 		mode |= GLUT_MULTISAMPLE;
 	return mode;
