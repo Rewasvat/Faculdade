@@ -18,8 +18,8 @@ Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspe
 		for (j=0; j < field_->nY(); j++) {
 			for (k=0; k < field_->nZ(); k++) {
 				Vector3D pos = field_->GetBaseVectorInGrid(i,j,k).first;
-				double height = field_->GetBaseVectorInGrid(i,j,k).second.Length();
-				objects::Cylinder* c = new objects::Cylinder( pos, 0.25, 0.25, height );
+				Vector3D dir = field_->GetBaseVectorInGrid(i,j,k).second;
+				objects::Cylinder* c = new objects::Cylinder( pos, dir );
 				c->ReparentTo(field_object_);
 			}
 		}
@@ -111,7 +111,6 @@ void Simulation::SetProjectionMode() {
 
 		//glOrtho(-2.5*w/h, 2.5*w/h, -2.5, 2.5, -10.0, 10.0);
 	}
-
 
     glMatrixMode(GL_MODELVIEW);
 }

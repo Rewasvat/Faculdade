@@ -10,7 +10,7 @@ namespace objects {
 
 class Cylinder : public engine::Object {
 public:
-    Cylinder(engine::Vector3D& pos, double base_radius, double top_radius, double height);
+    Cylinder(engine::Vector3D& pos, engine::Vector3D& direction);
     ~Cylinder();
 
 	void Update(double dt);
@@ -20,8 +20,11 @@ protected:
 	double base_radius_;
 	double top_radius_;
 	double height_;
+	engine::Vector3D direction_;
 	double color_[3];
 	GLUquadricObj* quadric_;
+
+	void rotateDirectionTowards(engine::Vector3D& axis);
 };
 
 }
