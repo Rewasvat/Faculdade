@@ -19,6 +19,8 @@ Cylinder::Cylinder(engine::Vector3D& pos, engine::Vector3D& direction) {
 	color_[1] = (double)rand()/(double)RAND_MAX;
 	color_[2] = (double)rand()/(double)RAND_MAX;
 	quadric_ = gluNewQuadric();
+	
+	buildRenderList();
 }
 
 Cylinder::~Cylinder() {
@@ -29,13 +31,17 @@ void Cylinder::Update(double dt) {
 }
 
 void Cylinder::Render() {
-	gluQuadricDrawStyle(quadric_, GLU_FILL); /* flat shaded */
+    glCallList(render_list_);
+}
+
+void Cylinder::buildRenderList() {
+    render_list_ = glGenLists(1);
+    
+    glNewList(render_list_, GL_COMPILE);
+    
+    gluQuadricDrawStyle(quadric_, GLU_FILL);
 	gluQuadricNormals(quadric_, GLU_SMOOTH);
 	
-	/*glPushMatrix copies the current matrix (top of the matrix stack), and places the copy at the top*/
-	glPushMatrix(); 
-
-
 	glColor3d(color_[0], color_[1], color_[2]);
 	glTranslated(position_.x, position_.y, position_.z);
 
@@ -44,9 +50,8 @@ void Cylinder::Render() {
 	rotateDirectionTowards( 0.0, 0.0, 1.0 );
 
 	gluCylinder(quadric_, base_radius_, top_radius_, height_, 30, 15);
-
-	/*glPopMatrix removes the top matrix of the stack*/
-	glPopMatrix();
+	
+    glEndList();
 }
 
 void Cylinder::rotateDirectionTowards(double x_axis, double y_axis, double z_axis) {

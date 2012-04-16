@@ -61,6 +61,7 @@ SET(EP_SRCS
     ./src/engine/eventhandler.cc
     ./src/engine/inputmanager.cc
     ./src/engine/object.cc
+    ./src/engine/objectcontainer.cc
     ./src/engine/timer.cc
     ./src/engine/vector3D.cc
 )

@@ -3,7 +3,7 @@
 namespace simulation {
 namespace objects {
 
-FieldObject::FieldObject() {
+FieldObject::FieldObject() : visible_(true) {
 	handles_mouse_ = false;
 }
 

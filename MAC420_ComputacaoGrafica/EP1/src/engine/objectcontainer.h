@@ -3,43 +3,21 @@
 #define OBJECTCONTAINER_H_
 
 #include <list>
-#include <engine/object.h>
 #include <engine/vector3D.h>
 
 namespace engine {
+
+class Object;
 
 typedef std::list<Object*> ChildList;
 
 class ObjectContainer {
 public:
-	ObjectContainer() {}
-	virtual ~ObjectContainer() {
-		ChildList to_delete;
-		for(ChildList::iterator it = childs_.begin(); it != childs_.end(); ++it)
-			to_delete.push_front(*it);
+	ObjectContainer();
+	virtual ~ObjectContainer();
 
-		for(ChildList::iterator it = to_delete.begin(); it != to_delete.end(); ++it) {
-			delete (*it);
-			childs_.remove(*it);
-		}
-
-		childs_.clear();
-	}
-
-	void UpdateChilds(double dt) {
-		ChildList::iterator it;
-        for (it = childs_.begin(); it != childs_.end(); ++it) {
-            Object* obj = (*it);
-            obj->Update(dt);
-        }
-	}
-	void RenderChilds() {
-		ChildList::iterator it;
-        for (it = childs_.begin(); it != childs_.end(); ++it) {
-            Object* obj = (*it);
-            obj->Render();
-        }
-	}
+	void UpdateChilds(double dt);
+	void RenderChilds();
 
 	/* If needed, this should return the Position of this entity in the 3D space,
 	   as given to the childs.*/
