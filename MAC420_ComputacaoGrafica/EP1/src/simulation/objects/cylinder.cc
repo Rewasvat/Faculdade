@@ -39,9 +39,9 @@ void Cylinder::Render() {
 	glColor3d(color_[0], color_[1], color_[2]);
 	glTranslated(position_.x, position_.y, position_.z);
 
-	rotateDirectionTowards( engine::Vector3D(1.0, 0.0, 0.0) );
-	rotateDirectionTowards( engine::Vector3D(0.0, 1.0, 0.0) );
-	rotateDirectionTowards( engine::Vector3D(0.0, 0.0, 1.0) );
+	rotateDirectionTowards( 1.0, 0.0, 0.0 );
+	rotateDirectionTowards( 0.0, 1.0, 0.0 );
+	rotateDirectionTowards( 0.0, 0.0, 1.0 );
 
 	gluCylinder(quadric_, base_radius_, top_radius_, height_, 30, 15);
 
@@ -49,7 +49,8 @@ void Cylinder::Render() {
 	glPopMatrix();
 }
 
-void Cylinder::rotateDirectionTowards(engine::Vector3D& axis) {
+void Cylinder::rotateDirectionTowards(double x_axis, double y_axis, double z_axis) {
+    engine::Vector3D axis(x_axis, y_axis, z_axis);
 	double angle_rad = direction_ * axis;
 	double angle_deg = (180.0 * angle_rad) / PI;
 	glRotated(angle_deg, axis.x, axis.y, axis.z);

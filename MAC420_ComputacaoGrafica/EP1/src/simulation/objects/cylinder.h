@@ -24,7 +24,7 @@ protected:
 	double color_[3];
 	GLUquadricObj* quadric_;
 
-	void rotateDirectionTowards(engine::Vector3D& axis);
+	void rotateDirectionTowards(double x_axis, double y_axis, double z_axis);
 };
 
 }

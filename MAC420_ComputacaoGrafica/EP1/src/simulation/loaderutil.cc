@@ -1,5 +1,6 @@
 #include "loaderutil.h"
 
+#include <string.h>
 #include <string>
 #include <cstdlib>
 #include <cstdio>
@@ -22,7 +23,7 @@ LoaderUtil::~LoaderUtil() {
 
 bool checkArgOption(const char* arg_name, char* full_arg, int* arg_size) {
 	*arg_size = strlen(arg_name);
-	return strncmp(full_arg, arg_name, *arg_size) == 0 && strlen(full_arg) > *arg_size;
+	return strncmp(full_arg, arg_name, *arg_size) == 0 && (int)strlen(full_arg) > *arg_size;
 }
 
 #define CHECK_ARG(code, argName) \
@@ -71,7 +72,8 @@ void LoaderUtil::LoadInputFile(const char* name) {
 		for (j=0; j < nY; j++)
 			for (k=0; k < nZ; k++) {
 				ifs >> x >> y >> z;
-				field_->SetVectorAtPos(i, j, k, engine::Vector3D(x,y,z));
+                engine::Vector3D v(x,y,z);
+				field_->SetVectorAtPos(i, j, k, v);
 			}
 
 	field_->Normalize();

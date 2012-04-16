@@ -51,6 +51,7 @@ SET(EP_SRCS
     ./src/simulation/objects/camera.cc
     ./src/simulation/objects/cylinder.cc
     ./src/simulation/objects/sphere.cc
+    ./src/simulation/objects/fieldobject.cc
     ./src/simulation/simulation.cc
     ./src/simulation/vectorfield.cc
     ./src/simulation/loaderutil.cc
