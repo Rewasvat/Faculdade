@@ -27,7 +27,10 @@ void Sphere::Update(double dt) {
     delta_pos.Normalize();
     delta_pos.Scale(dt);
 
-    position_ = position_ + delta_pos;
+    engine::Vector3D new_pos = position_ + delta_pos;
+    
+    if ( field_->IsInField(new_pos) )
+        position_ = new_pos;
 }
 
 void Sphere::Render() {

@@ -126,9 +126,13 @@ Vector3D VectorField::interpolateAtPos(const Vector3D& pos) {
 	baseZ_down = (int)floor(pos.z / step_size_.z);
 	baseZ_up = (int)ceil(pos.z / step_size_.z);
 
-    printf("INTERPOLATING\n");
+    /*printf("INTERPOLATING\n");
     printf("for pos (%f, %f, %f)\n", pos.x, pos.y, pos.z);
-    printf("base values x(%d, %d) y(%d, %d) z(%d, %d)\n", baseX_down, baseX_up, baseY_down, baseY_up, baseZ_down, baseZ_up);
+    printf("base values x(%d, %d) y(%d, %d) z(%d, %d)\n", baseX_down, baseX_up, baseY_down, baseY_up, baseZ_down, baseZ_up);*/
+
+    if (baseX_up >= nX_)    baseX_up = baseX_down;
+    if (baseY_up >= nY_)    baseY_up = baseY_down;
+    if (baseZ_up >= nZ_)    baseZ_up = baseZ_down;
 
 	/*Vector3D V000 = getBaseVectorForInterpolation(baseX_down, baseY_down, baseZ_down);
 	Vector3D V001 = getBaseVectorForInterpolation(baseX_down, baseY_down, baseZ_up);

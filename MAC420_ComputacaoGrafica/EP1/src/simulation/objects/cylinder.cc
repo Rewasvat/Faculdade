@@ -2,6 +2,8 @@
 #include <GL/glut.h>
 #include <math.h>
 
+#include <cstdio>
+
 #define PI 3.14159265358979323846
 
 namespace simulation {
@@ -45,22 +47,24 @@ void Cylinder::buildRenderList() {
 	glColor3d(color_[0], color_[1], color_[2]);
 	glTranslated(position_.x, position_.y, position_.z);
 
-    //TODO THIS IS WRONG
+    engine::Vector3D dir = direction_;
+    engine::Vector3D z_axis (0.0, 0.0, 1.0);
+    dir.Normalize();
+    
+    
+    double angle = acos( dir * z_axis );
+    if ( fabs(angle) > 0.0 ) {
+        engine::Vector3D rot_axis = dir.CrossProduct(z_axis);
+        rot_axis.Normalize();
+        rot_axis.Scale(-1.0);
 
-	rotateDirectionTowards( 1.0, 0.0, 0.0 );
-	rotateDirectionTowards( 0.0, 1.0, 0.0 );
-	rotateDirectionTowards( 0.0, 0.0, 1.0 );
+        double angle_deg = (180.0 * angle) / PI;
+        glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
+    }
 
 	gluCylinder(quadric_, base_radius_, top_radius_, height_, 10, 5);
 	
     glEndList();
-}
-
-void Cylinder::rotateDirectionTowards(double x_axis, double y_axis, double z_axis) {
-    engine::Vector3D axis(x_axis, y_axis, z_axis);
-	double angle_rad = direction_ * axis;
-	double angle_deg = (180.0 * angle_rad) / PI;
-	glRotated(angle_deg, axis.x, axis.y, axis.z);
 }
 
 }

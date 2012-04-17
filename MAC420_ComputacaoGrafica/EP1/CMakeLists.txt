@@ -5,8 +5,7 @@ cmake_minimum_required (VERSION 2.6)
 # General definitions.
 project (MAC0420_EP1 CXX C)
 set (PROJECT_NAME EP1)
-set (PROJECT_RELEASENAME ep1)
-set (PROJECT_DEBUGNAME ep1_d)
+set (PROJECT_BUILDNAME ep1)
 
 # Some output.
 message ("=== ${PROJECT_NAME} ===")
@@ -18,16 +17,6 @@ if (NOT BUILD_TYPE)
 else (NOT BUILD_TYPE)
     message ("-- Build type: ${BUILD_TYPE}")
 endif (NOT BUILD_TYPE)
-
-if (${BUILD_TYPE} STREQUAL RELEASE)
-    set (PROJECT_BUILDNAME ${PROJECT_RELEASENAME})
-elseif (${BUILD_TYPE} STREQUAL DEBUG)
-    set (PROJECT_BUILDNAME ${PROJECT_DEBUGNAME})
-	set (PROJECT_NAME "${PROJECT_NAME} (DEBUG)")
-else ()
-    message (FATAL_ERROR ">>> Unknown build type ${BUILD_TYPE}.")
-endif ()
-
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     SET (CHECKMAC "#define ISMAC")
@@ -48,7 +37,6 @@ set (BIN_DIR bin)
 SET(EP_SRCS
     ./src/main.cc
 
-    ./src/simulation/objects/camera.cc
     ./src/simulation/objects/cylinder.cc
     ./src/simulation/objects/sphere.cc
     ./src/simulation/objects/fieldobject.cc

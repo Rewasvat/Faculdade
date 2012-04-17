@@ -26,7 +26,6 @@ protected:
 	GLUquadricObj* quadric_;
 
     void buildRenderList();
-	void rotateDirectionTowards(double x_axis, double y_axis, double z_axis);
 };
 
 }
