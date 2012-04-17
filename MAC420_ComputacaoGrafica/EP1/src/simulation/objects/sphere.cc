@@ -7,8 +7,9 @@ namespace objects {
 Sphere::Sphere(engine::Vector3D& pos, VectorField* field) {
 	position_ = pos;
     field_ = field;
-
-	radius_ = 0.2;
+    handles_mouse_ = false;
+	radius_ = field_->GetMinimumVector().Length() / 2.0;
+    active_ = true;
 
 	color_[0] = 0.0;
 	color_[1] = 0.0;
@@ -23,19 +24,26 @@ Sphere::~Sphere() {
 }
 
 void Sphere::Update(double dt) {
-    engine::Vector3D delta_pos = field_->GetVectorAtPos(position_);
-    delta_pos.Normalize();
-    delta_pos.Scale(dt);
+    if (active_) {
+        engine::Vector3D delta_pos = field_->GetVectorAtPos(position_);
+        delta_pos.Normalize();
+        delta_pos.Scale(dt);
 
-    engine::Vector3D new_pos = position_ + delta_pos;
-    
-    if ( field_->IsInField(new_pos) )
-        position_ = new_pos;
+        engine::Vector3D new_pos = position_ + delta_pos;
+        
+        if ( field_->IsInField(new_pos) )
+            position_ = new_pos;
+    }
 }
 
 void Sphere::Render() {
     glTranslated(position_.x, position_.y, position_.z);
     glCallList(render_list_);
+}
+
+void Sphere::KeyboardHandler(unsigned char key, int x, int y) {
+    if (key == 's')
+        active_ = !active_;
 }
 
 void Sphere::buildRenderList() {

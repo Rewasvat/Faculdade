@@ -46,12 +46,12 @@
 ##########
 # Simulação da dinâmica de partículas (40%)
 ##########
--ESFERA com diametro = ao menor dos espacamentos (dx,dy,dz)
--criar uma ESFERA em cada ponto do reticulado (posicoes do campo vetorial)
--posicao da ESFERA = centro (esfera centralizada em cada posicao)
--COMANDO teclado: ESFERAS deverao ser afetadas pelo campo de forcas
--esferas podem parar se chegarem numa posicao do campo com forca nula
--esferas devem parar se atingirem o limite fisico do campo (ou seja, nao devem desaparecer da simulacao)
+[DONE] -ESFERA com diametro = ao menor dos espacamentos (dx,dy,dz)
+[DONE] -criar uma ESFERA em cada ponto do reticulado (posicoes do campo vetorial)
+[DONE] -posicao da ESFERA = centro (esfera centralizada em cada posicao)
+[DONE] -COMANDO teclado: ESFERAS deverao ser afetadas pelo campo de forcas
+[DONE] -esferas podem parar se chegarem numa posicao do campo com forca nula
+[DONE] -esferas devem parar se atingirem o limite fisico do campo (ou seja, nao devem desaparecer da simulacao)
 
 -Calculo de Trajetoria:
     x(t) = posicao de uma particula no espaco no tempo t

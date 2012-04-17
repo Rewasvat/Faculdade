@@ -147,6 +147,10 @@ void Simulation::KeyboardHandler(unsigned char key, int x, int y) {
 		use_perspective_proj_ = !use_perspective_proj_;
 		this->SetProjectionMode();
 		break;
+    case 'r':
+        Simulation* new_sim = new Simulation(field_);
+        this->Finish();
+        Engine::reference()->PushScene(new_sim);
 	}
 }
 

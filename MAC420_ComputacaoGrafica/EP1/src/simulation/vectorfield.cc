@@ -75,12 +75,18 @@ bool VectorField::IsInField(const Vector3D& pos) {
 /** Normalizes the vectors in the field according to the step_size and so on */
 void VectorField::Normalize() {
 	double scale = step_size_.Length() / max_vector_.Length();
+    min_vector_ = step_size_;
 
 	int i, j, k;
 	for (i=0; i < nX_; i++)
 		for (j=0; j < nY_; j++)
-			for (k=0; k < nZ_; k++)
+			for (k=0; k < nZ_; k++) {
 				field_[i][j][k].second.Scale(scale);
+                
+                double len = field_[i][j][k].second.Length();
+                if (len != 0.0 && len < min_vector_.Length())
+                    min_vector_ = field_[i][j][k].second;
+            }
 }
 
 engine::Vector3D VectorField::GetFieldCenterPos() {

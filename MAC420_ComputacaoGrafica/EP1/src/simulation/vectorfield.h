@@ -45,6 +45,7 @@ public:
     int nZ() { return nZ_; }
 
 	engine::Vector3D GetFieldCenterPos();
+    engine::Vector3D GetMinimumVector() { return min_vector_; }
     
 protected:
     int nX_, nY_, nZ_;
@@ -52,6 +53,7 @@ protected:
     VectorCube field_;
 
 	engine::Vector3D max_vector_; //used to help normalization
+    engine::Vector3D min_vector_;
 
     engine::Vector3D getBaseVectorForInterpolation(int i, int j, int k);
 	engine::Vector3D interpolateAtPos(const engine::Vector3D& pos);
