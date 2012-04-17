@@ -1,5 +1,5 @@
-#ifndef SPHERE_H_
-#define SPHERE_H_
+#ifndef FIELDOBJECT_H_
+#define FIELDOBJECT_H_
 
 #include <engine/object.h>
 #include <engine/objectcontainer.h>

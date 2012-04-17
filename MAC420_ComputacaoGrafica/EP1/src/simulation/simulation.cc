@@ -3,6 +3,7 @@
 #include <simulation/vectorfield.h>
 #include <simulation/objects/fieldobject.h>
 #include <simulation/objects/cylinder.h>
+#include <simulation/objects/sphere.h>
 #include <GL/glut.h>
 
 using namespace engine;
@@ -21,6 +22,9 @@ Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspe
 				Vector3D dir = field_->GetBaseVectorInGrid(i,j,k).second;
 				objects::Cylinder* c = new objects::Cylinder( pos, dir );
 				c->ReparentTo(field_object_);
+
+                objects::Sphere* sp = new objects::Sphere( pos, field_);
+                sp->ReparentTo(this);
 			}
 		}
 	}

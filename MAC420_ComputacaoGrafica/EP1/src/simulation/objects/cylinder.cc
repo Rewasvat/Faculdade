@@ -10,8 +10,8 @@ namespace objects {
 Cylinder::Cylinder(engine::Vector3D& pos, engine::Vector3D& direction) {
 	position_ = pos;
 
-	base_radius_ = 0.2;
-	top_radius_ = 0.07;
+	base_radius_ = 0.1;
+	top_radius_ = 0.05;
 	height_ = direction.Length();
 	direction_ = direction;
 
@@ -45,11 +45,13 @@ void Cylinder::buildRenderList() {
 	glColor3d(color_[0], color_[1], color_[2]);
 	glTranslated(position_.x, position_.y, position_.z);
 
+    //TODO THIS IS WRONG
+
 	rotateDirectionTowards( 1.0, 0.0, 0.0 );
 	rotateDirectionTowards( 0.0, 1.0, 0.0 );
 	rotateDirectionTowards( 0.0, 0.0, 1.0 );
 
-	gluCylinder(quadric_, base_radius_, top_radius_, height_, 30, 15);
+	gluCylinder(quadric_, base_radius_, top_radius_, height_, 10, 5);
 	
     glEndList();
 }

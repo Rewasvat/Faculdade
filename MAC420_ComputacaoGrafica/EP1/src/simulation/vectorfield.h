@@ -33,9 +33,7 @@ public:
 
 	/*Gets the base vector of the grid at the given coordinates. Mostly used so that outside code can iterate over the grid.*/
 	Force3D GetBaseVectorInGrid(int x, int y, int z) { return field_[x][y][z]; }
-    
-    engine::Vector3D operator[] (const engine::Vector3D& pos) { return GetVectorAtPos(pos); }
-    
+
     /** Checks if the given position is inside the vector field */
     bool IsInField(const engine::Vector3D& pos);
 
@@ -55,6 +53,7 @@ protected:
 
 	engine::Vector3D max_vector_; //used to help normalization
 
+    engine::Vector3D getBaseVectorForInterpolation(int i, int j, int k);
 	engine::Vector3D interpolateAtPos(const engine::Vector3D& pos);
 };
 

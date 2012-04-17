@@ -1,6 +1,7 @@
 #include <simulation/vectorfield.h>
 #include <engine/vector3D.h>
 #include <math.h>
+#include <cstdio>
 
 using namespace engine;
 
@@ -84,6 +85,16 @@ engine::Vector3D VectorField::GetFieldCenterPos() {
 	return center;
 }
 
+engine::Vector3D VectorField::getBaseVectorForInterpolation(int i, int j, int k) {
+    bool x_check = (i >= 0) && (i < nX_);
+    bool y_check = (j >= 0) && (j < nY_);
+    bool z_check = (k >= 0) && (k < nZ_);
+    
+    if (x_check && y_check && z_check)
+        return field_[i][j][k].second;
+    else
+        return Vector3D();
+}
 
 Vector3D VectorField::interpolateAtPos(const Vector3D& pos) {
 	/*  TRILINEAR INTERPOLATION:
@@ -115,7 +126,23 @@ Vector3D VectorField::interpolateAtPos(const Vector3D& pos) {
 	baseZ_down = (int)floor(pos.z / step_size_.z);
 	baseZ_up = (int)ceil(pos.z / step_size_.z);
 
-	Vector3D V000 = field_[baseX_down][baseY_down][baseZ_down].second;
+    printf("INTERPOLATING\n");
+    printf("for pos (%f, %f, %f)\n", pos.x, pos.y, pos.z);
+    printf("base values x(%d, %d) y(%d, %d) z(%d, %d)\n", baseX_down, baseX_up, baseY_down, baseY_up, baseZ_down, baseZ_up);
+
+	/*Vector3D V000 = getBaseVectorForInterpolation(baseX_down, baseY_down, baseZ_down);
+	Vector3D V001 = getBaseVectorForInterpolation(baseX_down, baseY_down, baseZ_up);
+	Vector3D V010 = getBaseVectorForInterpolation(baseX_down, baseY_up,   baseZ_down);
+	Vector3D V011 = getBaseVectorForInterpolation(baseX_down, baseY_up,   baseZ_up);
+	Vector3D V100 = getBaseVectorForInterpolation(baseX_up,   baseY_down, baseZ_down);
+	Vector3D V101 = getBaseVectorForInterpolation(baseX_up,   baseY_down, baseZ_up);
+	Vector3D V110 = getBaseVectorForInterpolation(baseX_up,   baseY_up,   baseZ_down);
+	Vector3D V111 = getBaseVectorForInterpolation(baseX_up,   baseY_up,   baseZ_up);*/
+
+    //TODO THIS IS WRONG
+    /* esta tentando pegar valor fora do cubo, para longe da origem ( baseWAT_up = nWAT_) */
+
+    Vector3D V000 = field_[baseX_down][baseY_down][baseZ_down].second;
 	Vector3D V001 = field_[baseX_down][baseY_down][baseZ_up].second;
 	Vector3D V010 = field_[baseX_down][baseY_up][baseZ_down].second;
 	Vector3D V011 = field_[baseX_down][baseY_up][baseZ_up].second;

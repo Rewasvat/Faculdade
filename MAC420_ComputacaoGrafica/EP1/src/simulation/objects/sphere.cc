@@ -1,12 +1,53 @@
 #include <simulation/objects/sphere.h>
+#include <simulation/vectorfield.h>
 
 namespace simulation {
 namespace objects {
 
-Sphere::Sphere() {
+Sphere::Sphere(engine::Vector3D& pos, VectorField* field) {
+	position_ = pos;
+    field_ = field;
+
+	radius_ = 0.2;
+
+	color_[0] = 0.0;
+	color_[1] = 0.0;
+	color_[2] = 0.0;
+	quadric_ = gluNewQuadric();
+	
+	buildRenderList();
 }
 
 Sphere::~Sphere() {
+    gluDeleteQuadric(quadric_);
+}
+
+void Sphere::Update(double dt) {
+    engine::Vector3D delta_pos = field_->GetVectorAtPos(position_);
+    delta_pos.Normalize();
+    delta_pos.Scale(dt);
+
+    position_ = position_ + delta_pos;
+}
+
+void Sphere::Render() {
+    glTranslated(position_.x, position_.y, position_.z);
+    glCallList(render_list_);
+}
+
+void Sphere::buildRenderList() {
+    render_list_ = glGenLists(1);
+    
+    glNewList(render_list_, GL_COMPILE);
+    
+    gluQuadricDrawStyle(quadric_, GLU_FILL);
+	gluQuadricNormals(quadric_, GLU_SMOOTH);
+	
+	glColor3d(color_[0], color_[1], color_[2]);
+
+	gluSphere(quadric_, radius_, 15, 15);
+	
+    glEndList();
 }
 
 }
