@@ -46,13 +46,18 @@ Vector3D VectorField::GetVectorAtPos(const Vector3D& pos) {
     int base_y = (int) (pos.y / step_size_.y);
     int base_z = (int) (pos.z / step_size_.z);
     
+    //printf("INTERPOLATING\n");
+    //printf("\t-for pos (%f, %f, %f)\n", pos.x, pos.y, pos.z);
     if (x_check && y_check && z_check) {
+        //printf("\t-returning base vector\n");
         return field_[base_x][base_y][base_z].second;
     }
     else {
         /*interpolate near vector to get result*/
-		if (! this->IsInField(pos) )
+		if (! this->IsInField(pos) ) {
+            //printf("\t-returning ZERO\n");
 			return Vector3D();
+        }
         return this->interpolateAtPos(pos);
     }
 }
@@ -60,9 +65,9 @@ Vector3D VectorField::GetVectorAtPos(const Vector3D& pos) {
 /** Checks if the given position is inside the vector field */
 bool VectorField::IsInField(const Vector3D& pos) {
     bool in = false;
-    if (0 < pos.x && pos.x < nX_ * step_size_.x)
-        if (0 < pos.y && pos.y < nY_ * step_size_.y)
-            if (0 < pos.z && pos.z < nZ_ * step_size_.z)
+    if (0 <= pos.x && pos.x <= (nX_-1) * step_size_.x)
+        if (0 <= pos.y && pos.y <= (nY_-1) * step_size_.y)
+            if (0 <= pos.z && pos.z <= (nZ_-1) * step_size_.z)
                 in = true;
     return in;
 }
@@ -126,9 +131,7 @@ Vector3D VectorField::interpolateAtPos(const Vector3D& pos) {
 	baseZ_down = (int)floor(pos.z / step_size_.z);
 	baseZ_up = (int)ceil(pos.z / step_size_.z);
 
-    /*printf("INTERPOLATING\n");
-    printf("for pos (%f, %f, %f)\n", pos.x, pos.y, pos.z);
-    printf("base values x(%d, %d) y(%d, %d) z(%d, %d)\n", baseX_down, baseX_up, baseY_down, baseY_up, baseZ_down, baseZ_up);*/
+    //printf("\t-base values x(%d, %d) y(%d, %d) z(%d, %d)\n", baseX_down, baseX_up, baseY_down, baseY_up, baseZ_down, baseZ_up);
 
     if (baseX_up >= nX_)    baseX_up = baseX_down;
     if (baseY_up >= nY_)    baseY_up = baseY_down;
