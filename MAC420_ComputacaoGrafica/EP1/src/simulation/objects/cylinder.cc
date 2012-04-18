@@ -13,7 +13,7 @@ Cylinder::Cylinder(engine::Vector3D& pos, engine::Vector3D& direction) {
 	position_ = pos;
 
 	base_radius_ = 0.1;
-	top_radius_ = 0.05;
+	top_radius_ = 0.0;  //YES, It is a cone.
 	height_ = direction.Length();
 	direction_ = direction;
 

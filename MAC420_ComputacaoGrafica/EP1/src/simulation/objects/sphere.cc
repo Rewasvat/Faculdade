@@ -8,7 +8,7 @@ Sphere::Sphere(engine::Vector3D& pos, VectorField* field) {
 	position_ = pos;
     field_ = field;
     handles_mouse_ = false;
-	radius_ = field_->GetMinimumVector().Length() / 2.0;
+	radius_ = 0.2;
     active_ = true;
 
 	color_[0] = 0.0;
@@ -37,8 +37,10 @@ void Sphere::Update(double dt) {
 }
 
 void Sphere::Render() {
-    glTranslated(position_.x, position_.y, position_.z);
-    glCallList(render_list_);
+	if (active_) {
+		glTranslated(position_.x, position_.y, position_.z);
+		glCallList(render_list_);
+	}
 }
 
 void Sphere::KeyboardHandler(unsigned char key, int x, int y) {

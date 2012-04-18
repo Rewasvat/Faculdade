@@ -2,12 +2,33 @@
 
 import sys
 import os
+import math
 
+#####################
 class vector:
     def __init__(self, x, y, z):
         self.x = float(x)
         self.y = float(y)
         self.z = float(z)
+
+    def length(self):
+        return math.sqrt(self.x**2 + self.y**2 + self.z**2)
+
+    def __add__(self, rhs):
+        return vector(self.x + rhs.x, self.y + rhs.y, self.z + rhs.z)
+
+    def __sub__(self, rhs):
+        return vector(self.x - rhs.x, self.y - rhs.y, self.z - rhs.z)
+
+    def __mul__(self, scale):
+        return vector(self.x*scale, self.y*scale, self.z*scale)
+
+    def __repr__(self):
+        return "<%s, %s, %s>" % (self.x, self.y, self.z)
+    def __str__(self):
+        return self.__repr__()
+
+##################
         
 class field:
     def __init__(self, nx, ny, nz, dx, dy, dz):
@@ -23,11 +44,33 @@ class field:
     def createVectorForPos(self, i, j, k):
         mx = self.nx / 2.0
         my = self.ny / 2.0
+
+        p = vector(i, j, k)
+        mp = vector(self.nx/2.0, j, self.nz/2.0)
+        den =  j - (self.ny/2.0)
+        de = abs(den)
+        #print "p =", p
+
+        v = p - mp
+        r = v.length()
+        #print "raio =", r
+
+        if den > 0:
+            v.x = v.x * (2 * de**2 / self.ny)
+            v.z = v.z * (2 * de**2 / self.ny)
+        else:
+            v.x = -v.x * (2 * de**2 / self.ny)
+            v.z = -v.z * (2 * de**2 / self.ny)
+
+        if r <= self.nx / 4.0:
+            if r == 0.0:
+                v.y = -(self.nx / 4.0)
+            else:
+                v.y = -(self.nx / (4.0 * r**2))
+        else:
+            v.y = self.nx / (4*r - self.nx)
         
-        x = -(i - my)
-        y = (j - mx)
-        z = 0
-        return vector(x,y,z)
+        return v * (-1)
         
     def generate(self):
         for i in range(self.nx):

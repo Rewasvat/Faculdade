@@ -6,8 +6,8 @@ namespace engine {
 EngineConfig::EngineConfig() {
 	window_name_ = "MAC420 Engine Window";
 	do_multisampling_ = true;
-	width_ = 800;
-	height_ = 600;
+	width_ = 1024;
+	height_ = 768;
 }
 
 EngineConfig::~EngineConfig() {
