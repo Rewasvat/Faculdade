@@ -22,7 +22,50 @@ class vector:
 
     def __mul__(self, scale):
         return vector(self.x*scale, self.y*scale, self.z*scale)
+        
+    def normalize(self):
+        l = self.length()
+        if l == 0:  return
+        self.x = self.x / l
+        self.y = self.y / l
+        self.z = self.z / l
 
+    def Scale(self, s):
+        self.x *= s
+        self.y *= s
+        self.z *= s
+        
+    def InnerProduct(self, b):
+        return (self.x * b.x) + (self.y * b.y) + (self.z * b.z)
+        
+    def CrossProduct(self, b):
+        cpx = (self.y * b.z) - (self.z * b.y)
+        cpy = (self.z * b.x) - (self.x * b.z)
+        cpz = (self.x * b.y) - (self.y * b.x)
+        return vector(cpx, cpy, cpz)
+        
+    def Rotate(self, angle, d):
+        #yes, since I dont have matrixes here and I dont wanna bother getting them, lets do it by hand
+        #  [ A B C 0 ]  [ X ]
+        #  [ D E F 0 ]  [ Y ]    = result
+        #  [ G H I 0 ]  [ Z ]   
+        #  [ 0 0 0 1 ]  [ 0 ]
+        one_cos = 1 - math.cos(angle)
+        A = math.cos(angle) + (d.x**2)*one_cos
+        B = d.x*d.y*one_cos - d.z*math.sin(angle) 
+        C = d.x*d.z*one_cos + d.y*math.sin(angle)
+        D = d.y*d.x*one_cos + d.z*math.sin(angle)
+        E = math.cos(angle) + (d.y**2)*one_cos
+        F = d.y*d.z*one_cos - d.x*math.sin(angle)
+        G = d.z*d.x*one_cos - d.y*math.sin(angle)
+        H = d.z*d.y*one_cos + d.x*math.sin(angle)
+        I = math.cos(angle) + (d.z**2)*one_cos
+        
+        newx = A*self.x + B*self.y + C*self.z
+        newy = D*self.x + E*self.y + F*self.z
+        newz = G*self.x + H*self.y + I*self.z
+        return vector(newx, newy, newz)
+        
     def __repr__(self):
         return "<%s, %s, %s>" % (self.x, self.y, self.z)
     def __str__(self):
@@ -44,33 +87,72 @@ class field:
     def createVectorForPos(self, i, j, k):
         mx = self.nx / 2.0
         my = self.ny / 2.0
+        mz = self.nz / 2.0
 
         p = vector(i, j, k)
-        mp = vector(self.nx/2.0, j, self.nz/2.0)
+        mp = vector(mx, j, mz)
+        center = vector(mx, my, mz)
+        step_size = self.ny / 4.0
+        
         den =  j - (self.ny/2.0)
         de = abs(den)
         #print "p =", p
 
-        v = p - mp
+        v = mp - p   # A - B == vector B->A
+        xz_dir = vector(v.x, v.y, v.z)
+        xz_dir.normalize() #xz_dir is the direction in the XZ plane perpendicular to the central Y axis, pointing in the direction of P
+
         r = v.length()
         #print "raio =", r
 
-        if den > 0:
-            v.x = v.x * (2 * de**2 / self.ny)
-            v.z = v.z * (2 * de**2 / self.ny)
-        else:
-            v.x = -v.x * (2 * de**2 / self.ny)
-            v.z = -v.z * (2 * de**2 / self.ny)
+        def getTangent():
+            cc = vector(0,0,0)
+            cc.y = den
+            cc.normalize()
+            cc = cc * step_size
+            cc = center + cc #cc a point in the central Y axis, in the XZ plane containing the center points of the circles in this elevation
+            
+            y_pp_dir = xz_dir * step_size #y_pp_dir is a vector perpendicular to the central Y axis)
+            
+            cc = cc + y_pp_dir  #now cc is the center point of the circle in this elevation and plane
+            
+            
+            y_pp_dir = vector(y_pp_dir.z, y_pp_dir.y, -y_pp_dir.x)
+            
+            ccp = p - cc
+            cr = ccp.length()
+            if cr > step_size and r <= step_size:
+                ccp.normalize()
+                ccp.Scale(-1.0)
+                return ccp
+            
+            ccp = ccp.Rotate(math.pi/2.0, y_pp_dir)
+            ccp.normalize()
+            ccp.Scale( cr/step_size )
+            return ccp
+        #######
 
-        if r <= self.nx / 4.0:
-            if r == 0.0:
-                v.y = -(self.nx / 4.0)
-            else:
-                v.y = -(self.nx / (4.0 * r**2))
+        if r >= 2*step_size:
+            v = mp - p
+            v.normalize()
+        elif de > step_size:
+            nv = getTangent()
+            if den > 0:
+                nv.Scale(-1.0)
+            v = nv
         else:
-            v.y = self.nx / (4*r - self.nx)
+            v.x = 0.0
+            v.z = 0.0
+
+            if r <= step_size:
+                if r == 0.0:
+                    v.y = -1.0 #-(self.nx / 4.0)
+                else:
+                    v.y = -1.0 #-(self.nx / (4.0 * r**2))
+            else:
+                v.y = 1.0 #self.nx / (4*r - self.nx)
         
-        return v * (-1)
+        return v
         
     def generate(self):
         for i in range(self.nx):
