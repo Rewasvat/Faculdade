@@ -14,7 +14,7 @@ namespace simulation {
 
 LoaderUtil* LoaderUtil::reference_ = NULL;
 
-LoaderUtil::LoaderUtil() : config_(NULL), field_(NULL) {
+LoaderUtil::LoaderUtil() : config_(NULL), field_(NULL), vector_color_mode_(0), sphere_resolution_(12), cylinder_resolution_(10) {
 }
 
 LoaderUtil::~LoaderUtil() {
@@ -50,7 +50,10 @@ bool LoaderUtil::ParseOptions(int argc, char* argv[]) {
 
 		CHECK_ARG(config_->set_width, "-width")
 		CHECK_ARG(config_->set_height, "-height")
-		
+		CHECK_ARG(vector_color_mode_ =, "-vcm")
+		CHECK_ARG(sphere_resolution_ =, "-sphereres")
+		CHECK_ARG(cylinder_resolution_ =, "-cylinderres")
+
 		if (!recognized) {
 			FILE* input_file = fopen(argv[i], "r");
 			if (input_file != NULL)	{
@@ -92,8 +95,14 @@ void LoaderUtil::PrintUsage() {
 	printf("MAC420 EP1  Usage:\n");
 	printf("\t./ep1 <input_file> [OPTION1 | OPTION2 | ...]\n\n");
 	printf("Where OPTIONi can be the following:\n");
-	printf("\t-width=INTEGER  :  sets the window width\n");
-	printf("\t-height=INTEGER  :  sets the window height\n");
+	printf("\t-width=INTEGER  :  sets the window width in pixels [default = 1024]\n");
+	printf("\t-height=INTEGER  :  sets the window height in pixels [default = 768]\n");
+	printf("\t-vcm=INTEGER  :  sets the vector color mode [default = 0]\n");
+	printf("\t\t%d = vector colors are based on their magnetude ( weaker = light blue / stronger = red).\n", VCM_MAGNETUDE);
+	printf("\t\t%d = vector colors are based on their direction (vector components are color components).\n", VCM_DIRECTION);
+	printf("\t\t%d = vector colors are randomly generated.\n", VCM_RANDOM);
+	printf("\t-sphereres=INTEGER  :  sets the sphere resolution [default = 12]\n");
+	printf("\t-cylinderres=INTEGER  :  sets the cylinder resolution [default = 10]\n");
 }
 
 }

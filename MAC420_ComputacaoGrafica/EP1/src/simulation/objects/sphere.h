@@ -14,7 +14,7 @@ namespace objects {
 
 class Sphere : public engine::Object, public engine::EventHandler {
 public:
-    Sphere(engine::Vector3D& pos, VectorField* field);
+    Sphere(engine::Vector3D& pos);
     ~Sphere();
 
 	void Update(double dt);

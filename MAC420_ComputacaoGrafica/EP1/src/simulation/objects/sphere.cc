@@ -1,14 +1,15 @@
 #include <simulation/objects/sphere.h>
 #include <simulation/vectorfield.h>
+#include <simulation/loaderutil.h>
 
 namespace simulation {
 namespace objects {
 
-Sphere::Sphere(engine::Vector3D& pos, VectorField* field) {
+Sphere::Sphere(engine::Vector3D& pos) {
 	position_ = pos;
-    field_ = field;
+	field_ = LoaderUtil::reference()->GetVectorField();
     handles_mouse_ = false;
-	radius_ = 0.2;
+	radius_ = field_->GetMinimumDimensionStep() / 2.0;
     active_ = true;
 
 	color_[0] = 0.0;
@@ -58,7 +59,8 @@ void Sphere::buildRenderList() {
 	
 	glColor3d(color_[0], color_[1], color_[2]);
 
-	gluSphere(quadric_, radius_, 15, 15);
+	int resolution = LoaderUtil::reference()->GetSphereResolution();
+	gluSphere(quadric_, radius_, resolution, resolution);
 	
     glEndList();
 }

@@ -31,6 +31,7 @@ public:
 
 protected:
 	bool use_perspective_proj_;
+	bool paused_;
 	VectorField* field_;
 	objects::FieldObject* field_object_;
 

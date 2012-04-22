@@ -46,7 +46,12 @@ public:
 
 	engine::Vector3D GetFieldCenterPos();
     engine::Vector3D GetMinimumVector() { return min_vector_; }
-    
+	engine::Vector3D GetMaximumVector() { return max_vector_; }
+	double GetMinimumDimensionStep() { 
+		double min1 = (step_size_.x < step_size_.y) ? step_size_.x : step_size_.y;
+		return (step_size_.z < min1) ? step_size_.z : min1;
+	}
+
 protected:
     int nX_, nY_, nZ_;
     engine::Vector3D step_size_;

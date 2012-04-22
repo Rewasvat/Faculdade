@@ -87,6 +87,8 @@ void VectorField::Normalize() {
                 if (len != 0.0 && len < min_vector_.Length())
                     min_vector_ = field_[i][j][k].second;
             }
+
+	max_vector_ = step_size_;
 }
 
 engine::Vector3D VectorField::GetFieldCenterPos() {

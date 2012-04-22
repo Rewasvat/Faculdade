@@ -11,7 +11,7 @@ using namespace engine;
 
 namespace simulation {
 
-Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspective_proj_(true), field_(field) {
+Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspective_proj_(true), paused_(false), field_(field) {
 	field_object_ = new objects::FieldObject();
 	field_object_->ReparentTo(this);
 
@@ -24,7 +24,7 @@ Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspe
 				objects::Cylinder* c = new objects::Cylinder( pos, dir );
 				c->ReparentTo(field_object_);
 
-                objects::Sphere* sp = new objects::Sphere( pos, field_);
+                objects::Sphere* sp = new objects::Sphere(pos);
                 sp->ReparentTo(this);
 			}
 		}
@@ -54,7 +54,8 @@ void Simulation::Start() {
 }
 
 void Simulation::Update(double dt) {
-    Scene::Update(dt);
+	if (!paused_)
+		Scene::Update(dt);
 }
 
 void Simulation::Render() {
@@ -124,6 +125,8 @@ void Simulation::MouseHandler(int btn, int state, int x, int y) {
 }
 
 void Simulation::MouseMotionHandler(int btn, int dx, int dy) {
+	if (paused_)	return;
+
 	if (btn==GLUT_LEFT_BUTTON) {
 		elevation_ += (double)dy / 10.0;
 		/*If elevation if outside [-180,0] degrees the cube will "flip", and thus the azimuth movimentation
@@ -145,14 +148,20 @@ void Simulation::KeyboardHandler(unsigned char key, int x, int y) {
 		Finish();
 		break;
 	case 'p':
-		use_perspective_proj_ = !use_perspective_proj_;
-		this->SetProjectionMode();
+		if (!paused_) {
+			use_perspective_proj_ = !use_perspective_proj_;
+			this->SetProjectionMode();
+		}
+		break;
+	case ' ':
+		paused_ = !paused_;
 		break;
     case 'r':
         Simulation* new_sim = new Simulation(field_);
         this->Finish();
         Engine::reference()->PushScene(new_sim);
 		printf("Simulation has been restarted...\n");
+		break;
 	}
 }
 

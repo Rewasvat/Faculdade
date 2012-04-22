@@ -1,6 +1,8 @@
 #include <simulation/objects/cylinder.h>
 #include <GL/glut.h>
 #include <math.h>
+#include <simulation/loaderutil.h>
+#include <simulation/vectorfield.h>
 
 #include <cstdio>
 
@@ -17,12 +19,25 @@ Cylinder::Cylinder(engine::Vector3D& pos, engine::Vector3D& direction) {
 	height_ = direction.Length();
 	direction_ = direction;
 
-	color_[0] = direction.x / height_;
-	color_[1] = direction.y / height_;
-	color_[2] = direction.z / height_;/*
-	color_[0] = (double)rand()/(double)RAND_MAX;
-	color_[1] = (double)rand()/(double)RAND_MAX;
-	color_[2] = (double)rand()/(double)RAND_MAX;*/
+	double cm;
+	switch (LoaderUtil::reference()->GetVectorColorMode()) {
+	case VCM_MAGNETUDE:
+		cm = direction.Length() / LoaderUtil::reference()->GetVectorField()->GetMaximumVector().Length();
+		color_[0] = cm;
+		color_[1] = 1 - cm;
+		color_[2] = 1 - cm;
+		break;
+	case VCM_DIRECTION:
+		color_[0] = direction.x / height_;
+		color_[1] = direction.y / height_;
+		color_[2] = direction.z / height_;
+		break;
+	case VCM_RANDOM:
+		color_[0] = (double)rand()/(double)RAND_MAX;
+		color_[1] = (double)rand()/(double)RAND_MAX;
+		color_[2] = (double)rand()/(double)RAND_MAX;
+		break;
+	}
 	quadric_ = gluNewQuadric();
 	
 	buildRenderList();
@@ -65,7 +80,9 @@ void Cylinder::buildRenderList() {
         glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
     }
 
-	gluCylinder(quadric_, base_radius_, top_radius_, height_, 10, 5);
+	int resolution = LoaderUtil::reference()->GetCylinderResolution();
+	gluCylinder(quadric_, base_radius_, top_radius_, height_, resolution, resolution/2);
+	gluCylinder(quadric_, base_radius_, 0.0, 0.0, resolution, resolution/2); /*This creates the circle base polygons, thus closing the cone in a solid 3D model.*/
 	
     glEndList();
 }

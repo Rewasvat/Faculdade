@@ -9,6 +9,10 @@ namespace engine {
 
 namespace simulation {
 
+#define VCM_MAGNETUDE	0
+#define VCM_DIRECTION	1
+#define VCM_RANDOM		2
+
 class VectorField;
 
 class LoaderUtil {
@@ -21,6 +25,9 @@ public:
 
 	engine::EngineConfig* GetEngineConfig() { return config_; }
 	VectorField* GetVectorField() { return field_; }
+	int GetVectorColorMode() { return vector_color_mode_; }
+	int GetSphereResolution() { return sphere_resolution_; }
+	int GetCylinderResolution() { return cylinder_resolution_; }
 
 	void PrintUsage();
 
@@ -30,6 +37,9 @@ private:
 	std::string input_filename_;
 	engine::EngineConfig* config_;
 	VectorField* field_;
+	int vector_color_mode_;
+	int sphere_resolution_;
+	int cylinder_resolution_;
 
 	LoaderUtil();
 
