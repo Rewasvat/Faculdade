@@ -101,6 +101,7 @@ class field:
         v = mp - p   # A - B == vector B->A
         xz_dir = vector(v.x, v.y, v.z)
         xz_dir.normalize() #xz_dir is the direction in the XZ plane perpendicular to the central Y axis, pointing in the direction of P
+        xz_dir.Scale(-1.0)
 
         r = v.length()
         #print "raio =", r
@@ -118,14 +119,19 @@ class field:
             
             
             y_pp_dir = vector(y_pp_dir.z, y_pp_dir.y, -y_pp_dir.x)
+            y_pp_dir.normalize()
             
             ccp = p - cc
             cr = ccp.length()
-            if cr > step_size and r <= step_size:
-                ccp.normalize()
+            if den < 0:
                 ccp.Scale(-1.0)
+
+            if cr > step_size:# and r <= step_size:
+                ccp.normalize()
+                #ccp.Scale(-1.0)
                 return ccp
             
+            ccp.normalize()
             ccp = ccp.Rotate(math.pi/2.0, y_pp_dir)
             ccp.normalize()
             ccp.Scale( cr/step_size )
@@ -136,10 +142,10 @@ class field:
             v = mp - p
             v.normalize()
         elif de > step_size:
-            nv = getTangent()
+            v = getTangent()
             if den > 0:
-                nv.Scale(-1.0)
-            v = nv
+                v.Scale(-1.0)
+            v.normalize()
         else:
             v.x = 0.0
             v.z = 0.0
