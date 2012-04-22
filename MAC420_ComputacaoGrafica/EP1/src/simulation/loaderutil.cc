@@ -12,13 +12,20 @@
 
 namespace simulation {
 
-LoaderUtil::LoaderUtil(int argc, char* argv[]) : config_(NULL), field_(NULL) {
-	bool has_inputfile = ParseOptions(argc, argv);
-	if (has_inputfile)
-		LoadInputFile(input_filename_.c_str());
+LoaderUtil* LoaderUtil::reference_ = NULL;
+
+LoaderUtil::LoaderUtil() : config_(NULL), field_(NULL) {
 }
 
 LoaderUtil::~LoaderUtil() {
+	/* No need to delete the EngineConfig... It is the single instance in the program and the Engine will remove it. */
+	delete field_;
+}
+
+void LoaderUtil::Load(int argc, char* argv[]) {
+	bool has_inputfile = ParseOptions(argc, argv);
+	if (has_inputfile)
+		LoadInputFile(input_filename_.c_str());
 }
 
 bool checkArgOption(const char* arg_name, char* full_arg, int* arg_size) {

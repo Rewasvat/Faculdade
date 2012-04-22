@@ -5,6 +5,7 @@
 #include <simulation/objects/cylinder.h>
 #include <simulation/objects/sphere.h>
 #include <GL/glut.h>
+#include <cstdio>
 
 using namespace engine;
 
@@ -151,6 +152,7 @@ void Simulation::KeyboardHandler(unsigned char key, int x, int y) {
         Simulation* new_sim = new Simulation(field_);
         this->Finish();
         Engine::reference()->PushScene(new_sim);
+		printf("Simulation has been restarted...\n");
 	}
 }
 

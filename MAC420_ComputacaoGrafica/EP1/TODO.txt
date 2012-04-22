@@ -4,10 +4,10 @@
 #
 ################################################################################
 
-- callbacks de saida para liberar memoria
+[DONE] - callbacks de saida para liberar memoria
 - reshape callback pode ter que ser por-cena
 -Melhorar PERFORMANCE:
-	-colocar desenhos de objetos (como o cilindro) em display list (uma só por classe ou por objeto?) e reutiliza-la
+	[DONE] -colocar desenhos de objetos (como o cilindro) em display list (uma só por classe ou por objeto?) e reutiliza-la
 	-ver outros métodos para melhorar performance
 
 ######
@@ -36,9 +36,9 @@
 #######
 # Visualizacao do Campo de Forcas  (30%)
 #######
--desenhar CILINDROS mostrando cada vetor, escalados de acordo (comprimento = magnetude)
+[DONE] -desenhar CILINDROS mostrando cada vetor, escalados de acordo (comprimento = magnetude)
 [DONE] -comprimento max = sqrt(dx^2 + dy^2 + dz^2)
--descobrir a magnetude minima e maxima de todos os vetores do campo
+[DONE] -descobrir a magnetude minima e maxima de todos os vetores do campo
 [DONE] -possibilidade de LIGAR/DESLIGAR essa visualicao a qualquer momento pelo teclado
 -pode pintar como quiser os cilindros
 
@@ -46,10 +46,10 @@
 ##########
 # Simulação da dinâmica de partículas (40%)
 ##########
-[DONE] -ESFERA com diametro = ao menor dos espacamentos (dx,dy,dz)
+-ESFERA com diametro = ao menor dos espacamentos (dx,dy,dz)
 [DONE] -criar uma ESFERA em cada ponto do reticulado (posicoes do campo vetorial)
 [DONE] -posicao da ESFERA = centro (esfera centralizada em cada posicao)
-[DONE] -COMANDO teclado: ESFERAS deverao ser afetadas pelo campo de forcas
+-COMANDO teclado: ESFERAS deverao ser afetadas pelo campo de forcas
 [DONE] -esferas podem parar se chegarem numa posicao do campo com forca nula
 [DONE] -esferas devem parar se atingirem o limite fisico do campo (ou seja, nao devem desaparecer da simulacao)
 
@@ -84,7 +84,7 @@
 -Resolucao padrao dos CILINDROS e ESFERAS a nossa escolha, mas devem poder ser alterados por command-line arg
 [DONE] -troca entre projecoes (perspectiva e ortografica) a qualquer momento, por comando do teclado
 -comando do teclado: PAUSE
--comando do teclado: restart simulation
+[DONE] -comando do teclado: restart simulation
 
 -fazer LEIAME.txt
     -instrucoes de como compilar

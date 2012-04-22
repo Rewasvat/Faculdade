@@ -39,12 +39,24 @@ void InputManager::Initialize() {
 }
 
 void InputManager::AddHandler(EventHandler* handler) {
-	handlers_.push_back(handler);
+	new_additions_.push_back(handler);
 }
 
 void InputManager::RemoveHandler(EventHandler* handler) {
-	if (!handlers_.empty())
-		handlers_.remove(handler);
+	to_be_removed_.push_back(handler);
+}
+
+void InputManager::Update() {
+	HandlerList::iterator it;
+	for (it = to_be_removed_.begin(); it != to_be_removed_.end(); ++it) {
+		handlers_.remove( (*it) );
+	}
+	to_be_removed_.clear();
+
+	for (it = new_additions_.begin(); it != new_additions_.end(); ++it) {
+		handlers_.push_back( (*it) );
+	}
+	new_additions_.clear();
 }
 
 void InputManager::CallMouseHandlers(int btn, int state, int x, int y) {

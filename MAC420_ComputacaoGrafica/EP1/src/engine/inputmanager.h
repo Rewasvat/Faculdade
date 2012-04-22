@@ -19,12 +19,16 @@ public:
 	void AddHandler(EventHandler* handler);
 	void RemoveHandler(EventHandler* handler);
 
+	void Update();
+
 	void CallMouseHandlers(int btn, int state, int x, int y);
 	void CallMouseMotionHandlers(int x, int y);
 	void CallKeyboardHandlers(unsigned char key, int x, int y);
 
 private:
 	HandlerList handlers_;
+	HandlerList new_additions_;
+	HandlerList to_be_removed_;
 
 	bool buttons_[3];
 	int buttons_map_[3];

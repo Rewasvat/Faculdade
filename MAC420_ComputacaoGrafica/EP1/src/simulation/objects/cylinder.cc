@@ -17,12 +17,12 @@ Cylinder::Cylinder(engine::Vector3D& pos, engine::Vector3D& direction) {
 	height_ = direction.Length();
 	direction_ = direction;
 
-	/*color_[0] = direction.x / height_;
+	color_[0] = direction.x / height_;
 	color_[1] = direction.y / height_;
-	color_[2] = direction.z / height_;*/
+	color_[2] = direction.z / height_;/*
 	color_[0] = (double)rand()/(double)RAND_MAX;
 	color_[1] = (double)rand()/(double)RAND_MAX;
-	color_[2] = (double)rand()/(double)RAND_MAX;
+	color_[2] = (double)rand()/(double)RAND_MAX;*/
 	quadric_ = gluNewQuadric();
 	
 	buildRenderList();

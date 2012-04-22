@@ -10,6 +10,7 @@
 namespace engine {
 
 Engine* Engine::reference_ = NULL;
+ExitCallbackFunc Engine::custom_exit_callback_ = NULL;
 
 Engine::Engine() : width_(0), height_(0), config_(NULL) {
 	input_manager_ = new InputManager;
@@ -21,6 +22,7 @@ Engine::~Engine() {
 		delete *it;
 
 	delete input_manager_;
+	delete config_;
 }
 
 
@@ -28,6 +30,7 @@ void Engine::Initialize(int argc, char* argv[]) {
 	if (config_ == NULL)
 		config_ = new EngineConfig;
 
+	atexit(Engine::exitCallback);
 	glutInit(&argc, argv);
 	glutInitDisplayMode( config_->display_mode() );
 	glutInitWindowSize( config_->width() , config_->height() );
@@ -54,6 +57,8 @@ void Engine::Update() {
 		double dt = clock_.elapsed_time_secs();
 		
 		DeleteFinishedScenes();
+
+		input_manager_->Update();
 
 		if (scenes_.size() > 0) {
 		    scenes_.back()->Update(dt);
