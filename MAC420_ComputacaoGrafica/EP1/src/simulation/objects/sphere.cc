@@ -38,10 +38,8 @@ void Sphere::Update(double dt) {
 }
 
 void Sphere::Render() {
-	if (active_) {
-		glTranslated(position_.x, position_.y, position_.z);
-		glCallList(render_list_);
-	}
+	glTranslated(position_.x, position_.y, position_.z);
+	glCallList(render_list_);
 }
 
 void Sphere::KeyboardHandler(unsigned char key, int x, int y) {
