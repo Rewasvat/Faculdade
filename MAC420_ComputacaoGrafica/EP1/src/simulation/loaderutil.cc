@@ -14,7 +14,9 @@ namespace simulation {
 
 LoaderUtil* LoaderUtil::reference_ = NULL;
 
-LoaderUtil::LoaderUtil() : config_(NULL), field_(NULL), vector_color_mode_(0), sphere_resolution_(12), cylinder_resolution_(10) {
+LoaderUtil::LoaderUtil() : 
+	config_(NULL), field_(NULL), vector_color_mode_(0), sphere_resolution_(12), cylinder_resolution_(10), sphere_radius_factor_(1.0)
+{
 }
 
 LoaderUtil::~LoaderUtil() {
@@ -33,11 +35,14 @@ bool checkArgOption(const char* arg_name, char* full_arg, int* arg_size) {
 	return strncmp(full_arg, arg_name, *arg_size) == 0 && (int)strlen(full_arg) > *arg_size;
 }
 
-#define CHECK_ARG(code, argName) \
+#define CHECK_ARG(code, argName, conversionFunction) \
 	if ( !recognized && checkArgOption(argName, argv[i], &arg_size)) { \
-		code( atoi(&argv[i][arg_size+1]) ); \
+		code( conversionFunction(&argv[i][arg_size+1]) ); \
 		recognized = true; \
 	} \
+
+#define CHECK_INT_ARG(code, argName)		CHECK_ARG(code, argName, atoi)
+#define CHECK_DOUBLE_ARG(code, argName)		CHECK_ARG(code, argName, atof)
 
 bool LoaderUtil::ParseOptions(int argc, char* argv[]) {
 	int i, arg_size;
@@ -48,11 +53,12 @@ bool LoaderUtil::ParseOptions(int argc, char* argv[]) {
 	for (i=1; i<argc; i++) {
 		bool recognized = false;
 
-		CHECK_ARG(config_->set_width, "-width")
-		CHECK_ARG(config_->set_height, "-height")
-		CHECK_ARG(vector_color_mode_ =, "-vcm")
-		CHECK_ARG(sphere_resolution_ =, "-sphereres")
-		CHECK_ARG(cylinder_resolution_ =, "-cylinderres")
+		CHECK_INT_ARG(config_->set_width, "-width")
+		CHECK_INT_ARG(config_->set_height, "-height")
+		CHECK_INT_ARG(vector_color_mode_ =, "-vcm")
+		CHECK_INT_ARG(sphere_resolution_ =, "-sphereres")
+		CHECK_INT_ARG(cylinder_resolution_ =, "-cylinderres")
+		CHECK_DOUBLE_ARG(sphere_radius_factor_ =, "-srf")
 
 		if (!recognized) {
 			FILE* input_file = fopen(argv[i], "r");
@@ -103,6 +109,7 @@ void LoaderUtil::PrintUsage() {
 	printf("\t\t%d = vector colors are randomly generated.\n", VCM_RANDOM);
 	printf("\t-sphereres=INTEGER  :  sets the sphere resolution [default = 12]\n");
 	printf("\t-cylinderres=INTEGER  :  sets the cylinder resolution [default = 10]\n");
+	printf("\t-srf=DOUBLE  :  sets the factor by which default sphere radius will be multiplied [default = 1.0]\n");
 }
 
 }

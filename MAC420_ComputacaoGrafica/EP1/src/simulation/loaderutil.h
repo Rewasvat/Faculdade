@@ -28,6 +28,7 @@ public:
 	int GetVectorColorMode() { return vector_color_mode_; }
 	int GetSphereResolution() { return sphere_resolution_; }
 	int GetCylinderResolution() { return cylinder_resolution_; }
+	double GetSphereRadiusFactor() { return sphere_radius_factor_; }
 
 	void PrintUsage();
 
@@ -40,6 +41,7 @@ private:
 	int vector_color_mode_;
 	int sphere_resolution_;
 	int cylinder_resolution_;
+	double sphere_radius_factor_;
 
 	LoaderUtil();
 

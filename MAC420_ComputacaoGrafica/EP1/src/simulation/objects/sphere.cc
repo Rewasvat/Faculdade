@@ -9,7 +9,7 @@ Sphere::Sphere(engine::Vector3D& pos) {
 	position_ = pos;
 	field_ = LoaderUtil::reference()->GetVectorField();
     handles_mouse_ = false;
-	radius_ = field_->GetMinimumDimensionStep() / 2.0;
+	radius_ = LoaderUtil::reference()->GetSphereRadiusFactor() * (field_->GetMinimumDimensionStep() / 2.0);
     active_ = true;
 
 	color_[0] = 0.0;
