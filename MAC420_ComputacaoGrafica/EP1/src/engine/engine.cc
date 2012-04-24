@@ -84,9 +84,19 @@ void Engine::Render() {
 }
 
 void Engine::WindowReshape(int w, int h) {
+    int x = 0;
+    int y = 0;
+    if (w > h) {
+        x = (w - h) / 2;
+        w = h;
+    }
+    else if (h > w) {
+        y = (h - w) / 2;
+        h = w;
+    }
 	width_ = w;
 	height_ = h;
-	glViewport(0, 0, (GLint)w, (GLint)h); 
+	glViewport(x, y, (GLint)w, (GLint)h); 
 }
 
 void Engine::PushScene(Scene* scene) {

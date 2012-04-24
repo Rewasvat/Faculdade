@@ -32,6 +32,7 @@ public:
 protected:
 	bool use_perspective_proj_;
 	bool paused_;
+    bool show_bounding_sphere_;
 	VectorField* field_;
 	objects::FieldObject* field_object_;
 

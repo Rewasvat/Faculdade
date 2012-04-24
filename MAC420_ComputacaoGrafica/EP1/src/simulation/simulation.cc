@@ -11,7 +11,7 @@ using namespace engine;
 
 namespace simulation {
 
-Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspective_proj_(true), paused_(false), field_(field) {
+Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspective_proj_(true), paused_(false), show_bounding_sphere_(false), field_(field) {
 	field_object_ = new objects::FieldObject();
 	field_object_->ReparentTo(this);
 
@@ -35,7 +35,7 @@ Simulation::Simulation(VectorField* field) : Scene(), EventHandler(), use_perspe
 	center_ = field_->GetFieldCenterPos();
 
 	double r = center_.Length();
-	camera_distance_ = r * 15.0;
+	camera_distance_ = r * 2.0;
 
 	azimuth_ = 0.0;
 	elevation_ = 0.0;
@@ -66,23 +66,21 @@ void Simulation::Render() {
 	//gluLookAt(camera_pos_.x, camera_pos_.y, camera_pos_.z, center_.x, center_.y, center_.z, camera_up_.x, camera_up_.y, camera_up_.z);
 	//gluLookAt(camera_pos_.x, camera_pos_.y, camera_pos_.z, 0.0,0.0,-1.0  , 0.0, 1.0, 0.0);
 
-	//glTranslated(-center_.x, -center_.y, -center_.z);
 	//trying to position camera in polar coordinates around the origin
-	//double radius = dist.Length() - center_.Length();
-	//glTranslated(0.0, 0.0, -(radius + zoom_));
-	glTranslated(center_.x, center_.y, center_.z -(camera_distance_ + zoom_));
-
+    glTranslated(0.0, 0.0,  -(camera_distance_ + zoom_));
 	glRotated(elevation_, 1.0, 0.0, 0.0); //angle of rotation of the camera in the y-z plane, measured from the positive z-axis
 	glRotated(azimuth_, 0.0, 0.0, 1.0); //angle of rotation of the camera about the object in the x-y plane, measured from the positive y-axis
 	
-	
+    //moving the entire scene (the cube) so that its center is in the origin - that helps with the camera and the projection (mainly perspective)
 	glTranslated(-center_.x, -center_.y, -center_.z);
 
-	glPushMatrix();
-	glTranslated(center_.x, center_.y, center_.z);
-	glColor3d(0.0,0.0,0.0);
-	glutWireSphere(center_.Length(), 30, 15);
-	glPopMatrix();
+    if (show_bounding_sphere_) {
+	    glPushMatrix();
+	    glTranslated(center_.x, center_.y, center_.z);
+	    glColor3d(0.0,0.0,0.0);
+	    glutWireSphere(center_.Length(), 30, 15);
+	    glPopMatrix();
+    }
 
     Scene::Render();
     
@@ -96,15 +94,17 @@ void Simulation::SetProjectionMode() {
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-	double near_d = camera_distance_ + zoom_ - center_.Length()*5;
+    double r = center_.Length();
+	double near = (camera_distance_) * 0.01;
+    double far = camera_distance_ + r;
 
 	if (use_perspective_proj_) {
 		/*void glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
 			viewing volume is defined by the parameters: (left, bottom, -near) and (right, top, -near) specify the (x, y, z)
 			coordinates of the lower-left and upper-right corners of the near clipping plane; near and far give the distances
 			from the viewpoint to the near and far clipping planes. They should always be positive.*/
-		//glFrustum(0.0, center_.x*2, 0.0, center_.y*2, near_d, near_d + center_.Length()*10);
-		glFrustum(-center_.x*0.5, center_.x*2.5, -center_.y*0.5, center_.y*2.5, near_d, near_d + center_.Length()*10);
+
+        gluPerspective(60.0, 1.0, near, far);
 	}
 	else {
 		/*void glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
@@ -112,10 +112,8 @@ void Simulation::SetProjectionMode() {
 		and upper-right corners of the viewport window, respectively. (left, bottom, -far) and (right, top, -far)
 		are points on the far clipping plane that are mapped to the same respective corners of the viewport. 
 		Both near and far can be positive or negative.*/
-		//glOrtho(0.0, center_.x*2, 0.0, center_.y*2, near_d, near_d + center_.Length()*10);
-		glOrtho(-center_.x*0.5, center_.x*2.5, -center_.y*0.5, center_.y*2.5, near_d, near_d + center_.Length()*10);
 
-		//glOrtho(-2.5*w/h, 2.5*w/h, -2.5, 2.5, -10.0, 10.0);
+        glOrtho(-r, r, -r, r, near, far);
 	}
 
     glMatrixMode(GL_MODELVIEW);
@@ -138,6 +136,8 @@ void Simulation::MouseMotionHandler(int btn, int dx, int dy) {
 	}
 	else if (btn==GLUT_RIGHT_BUTTON) {
 		zoom_ += (double)dy/10.0;
+        if (use_perspective_proj_)
+            this->SetProjectionMode();
 	}
 }
 
@@ -156,6 +156,9 @@ void Simulation::KeyboardHandler(unsigned char key, int x, int y) {
 	case ' ':
 		paused_ = !paused_;
 		break;
+    case 'b':
+        show_bounding_sphere_ = !show_bounding_sphere_;
+        break;
     case 'r':
         Simulation* new_sim = new Simulation(field_);
         this->Finish();
