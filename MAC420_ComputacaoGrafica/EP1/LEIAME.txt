@@ -1,0 +1,28 @@
+###############################################################################
+#   MAC420 - Computação Gráfica
+#   EP1 - Simulação de Dinâmica de Partículas sob Campos de Forças
+#
+#   Fernando Omar Aluani    #USP: 6797226
+###############################################################################
+
+
+################################
+#  Instruções de Compilação
+################################
+Requerimentos:
+    -CMake (ao menos versão 2.6)
+    -Compilador de C++
+    -OpenGL e GLUT
+
+OBS.: O CMake deve conseguir encontrar o Compilador, o OpenGL e o GLUT. O CMake conheçe
+e testa vários locais no sistema para encontrá-los, e isso normalmente funciona em quase
+todos sistemas onde tais coisas foram instaladas de forma normal. Caso eles não sejam
+encontrados, sugiro checar documentação do CMake sobre como corrigir isto.
+
+O CMake 
+
+
+
+################################
+#  Instruções de Uso do EP
+################################

@@ -136,8 +136,6 @@ void Simulation::MouseMotionHandler(int btn, int dx, int dy) {
 	}
 	else if (btn==GLUT_RIGHT_BUTTON) {
 		zoom_ += (double)dy/10.0;
-        if (use_perspective_proj_)
-            this->SetProjectionMode();
 	}
 }
 

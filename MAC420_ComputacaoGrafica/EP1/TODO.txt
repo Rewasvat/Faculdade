@@ -78,9 +78,9 @@
 ############
 # Observações gerais (15%)
 ############
--sempre manter razao de perspectiva dos objetos na cena, mesmo durante resize da janela
--sempre manter cena centralizada na viewport
--Planos Near/Far ajustados apropriadamente para dimensoes do campo lido
+[DONE] -sempre manter razao de perspectiva dos objetos na cena, mesmo durante resize da janela
+[DONE] -sempre manter cena centralizada na viewport
+[DONE] -Planos Near/Far ajustados apropriadamente para dimensoes do campo lido
 [DONE] -Resolucao padrao dos CILINDROS e ESFERAS a nossa escolha, mas devem poder ser alterados por command-line arg
 [DONE] -troca entre projecoes (perspectiva e ortografica) a qualquer momento, por comando do teclado
 [DONE] -comando do teclado: PAUSE
