@@ -29,6 +29,25 @@ IF (UNIVERSAL)
     SET (MACOSX_DEPLOYMENT_TARGET 10.5)
 ENDIF ()
 
+
+# CFLAGS: flags que voce queira enviar ao compilador
+# LDFLAGS: flags que voce queira enviar ao ligador
+set (CFLAGS "" CACHE STRING "flags enviadas ao compilador")
+set (LDFLAGS "" CACHE STRING "flags enviadas ao linker")
+if (UNIX OR MINGW)
+    # se for o g++ para *nix ou o MinGW para Windows:
+    set (CFLAGS "${CFLAGS} -Wall -ansi -O3 -U_FORTIFY_SOURCE")
+    if (${BUILD_TYPE} STREQUAL DEBUG)
+        set (CFLAGS "${CFLAGS} -g")
+    endif (${BUILD_TYPE} STREQUAL DEBUG)
+endif (UNIX OR MINGW)
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+	set (LDFLAGS "${LDFLAGS} -mmacosx-version-min=10.5")
+endif ()
+
+
+
 # Important build locations.
 set (SRC_DIR src)
 set (BIN_DIR bin)
@@ -54,30 +73,8 @@ SET(EP_SRCS
     ./src/engine/vector3D.cc
 )
 
-# #define's que voce queira incluir na compilacao
-# separe por espacos
-set (DEFS "" CACHE STRING "#define's que voce queira incluir na compilacao; separe por espacos")
-if (WIN32)
-    set (DEFS "${DEFS} WIN32")
-endif (WIN32)
-
-# CFLAGS: flags que voce queira enviar ao compilador
-# LDFLAGS: flags que voce queira enviar ao ligador
-set (CFLAGS "" CACHE STRING "flags enviadas ao compilador")
-set (LDFLAGS "" CACHE STRING "flags enviadas ao linker")
-if (UNIX OR MINGW)
-    # se for o g++ para *nix ou o MinGW para Windows:
-    set (CFLAGS "${CFLAGS} -Wall -ansi -O3 -U_FORTIFY_SOURCE")
-    if (${BUILD_TYPE} STREQUAL DEBUG)
-        set (CFLAGS "${CFLAGS} -g")
-    endif (${BUILD_TYPE} STREQUAL DEBUG)
-endif (UNIX OR MINGW)
-
-if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-	set (LDFLAGS "${LDFLAGS} -mmacosx-version-min=10.5")
-endif ()
-
 include_directories ("src")
+
 
 # Encontrando as bibliotecas necessarias:
 find_package(OpenGL REQUIRED)
@@ -90,24 +87,6 @@ else ()
   set (GLUT_FINAL_LIB ${GLUT_glut_LIBRARY} )
 endif ()
 
-
-if (${BUILD_TYPE} STREQUAL DEBUG)
-  set (CFLAGS_EXTRA "${CFLAGS_EXTRA} -DDEBUG")
-endif (${BUILD_TYPE} STREQUAL DEBUG)
-
-# pre-processor: #define's
-if (MSVC)
-  foreach (d ${DEFS})
-    set (CFLAGS_EXTRA "${CFLAGS_EXTRA} /D${d}")
-  endforeach (d)
-  
-  set (CFLAGS_EXTRA "${CFLAGS_EXTRA} /D_CRT_SECURE_NO_WARNINGS /W4 /wd4100 /wd4127 /wd4201 /wd4211 /wd4250 /wd4706 /fp:fast")
-  
-else (MSVC)
-  foreach (d ${DEFS})
-    set (CFLAGS_EXTRA "${CFLAGS_EXTRA} -D${d}")
-  endforeach (d)
-endif  (MSVC)
 
 
 add_executable (${PROJECT_BUILDNAME} ${EP_SRCS})
