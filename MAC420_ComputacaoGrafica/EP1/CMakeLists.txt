@@ -84,16 +84,11 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 find_package(GLUT REQUIRED)
-#include_directories(${GLUT_INCLUDE_DIR})
 if (WIN32)
   set (GLUT_FINAL_LIB ${GLUT_LIBRARY} )
 else ()
   set (GLUT_FINAL_LIB ${GLUT_glut_LIBRARY} )
 endif ()
-
-#if (NOT GLUT_FOUND)
-#  message (FATAL_ERROR ">>> COULD NOT FIND GLUT.")
-#endif (NOT GLUT_FOUND)
 
 
 if (${BUILD_TYPE} STREQUAL DEBUG)
@@ -114,29 +109,18 @@ else (MSVC)
   endforeach (d)
 endif  (MSVC)
 
-if (CMAKE_COMPILER_IS_GNUCXX)
-	set (EXTRA_LIBRARIES m ${EXTRA_LIBRARIES})
-endif (CMAKE_COMPILER_IS_GNUCXX)
-if (MINGW)
-	set (EXTRA_LIBRARIES mingw32 ${EXTRA_LIBRARIES})
-endif (MINGW)
-if (WIN32)
-	set (EXTRA_LIBRARIES Ws2_32 ${EXTRA_LIBRARIES})
-endif (WIN32)
-
 
 add_executable (${PROJECT_BUILDNAME} ${EP_SRCS})
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${BIN_DIR})
 
 target_link_libraries (${PROJECT_BUILDNAME}
-                            ${EXTRA_LIBRARIES}
                             ${OPENGL_LIBRARIES}
                             ${GLUT_FINAL_LIB} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")
-set_target_properties (${PROJECT_BUILDNAME} PROPERTIES COMPILE_FLAGS "${CFLAGS} ${CFLAGS_EXTRA}")
+set_target_properties (${PROJECT_BUILDNAME} PROPERTIES COMPILE_FLAGS "${CFLAGS}")
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES PROJECT_NAME "${PROJECT_NAME}")
 
 
