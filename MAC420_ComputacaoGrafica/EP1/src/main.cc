@@ -32,8 +32,6 @@ int main(int argc, char* argv[]) {
     e->PushScene(scene);
     
     e->Run();
-    
-	delete e;
-
+    //from here on down, things never will be executed...
     return 0;
 }

@@ -19,10 +19,77 @@ e testa vários locais no sistema para encontrá-los, e isso normalmente funcion
 todos sistemas onde tais coisas foram instaladas de forma normal. Caso eles não sejam
 encontrados, sugiro checar documentação do CMake sobre como corrigir isto.
 
-O CMake 
+O CMake gera arquivos necessários para compilar o projeto em várias plataformas e compiladores,
+o exemplo mais básico disso é ele gerar Makefiles em Linux, que usam o GCC para compilar projetos
+em C/C++.
+Este EP foi compilado e testado com sucesso em:
+-Windows, cmake gerou projetos de Visual Studio.
+-Linux, cmake gerou Makefile/G++.
+E acredito que ele deva funcionar em Windows/MinGW e Macintosh/G++.
 
+Para compilar o EP então, siga esses passos:
+1) Execute este comando em um terminal na pasta raiz do EP:
+	cmake .
+
+2) Execute a ferramenta para o qual o CMake gerou arquivos para. Neste caso, isso provavelmente sera:
+
+2A) [Linux] Execute o seguinte comando em um terminal, ainda na pasta raiz do EP
+	make
+
+2B) [Windows] Abra a solução de Visual Studio que foi gerada 'MAC0420_EP1'. 
+3B) [Windows] Compile o projeto 'ep1' (ignore os outros 2 projetos que o CMake gera, eles são usados internamente pelo CMake)
+
+Pronto, agora o EP1 está compilado, e você pode usá-lo.
+O arquivo executável gerado fica localizado na pasta <pasta raiz do EP>/bin/
+No caso do Windows, é capaz do Visual Studio colocar o executável dentro de outra pasta dentro desta, 
+dependendo do modo de compilação (Debug ou Release).
 
 
 ################################
 #  Instruções de Uso do EP
 ################################
+Em seu terminal, com o EP1 compilado, navegue para a pasta onde está o executável do EP.
+Então, para executar o EP rode o comando:
+
+./ep1 <arquivo_de_entrada> [OPTION1 | OPTION2 | ...]
+Onde:
+	<arquivo_de_entrada>: é o caminho para o arquivo de entrada determinando o campo de vetores que será passado.
+	-width=INTEGER  :  seta a largura inicial da janela, em pixels [padrão = 1024]
+	-height=INTEGER  :  seta a altura inicial da janela, em pixels [padrão = 768]
+	-vcm=INTEGER  :  seta o modo de cores do vetores [padrão = 0]
+		0 = cores dos vetores são baseadas em sua magnetude ( weaker = light blue / stronger = red)
+		1 = cores dos vetores são baseadas em sua direção (vector components are color components)
+		2 = cores dos vetores são escolhidas aleatóriamente.
+	-sphereres=INTEGER  :  seta a resolução das esferas [padrão = 12]
+	-cylinderres=INTEGER  :  seta a resolução dos cilindros/cones [padrão = 10]
+	-srf=DOUBLE  :  seta um fator pelo qual o raio das esferas será multiplicado por. [padrão = 1.0]
+
+Com o EP1 rodando e sua janela aberta, existem os seguintes comandos para serem usados:
+-R: reinicia a simulação inteira;
+-S: liga/desliga a atualização de posição das esferas (assim elas param de se mover, ou continuam);
+-Barra de Espaço: pausa/resume a simulação;
+-P: troca o tipo de projeção da câmera entre perspectiva e ortográfica;
+-V: liga/desliga a visualização dos cones que representam os vetores básicos do campo (que forma lidos do arquivo de entrada);
+-B: liga/desliga a visualização da esfera do campo, isto é, a esfera (wireframe) de menor raio possível que ainda contenha
+	o cubo do campo de vetores lido do arquivo de entrada;
+-Q ou ESC: fecha o programa;
+
+E finalmente, pra controlar a câmera que visualiza o espaço 3D no EP, os comandos são usados com o mouse.
+A câmera e seu movimento são implementados como se a câmera deslizasse pela superfície de uma esfera com centro
+na mesma posição que o centro do campo de vetores (a "esfera da câmera"), ou seja, uma esfera similar à
+esfera do campo, porém de raiodiferente, dependendo da distância da câmera.
+Segurando o botão esquerdo do mouse e movendo ele irá mover a câmera pela superfície da esfera da câmera, como esperado.
+Segurando o botão direito do mouse, e movendo ele ao longo do eixo Y (cima/baixo), irá aumentar ou diminuir o "zoom" da 
+câmera (distância dela para o centro do campo/raio da esfera da câmera).
+
+
+################################
+#  Notas sobre o código fonte
+################################
+Como você pode ter notado, o código fonte deste EP está dividido em 2 pastas (2 namespaces no C++),
+o Engine e o Simulation, mais o main.cc
+A Engine compõe um simples framework para fazer aplicações gráficas (de tempo real) que eu fiz durante esse EP,
+e minha idéia é reutilizá-lo para os próximos EPs de MAC420, talvez alterando uma coisa ou outra se eu achar algum
+problema durante os próximos EPs.
+O Simulation contém a verdadeira lógica do EP, contendo as implementações de classes da framework usadas no programa.
+Com isso, o main.cc simplesmente inicializa a framework e cria a cena da simulação.

@@ -95,8 +95,8 @@ void Simulation::SetProjectionMode() {
     glLoadIdentity();
 
     double r = center_.Length();
-	double near = (camera_distance_) * 0.01;
-    double far = camera_distance_ + r;
+	double near_d = (camera_distance_) * 0.01;
+    double far_d = camera_distance_ + r;
 
 	if (use_perspective_proj_) {
 		/*void glFrustum(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
@@ -104,7 +104,7 @@ void Simulation::SetProjectionMode() {
 			coordinates of the lower-left and upper-right corners of the near clipping plane; near and far give the distances
 			from the viewpoint to the near and far clipping planes. They should always be positive.*/
 
-        gluPerspective(60.0, 1.0, near, far);
+        gluPerspective(60.0, 1.0, near_d, far_d);
 	}
 	else {
 		/*void glOrtho(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top, GLdouble near, GLdouble far);
@@ -113,7 +113,7 @@ void Simulation::SetProjectionMode() {
 		are points on the far clipping plane that are mapped to the same respective corners of the viewport. 
 		Both near and far can be positive or negative.*/
 
-        glOrtho(-r, r, -r, r, near, far);
+        glOrtho(-r, r, -r, r, near_d, far_d);
 	}
 
     glMatrixMode(GL_MODELVIEW);
