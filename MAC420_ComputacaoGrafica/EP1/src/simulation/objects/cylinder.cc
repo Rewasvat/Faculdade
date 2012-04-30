@@ -28,9 +28,9 @@ Cylinder::Cylinder(engine::Vector3D& pos, engine::Vector3D& direction) {
 		color_[2] = 1 - cm;
 		break;
 	case VCM_DIRECTION:
-		color_[0] = direction.x / height_;
-		color_[1] = direction.y / height_;
-		color_[2] = direction.z / height_;
+		color_[0] = ((direction.x / height_) + 1.0) / 2.0;
+		color_[1] = ((direction.y / height_) + 1.0) / 2.0;
+		color_[2] = ((direction.z / height_) + 1.0) / 2.0;
 		break;
 	case VCM_RANDOM:
 		color_[0] = (double)rand()/(double)RAND_MAX;

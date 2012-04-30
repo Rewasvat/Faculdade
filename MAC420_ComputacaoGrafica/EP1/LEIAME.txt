@@ -1,4 +1,4 @@
-###############################################################################
+﻿###############################################################################
 #   MAC420 - Computação Gráfica
 #   EP1 - Simulação de Dinâmica de Partículas sob Campos de Forças
 #
@@ -81,6 +81,11 @@ esfera do campo, porém de raiodiferente, dependendo da distância da câmera.
 Segurando o botão esquerdo do mouse e movendo ele irá mover a câmera pela superfície da esfera da câmera, como esperado.
 Segurando o botão direito do mouse, e movendo ele ao longo do eixo Y (cima/baixo), irá aumentar ou diminuir o "zoom" da 
 câmera (distância dela para o centro do campo/raio da esfera da câmera).
+
+OBS.: O EP é compilado linkando dinâmicamente com a biblioteca do glut. Isso normalmente não é um problema no Linux, mas é
+      capaz, dependendo do seu sistema, de acontecer no Windows. Em qualquer caso, é só fazer com que a lib dinâmica
+      (.dll no Windows, .so no Linux) esteja em uma pasta no sistema que o executável/SO encontrem. Só para rodar o programa,
+      o jeito mais fácil é colocar a lib dinâmica na mesma pasta onde se encontra o executável.
 
 
 ################################
