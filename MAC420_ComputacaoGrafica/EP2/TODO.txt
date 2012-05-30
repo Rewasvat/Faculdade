@@ -1,0 +1,74 @@
+################################################################################
+#
+#  EP2 de Computacao Grafica - 'Mundo IME Virtual'
+#
+################################################################################
+
+############
+# Observações Finais
+############
+-Mostre o FrameRate da simulação superposto ao seu mundo virtual.
+-Economize recursos no sistema de particulas, reusando aquelas que já "morreram" (atingiram solo ou prédio)
+-Não é necessário, mas se quiser pode fazer ambiente interno do IME
+-Não é necessário, mas se quiser pode usar shaders (somente GLSL).
+
+#########################################
+# FASE I
+#########################################
+-Ambiente:
+    -Prédios do IME-USP e terreno ao redor.
+    -prédios e terreno com texturas "reais".
+    -árvores e carros podem ser omitidos.
+    -não precisa desenhar o personagem.
+
+-Movimento:
+    -camêra FPS: mouse olha, AWSD (e setas) anda, não pode atravessar objetos sólidos.
+    -Não pode chegar perto do horizonte.
+
+-Céu/Horizonte:
+    -Usar SkyBox com textura panorâmica de acordo com a visão a partir do IME
+        (http://www.opengl.org/wiki/Skybox)
+
+-Ponto principal de iluminação sendo o Sol
+-marcar tempo "do mundo" na simulação, posicionar o Sol de acordo (valor padrão = relógio do sistema)
+-habilitar comandos para acelerar/desacelerar a passagem do tempo
+
+-Sombras dos objetos de acordo com o solo e luzes (como o Sol)
+    -técnica simples como projeções de perspectiva
+    -técnicas avançadas de mapeamento de sombras usando o buffer de profundidade (http://en.wikipedia.org/wiki/Shadow_mapping)
+
+#########################################
+# FASE II
+#########################################
+-implementar sistema de particulas que simule Chuva:
+    -alterando iluminação
+    -pouco de neblina
+    -intensidade da chuva váriavel (possivelmente aleatória ou alterada pelo usuário)
+
+
+##################################################################################
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: NomeDoArquivo.cpp                                  **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em XX/06/2012                                     **/
+/*******************************************************************/
+
+
+-fazer LEIAME.txt
+    -instrucoes de como compilar
+    -instrucoes de como usar o EP
+    -referências de código de outras pessoas que usamos
+    
+-ENTREGA DO EP:
+    -pode ser feito em dupla (soh um entrega)
+    -fazer em C++ com OpenGL e GLUT
+    -pode ser freeglut e programar no windows, mas teste no linux tb e documente
+    -colocar codigo fonte e arquivos auxiliares em um arquivo MundoIME.zip
+    
