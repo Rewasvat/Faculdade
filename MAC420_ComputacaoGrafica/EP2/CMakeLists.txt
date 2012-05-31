@@ -54,12 +54,8 @@ set (SRC_DIR src)
 SET(EP_SRCS
     ./src/main.cc
 
-    ./src/simulation/objects/cylinder.cc
-    ./src/simulation/objects/sphere.cc
-    ./src/simulation/objects/fieldobject.cc
-    ./src/simulation/simulation.cc
-    ./src/simulation/vectorfield.cc
-    ./src/simulation/loaderutil.cc
+    ./src/mundoime/mundoime.cc
+    ./src/mundoime/loaderutil.cc
 
     ./src/engine/engine.cc
     ./src/engine/engineconfig.cc
@@ -69,6 +65,7 @@ SET(EP_SRCS
     ./src/engine/objectcontainer.cc
     ./src/engine/timer.cc
     ./src/engine/vector3D.cc
+    ./src/engine/objload/objload.cpp
 )
 
 include_directories ("src")
