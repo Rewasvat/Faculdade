@@ -2,16 +2,16 @@
 #include <cstdio>
 #include <engine/engine.h>
 #include <engine/engineconfig.h>
-#include <simulation/simulation.h>
-#include <simulation/loaderutil.h>
+#include <mundoime/mundoime.h>
+#include <mundoime/loaderutil.h>
 
-void ep1_exitCallback() {
-	simulation::LoaderUtil* loader = simulation::LoaderUtil::reference();
+void mundoIME_exitCallback() {
+	mundoime::LoaderUtil* loader = mundoime::LoaderUtil::reference();
 	delete loader;
 }
 
 int main(int argc, char* argv[]) {
-	simulation::LoaderUtil* loader = simulation::LoaderUtil::reference();
+	mundoime::LoaderUtil* loader = mundoime::LoaderUtil::reference();
 
 	loader->Load(argc, argv);
 
@@ -21,13 +21,13 @@ int main(int argc, char* argv[]) {
 	}
 
 	engine::Engine* e = engine::Engine::reference();
-	e->RegisterCustomExitCallback(ep1_exitCallback);
+	e->RegisterCustomExitCallback(mundoIME_exitCallback);
 	engine::EngineConfig* config = loader->GetEngineConfig();
-	config->set_window_name("MAC420 EP1 - Simulacao de Particulas em um Campo de Forcas");
+	config->set_window_name("MAC420 EP2 - Mundo IME");
 	e->Configure(config);
 	e->Initialize(argc, argv);
 	
-	simulation::Simulation* scene = new simulation::Simulation( loader->GetVectorField() );
+	mundoime::MundoIME* scene = new mundoime::MundoIME( );
 
     e->PushScene(scene);
     
