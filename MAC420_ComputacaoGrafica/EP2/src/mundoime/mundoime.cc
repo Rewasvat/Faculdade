@@ -18,6 +18,7 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 	file_ = new Obj::File();
 	if (file_->Load("Models/teste.obj")) {
 		file_->GroupsToVertexArrays(models_);
+        printf("Number of models: %d\n", models_.size());
 	}
 	delete file_;
 }
@@ -32,12 +33,21 @@ void MundoIME::Start() {
     double r = center_.Length();
 	double near_d = (camera_distance_) * 0.01;
     double far_d = camera_distance_ + r;
-	gluPerspective(60.0, 1.0, near_d, far_d);
+	gluPerspective(60.0, 1.0, 1, far_d*10);
     glMatrixMode(GL_MODELVIEW);
 
 	glLoadIdentity();
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glColor3f(0.0,0.0,0.0);
+
+    float light_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
+    float light_diffuse[] = { 1.0, 1.0, 1.0, 0.8 };
+    float light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
+    float light_position[] = { 2.0, 2.0, -50.0, 0.0 };
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+    glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
 }
 
 void MundoIME::Update(double dt) {

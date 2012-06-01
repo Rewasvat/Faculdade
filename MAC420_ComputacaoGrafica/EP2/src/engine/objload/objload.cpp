@@ -12,6 +12,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <iostream>
+#include <vector>
 
 namespace Obj {
 
@@ -155,7 +156,7 @@ namespace Obj {
 	//-------------------------------------------------------------------------------------------------------
 
 	//----------------------------------------------------------------------	Material :: Material
-	Material::Material() : name(),illum(4),Ni(1),Ns(10),Bm(1),map_Ka(),map_Kd(),map_Ks(),map_Bump() {
+	Material::Material() : name(),illum(4),Ni(1),Ns(10),map_Ka(),map_Kd(),map_Ks(),map_Bump(),Bm(1) {
 		Ka[0] = Ka[1] = Ka[2] = 
 			Kd[0] = Kd[1] = Kd[2] = 
 			Ks[0] = Ks[1] = Ks[2] = 0;
@@ -216,22 +217,22 @@ namespace Obj {
 
 	//----------------------------------------------------------------------	Surface :: Surface
 	Surface::Surface()
-		: m_Vertices(),
+		: name(),
+          m_Vertices(),
 		  m_Normals(),
 		  m_TexCoords(), 
 		  m_Triangles(),
-		  m_AssignedMaterials(),
-		  name()
+		  m_AssignedMaterials()
 	{}
 
 	//----------------------------------------------------------------------	Surface :: Surface		
 	Surface::Surface(const Surface& surface) 
-		: m_Vertices(surface.m_Vertices),
+		: name(surface.name),
+          m_Vertices(surface.m_Vertices),
 		  m_Normals(surface.m_Normals),
 		  m_TexCoords(surface.m_TexCoords),
 		  m_Triangles(surface.m_Triangles),
-		  m_AssignedMaterials(surface.m_AssignedMaterials) ,
-		  name(surface.name)
+		  m_AssignedMaterials(surface.m_AssignedMaterials)
 	{}
 
 	//----------------------------------------------------------------------	Surface :: CalculateNormals
@@ -298,23 +299,23 @@ namespace Obj {
 
 	//----------------------------------------------------------------------	VertexBuffer :: VertexBuffer	
 	VertexBuffer::VertexBuffer() 
-		: m_Vertices(), 
+		: name(),
+          m_Vertices(), 
 		  m_Normals(), 
 		  m_TexCoords(),
 		  m_Indices(),
 		  m_AssignedMaterials(),
-		  name(),
 		  m_pFile(0)
 	{}
 		
 	//----------------------------------------------------------------------	VertexBuffer :: VertexBuffer
 	VertexBuffer::VertexBuffer(const VertexBuffer& surface) 
-		: m_Vertices(surface.m_Vertices),
+		: name(surface.name),
+          m_Vertices(surface.m_Vertices),
 		  m_Normals(surface.m_Normals),
 		  m_TexCoords(surface.m_TexCoords),
 		  m_Indices(surface.m_Indices),
 		  m_AssignedMaterials(surface.m_AssignedMaterials),
-		  name(surface.name),
 		  m_pFile(surface.m_pFile)
 	{}
 	
@@ -425,17 +426,17 @@ namespace Obj {
 	//----------------------------------------------------------------------	CopyArray< T >
 	/// quick utility function to copy a range of data from the obj file arrays
 	/// into a surface array. 
-	template< typename T >
-	void CopyArray(std::vector< T >& output,const std::vector< T >& input,unsigned start,unsigned end) {
-		output.resize( end-start+1 );
-		std::vector< T >::iterator ito = output.begin();
-		std::vector< T >::const_iterator it= input.begin() + start;
-		std::vector< T >::const_iterator itend = input.begin() + end + 1;
-		for( ; it != itend; ++it,++ito ) 
-		{
-			*ito = *it;
-		}
-	}
+    template< typename T >
+    void CopyArray(std::vector<T>& output,const std::vector<T>& input,unsigned start,unsigned end) {
+        output.resize( end-start+1 );
+        typename std::vector<T>::iterator ito = output.begin();
+        typename std::vector<T>::const_iterator it= input.begin() + start;
+        typename std::vector<T>::const_iterator itend = input.begin() + end + 1;
+        for( ; it != itend; ++it,++ito ) 
+        {
+            *ito = *it;
+        }
+    }
 
 	//----------------------------------------------------------------------	DetermineIndexRange()
 	void DetermineIndexRange(unsigned int& s_vert,unsigned int& e_vert,
@@ -470,8 +471,8 @@ namespace Obj {
 	//----------------------------------------------------------------------	WriteArrayRange< T >()
 	template< typename T >
 	void WriteArrayRange(std::ostream& ofs,const std::vector< T >& the_array,unsigned start,unsigned end) {
-		std::vector< T >::const_iterator it = the_array.begin() + start;
-		std::vector< T >::const_iterator itend = the_array.begin() + end + 1;
+		typename std::vector< T >::const_iterator it = the_array.begin() + start;
+		typename std::vector< T >::const_iterator itend = the_array.begin() + end + 1;
 		for( ; it != itend; ++it )
 			ofs << *it;
 	}
@@ -790,7 +791,6 @@ vinf: ;
 
 				ifs >> s;
 
-				printf("OBJ:: %s\n", s.c_str());
 				if (s.size() <= 0)
 					continue;
 
@@ -1157,7 +1157,7 @@ vinf: ;
 
 					pmat->map_Bump = ptr;
 					flag += 3;
-					sscanf(flag,"%d",&pmat->Bm);
+					sscanf(flag,"%f",&pmat->Bm);
 					pmat->gltex_Bump = OnLoadTexture(pmat->map_Bump.c_str());
 				}
 			}

@@ -56,6 +56,7 @@
 #include <map>
 #include <vector>
 #include <iostream>
+#include <string.h>
 //#include <Debug.h>
 
 #define FCOMPARE(x,y) (((x)-0.0001f)<(y) && ((x)+0.00001f)>(y))
