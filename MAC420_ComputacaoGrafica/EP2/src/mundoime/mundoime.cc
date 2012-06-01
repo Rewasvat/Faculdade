@@ -1,9 +1,6 @@
 #include <engine/engine.h>
-#include <simulation/simulation.h>
-#include <simulation/vectorfield.h>
-#include <simulation/objects/fieldobject.h>
-#include <simulation/objects/cylinder.h>
-#include <simulation/objects/sphere.h>
+#include <mundoime/mundoime.h>
+#include <engine/objload/objload.h>
 #include <GL/glut.h>
 #include <cstdio>
 
@@ -12,10 +9,21 @@ using namespace engine;
 namespace mundoime {
 
 MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
+	azimuth_ = 0.0;
+	elevation_ = 0.0;
+	zoom_ = 10.0;
+	camera_distance_ = 30.0;
+	center_ = Vector3D();
 
+	file_ = new Obj::File();
+	if (file_->Load("Models/teste.obj")) {
+		file_->GroupsToVertexArrays(models_);
+	}
+	delete file_;
 }
 
 MundoIME::~MundoIME() {
+
 }
 
 void MundoIME::Start() {
@@ -53,6 +61,13 @@ void MundoIME::Render() {
     //moving the entire scene (the cube) so that its center is in the origin - that helps with the camera and the projection (mainly perspective)
 	glTranslated(-center_.x, -center_.y, -center_.z);
 
+	if (models_.size() > 0) {
+		VertexBufferList::iterator it;
+		for (it = models_.begin(); it != models_.end(); ++it) {
+			Obj::VertexBuffer vb = (*it);
+			vb.gl();
+		}
+	}
 
     Scene::Render();
 }

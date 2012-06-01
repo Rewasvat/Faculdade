@@ -7,21 +7,19 @@
 #include <iostream>
 #include <fstream>
 #include <engine/engineconfig.h>
-#include <simulation/vectorfield.h>
 #include <engine/vector3D.h>
 
-namespace simulation {
+namespace mundoime {
 
 LoaderUtil* LoaderUtil::reference_ = NULL;
 
 LoaderUtil::LoaderUtil() : 
-	config_(NULL), field_(NULL), vector_color_mode_(0), sphere_resolution_(12), cylinder_resolution_(10), sphere_radius_factor_(1.0)
+	config_(NULL), vector_color_mode_(0), sphere_resolution_(12), cylinder_resolution_(10), sphere_radius_factor_(1.0)
 {
 }
 
 LoaderUtil::~LoaderUtil() {
 	/* No need to delete the EngineConfig... It is the single instance in the program and the Engine will remove it. */
-	delete field_;
 }
 
 void LoaderUtil::Load(int argc, char* argv[]) {
@@ -80,8 +78,6 @@ void LoaderUtil::LoadInputFile(const char* name) {
 	ifs >> nX >> nY >> nZ;
 	ifs >> stepX >> stepY >> stepZ;
 
-	field_ = new VectorField(stepX, stepY, stepZ, nX, nY, nZ);
-
 	double x, y, z;
 	int i, j, k;
 	for (i=0; i < nX; i++)
@@ -89,24 +85,17 @@ void LoaderUtil::LoadInputFile(const char* name) {
 			for (k=0; k < nZ; k++) {
 				ifs >> x >> y >> z;
                 engine::Vector3D v(x,y,z);
-				field_->SetVectorAtPos(i, j, k, v);
 			}
-
-	field_->Normalize();
 
 	ifs.close();
 }
 
 void LoaderUtil::PrintUsage() {
-	printf("MAC420 EP1  Usage:\n");
+	printf("MAC420 EP2  Usage:\n");
 	printf("\t./ep1 <input_file> [OPTION1 | OPTION2 | ...]\n\n");
 	printf("Where OPTIONi can be the following:\n");
 	printf("\t-width=INTEGER  :  sets the window width in pixels [default = 1024]\n");
 	printf("\t-height=INTEGER  :  sets the window height in pixels [default = 768]\n");
-	printf("\t-vcm=INTEGER  :  sets the vector color mode [default = 0]\n");
-	printf("\t\t%d = vector colors are based on their magnetude ( weaker = light blue / stronger = red).\n", VCM_MAGNETUDE);
-	printf("\t\t%d = vector colors are based on their direction (vector components are color components).\n", VCM_DIRECTION);
-	printf("\t\t%d = vector colors are randomly generated.\n", VCM_RANDOM);
 	printf("\t-sphereres=INTEGER  :  sets the sphere resolution [default = 12]\n");
 	printf("\t-cylinderres=INTEGER  :  sets the cylinder resolution [default = 10]\n");
 	printf("\t-srf=DOUBLE  :  sets the factor by which default sphere radius will be multiplied [default = 1.0]\n");

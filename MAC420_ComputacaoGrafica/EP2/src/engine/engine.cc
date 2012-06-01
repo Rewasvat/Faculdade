@@ -41,7 +41,14 @@ void Engine::Initialize(int argc, char* argv[]) {
 	glutVisibilityFunc(Engine::visibilityCallback);
 	glutIdleFunc(Engine::idleCallback);
     glClearColor(0.0, 0.0, 0.0, 0.0); //transparent, I hope =P
-    glEnable(GL_DEPTH_TEST);
+    
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_COLOR_MATERIAL);
     
 	input_manager_->Initialize();
 }

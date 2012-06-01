@@ -5,6 +5,9 @@
 #include <engine/eventhandler.h>
 #include <engine/vector3D.h>
 
+#include <engine/objload/objload.h>
+#include <vector>
+
 namespace mundoime {
 
 
@@ -30,6 +33,10 @@ protected:
 	double zoom_;
 	double camera_distance_;
 	engine::Vector3D center_;
+
+	Obj::File* file_;
+	typedef std::vector<Obj::VertexBuffer> VertexBufferList;
+	VertexBufferList models_;
 };
 
 }

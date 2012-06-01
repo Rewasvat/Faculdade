@@ -15,10 +15,10 @@ int main(int argc, char* argv[]) {
 
 	loader->Load(argc, argv);
 
-	if (!loader->GetVectorField()) {
+	/*if (!loader->GetVectorField()) {
 		loader->PrintUsage();
 		return 0;
-	}
+	}*/
 
 	engine::Engine* e = engine::Engine::reference();
 	e->RegisterCustomExitCallback(mundoIME_exitCallback);

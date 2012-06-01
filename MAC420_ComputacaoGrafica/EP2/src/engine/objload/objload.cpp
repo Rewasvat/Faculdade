@@ -790,6 +790,10 @@ vinf: ;
 
 				ifs >> s;
 
+				printf("OBJ:: %s\n", s.c_str());
+				if (s.size() <= 0)
+					continue;
+
 				// comment, skip line
 				if(s[0]=='#') {
 					while(ifs.get()!='\n') ;
