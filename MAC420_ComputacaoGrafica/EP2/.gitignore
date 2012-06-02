@@ -1,5 +1,12 @@
-MundoIME
+MundoIME*
 CMakeFiles/*
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+Debug/*
+MAC0420_EP2*
+MundoIME.dir/*
+Win32/*
+ZERO_CHECK*
+ipch/*
+ALL_BUILD*
