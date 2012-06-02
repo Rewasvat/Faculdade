@@ -4,6 +4,9 @@
 #include <GL/glut.h>
 #include <cstdio>
 
+#include <engine/light.h>
+#include <engine/color.h>
+
 using namespace engine;
 
 namespace mundoime {
@@ -21,6 +24,19 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
         printf("Number of models: %d\n", models_.size());
 	}
 	delete file_;
+
+    Light* light = new Light(GL_LIGHT0, Light::SPOTLIGHT);
+    light->SetSpotlightParameters(10.0);
+    light->SetAmbientColor(Color(0.5, 0.5, 0.5, 1.0));
+    light->SetDiffuseColor(Color(1.0, 1.0, 1.0, 1.0));
+    light->SetSpecularColor(Color(1.0, 1.0, 1.0, 1.0));
+    Vector3D pos(0.0, 0.0, 100.0);
+    light->set_position( pos );
+    Vector3D dir(0.0, 0.0, 1.0);
+    light->set_direction( dir );
+    light->Activate();
+
+    light->ReparentTo(this);
 }
 
 MundoIME::~MundoIME() {
@@ -40,14 +56,14 @@ void MundoIME::Start() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glColor3f(0.0,0.0,0.0);
 
-    float light_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
+    /*float light_ambient[] = { 0.5, 0.5, 0.5, 1.0 };
     float light_diffuse[] = { 1.0, 1.0, 1.0, 0.8 };
     float light_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     float light_position[] = { 2.0, 2.0, -50.0, 0.0 };
     glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
     glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
     glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);*/
 }
 
 void MundoIME::Update(double dt) {

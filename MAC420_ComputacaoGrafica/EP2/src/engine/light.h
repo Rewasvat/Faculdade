@@ -10,13 +10,13 @@
 
 namespace engine {
 
-class Light : Object {
+class Light : public Object {
 public:
     enum LightType {
         DIRECTIONAL,    POINT,     SPOTLIGHT
     };
 
-    Light(LightType type);
+    Light(unsigned id, LightType type);
     virtual ~Light();
 
     virtual void Update(double dt) {}
@@ -29,6 +29,10 @@ public:
     LightType type() { return type_; }
 
     /*angle in degrees, in range [0, 90], or special value 180.0 (no spotlight)*/
+    void SetAmbientColor(Color ambient) { ambient_ = ambient; }
+    void SetDiffuseColor(Color diffuse) { diffuse_ = diffuse; }
+    void SetSpecularColor(Color specular) { specular_ = specular; }
+    void SetColors(Color ambient, Color diffuse, Color specular) { ambient_ = ambient; diffuse_ = diffuse; specular_ = specular; }
     void SetSpotlightParameters(double angle = 180.0, double exponent = 0.0) { spot_angle_ = angle; spot_exponent_ = exponent; }
     void SetAttenuationParameters(double constant = 1.0, double linear = 0.0, double quadratic = 0.0) {
         atte_constant_ = constant;
@@ -38,6 +42,10 @@ public:
 
     Vector3D direction() { return direction_; }
 	void set_direction(Vector3D& dir) { direction_ = dir; }
+
+    static void SetGlobalAmbientLight(Color color);
+    static void SetUseLocalViewport(bool use);
+    static void SetUseTwoSidedLighting(bool use);
 
 protected:
 	GLenum light_id_;
