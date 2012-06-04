@@ -76,6 +76,10 @@ include_directories ("src")
 find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
+subdirs(BulletLib)
+set(PROJECT_BULLET_LIBS BulletDynamics BulletCollision  LinearMath)
+include_directories(BulletLib)
+
 find_package(GLUT REQUIRED)
 if (WIN32)
   set (GLUT_FINAL_LIB ${GLUT_LIBRARY} )
@@ -89,7 +93,8 @@ add_executable (${PROJECT_BUILDNAME} ${EP_SRCS})
 
 target_link_libraries (${PROJECT_BUILDNAME}
                             ${OPENGL_LIBRARIES}
-                            ${GLUT_FINAL_LIB} )
+                            ${GLUT_FINAL_LIB}
+                            ${PROJECT_BULLET_LIBS} )
 
 
 set_target_properties (${PROJECT_BUILDNAME} PROPERTIES LINK_FLAGS "${LDFLAGS}")

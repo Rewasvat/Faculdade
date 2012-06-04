@@ -2,6 +2,7 @@
 #include <engine/vector3D.h>
 #include <engine/color.h>
 #include <GL/glut.h>
+#include <cmath>
 
 #define LIGHT_ID(id) GL_LIGHT##id
 
@@ -50,12 +51,7 @@ void Light::buildGLlist() {
     glLightf(light_id_, GL_QUADRATIC_ATTENUATION, atte_quadratic_);
 
 
-	
 
-    engine::Vector3D dir = direction_;
-    engine::Vector3D z_axis (0.0, 0.0, 1.0);
-    dir.Normalize();
-    
     
     Vector3D z_axis (0.0, 0.0, 1.0);
     double angle = acos( direction_ * z_axis );
