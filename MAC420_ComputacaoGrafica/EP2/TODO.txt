@@ -15,6 +15,19 @@
 #########################################
 # FASE I
 #########################################
+Basic Features needed:
+-model loading [DONE]
+-texture loading
+-skybox
+-dynamic illumination  [perhaps DONE]
+-dynamic shadows
+-colisão
+
+Resources needed:
+-IME model  [done: 10%]
+-IME panorama texture (for skybox)
+==================================
+
 -Ambiente:
     -Prédios do IME-USP e terreno ao redor.
     -prédios e terreno com texturas "reais".

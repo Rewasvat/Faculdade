@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <vector>
+#include <engine/texture/texture.h>
 
 namespace Obj {
 
@@ -199,8 +200,8 @@ namespace Obj {
 
 		if (gltex_Kd) {
 			// maya always sets the diffuse colour to black when a texture is applied.
-			float color[4]={0.6f,0.6f,0.6f,average_transp};
-			glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
+			//float color[4]={0.6f,0.6f,0.6f,average_transp};
+			//glMaterialfv(GL_FRONT_AND_BACK,GL_DIFFUSE,color);
 
 			// apply texture
 			glBindTexture(GL_TEXTURE_2D,gltex_Kd);
@@ -281,8 +282,8 @@ namespace Obj {
 			for( ; it != m_AssignedMaterials.end(); ++it ) {
 
 				// if file valid, assign materials
-				if(m_pFile && m_pFile->m_Materials.size()> it->m_MaterialIdx )
-					m_pFile->OnBindMaterial( m_pFile->m_Materials[ it->m_MaterialIdx ] );
+				//if(m_pFile && m_pFile->m_Materials.size()> it->m_MaterialIdx )
+				m_pFile->OnBindMaterial( m_pFile->m_Materials[ it->m_MaterialIdx ] );
 				
 				// draw each face with this material assigned.
 				DrawRange( it->m_StartFace, it->m_EndFace );
@@ -1438,5 +1439,12 @@ vinf: ;
 				}
 			}
 		}
+	}
+
+
+	//----------------------------------------------------------------------	File :: OnLoadTexture
+	/// overide to handle loading of texture data
+	unsigned int File::OnLoadTexture(const char filename[]) {
+		return engine::texture::LoadTexture(filename, false);
 	}
 }

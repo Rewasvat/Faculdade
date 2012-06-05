@@ -48,28 +48,9 @@ void Light::buildGLlist() {
     glLightf(light_id_, GL_CONSTANT_ATTENUATION, atte_linear_);
     glLightf(light_id_, GL_LINEAR_ATTENUATION, atte_linear_);
     glLightf(light_id_, GL_QUADRATIC_ATTENUATION, atte_quadratic_);
-
-
-	
-
-    engine::Vector3D dir = direction_;
-    engine::Vector3D z_axis (0.0, 0.0, 1.0);
-    dir.Normalize();
     
-    
-    Vector3D z_axis (0.0, 0.0, 1.0);
-    double angle = acos( direction_ * z_axis );
-    if ( fabs(angle) > 0.0 ) {
-        engine::Vector3D rot_axis = direction_.CrossProduct(z_axis);
-        rot_axis.Normalize();
-        rot_axis.Scale(-1.0);
 
-        double angle_deg = (180.0 * angle) / PI;
-        glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
-    }
-
-
-    float x, y, z, w;
+    double x, y, z, w;
     x=y=z=w=0.0;
     if (type_ == DIRECTIONAL) {
         x = direction_.x; y = direction_.y; z = direction_.z; w = 0.0;
@@ -82,14 +63,27 @@ void Light::buildGLlist() {
         x = position_.x; y = position_.y; z = position_.z; w = 1.0;
         glLightf(light_id_, GL_SPOT_CUTOFF, spot_angle_);
         glLightf(light_id_, GL_SPOT_EXPONENT, spot_exponent_);
-        float dir[] = {direction_.x, direction_.y, direction_.z};
+        float dir[] = {static_cast<float>(direction_.x), static_cast<float>(direction_.y), static_cast<float>(direction_.z)};
         glLightfv(light_id_, GL_SPOT_DIRECTION, dir);
-        glTranslated(position_.x, position_.y, position_.z);
+        //glTranslated(position_.x, position_.y, position_.z);
+		//rotateToDirection();
     }
-    float pos[] = {x, y, z, w};
+    float pos[] = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(z), static_cast<float>(w)};
     glLightfv(light_id_, GL_POSITION, pos);
    
     glEndList();
+}
+
+void Light::rotateToDirection() {
+	Vector3D z_axis (0.0, 0.0, 1.0);
+    double angle = acos( direction_ * z_axis );
+    if ( fabs(angle) > 0.0 ) {
+        Vector3D rot_axis = direction_.CrossProduct(z_axis);
+        rot_axis.Normalize();
+        rot_axis.Scale(-1.0);
+        double angle_deg = (180.0 * angle) / PI;
+        glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
+    }
 }
 
 }

@@ -6,6 +6,7 @@
 #include <engine/inputmanager.h>
 #include <stdlib.h>
 #include <engine/scene.h>
+#include <engine/texture/texture.h>
 
 namespace engine {
 
@@ -23,6 +24,8 @@ Engine::~Engine() {
 
 	delete input_manager_;
 	delete config_;
+
+	texture::DeleteAllTextures();
 }
 
 
@@ -42,6 +45,8 @@ void Engine::Initialize(int argc, char* argv[]) {
 	glutIdleFunc(Engine::idleCallback);
     glClearColor(0.0, 0.0, 0.0, 0.0); //transparent, I hope =P
     
+	if (config_->do_multisampling())
+		glEnable(GLUT_MULTISAMPLE);
 	//glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_TRUE);

@@ -630,9 +630,7 @@ namespace Obj {
 	protected:
 
 		/// overide to handle loading of texture data
-		virtual unsigned int OnLoadTexture(const char filename[]) {
-			return 0;
-		}
+		virtual unsigned int OnLoadTexture(const char filename[]);
 
 		/// overload this to change the way the material is specified 
 		/// (ie, custom shaders rather than glMaterialfv() )

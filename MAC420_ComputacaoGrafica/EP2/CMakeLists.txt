@@ -67,6 +67,10 @@ SET(EP_SRCS
     ./src/engine/timer.cc
     ./src/engine/vector3D.cc
     ./src/engine/objload/objload.cpp
+    ./src/engine/texture/texture.cpp
+    ./src/engine/texture/bmpLoader.c
+    ./src/engine/texture/pcxLoader.c
+    ./src/engine/texture/tgaLoader.c
 )
 
 include_directories ("src")
