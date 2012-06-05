@@ -21,7 +21,7 @@ Basic Features needed:
 -skybox
 -dynamic illumination  [perhaps DONE]
 -dynamic shadows
--colisão
+-colisão  [we has bullet, precisa implementar agora]
 
 Resources needed:
 -IME model  [done: 10%]
