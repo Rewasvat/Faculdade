@@ -4,6 +4,7 @@
 #include <GL/glut.h>
 #include <cstdio>
 #include <btBulletDynamicsCommon.h>
+#include <mundoime/objects/model.h>
 
 #include <engine/light.h>
 #include <engine/color.h>
@@ -19,12 +20,6 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 	camera_distance_ = 30.0;
 	center_ = Vector3D();
 
-	file_ = new Obj::File();
-	if (file_->Load("Models/teste.obj")) {
-		file_->GroupsToVertexArrays(models_); //file_->GroupsToVertexArrays(models_);   GroupsToSurfaces
-        printf("Number of models: %d\n", models_.size());
-	}
-	//delete file_;
 
     Light* light = new Light(GL_LIGHT0, Light::DIRECTIONAL);
     light->SetSpotlightParameters(10.0);
@@ -36,10 +31,28 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
     Vector3D dir(0.0, -1.0, -1.0);
     light->set_direction( dir );
     light->Activate();
-
     light->ReparentTo(this);
 
 
+	file_ = new Obj::File();
+	if (file_->Load("Models/teste.obj")) {
+	
+	    std::vector<Obj::VertexBuffer> meshes;
+	
+		file_->GroupsToVertexArrays(meshes);
+        printf("Number of models: %d\n", meshes.size());
+        
+        std::vector<Obj::VertexBuffer>::iterator it;
+        for (it = meshes.begin(); it != meshes.end(); ++it) {
+            Vector3D mpos (0.0, 0.0, 0.0);
+            Vector3D mdir (0.0, 0.0, 0.0);
+            objects::Model* model = new objects::Model(mpos, mdir, (*it) );
+            model->ReparentTo(this);
+        }
+	}
+	//delete file_;
+	
+	
     /****************/
 	int i;
 
@@ -168,7 +181,7 @@ void MundoIME::Start() {
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     double r = center_.Length();
-	double near_d = (camera_distance_) * 0.01;
+	//double near_d = (camera_distance_) * 0.01;
     double far_d = camera_distance_ + r;
 	gluPerspective(60.0, 1.0, 1, far_d*10);
     glMatrixMode(GL_MODELVIEW);
@@ -199,14 +212,14 @@ void MundoIME::Render() {
     //moving the entire scene (the cube) so that its center is in the origin - that helps with the camera and the projection (mainly perspective)
 	glTranslated(-center_.x, -center_.y, -center_.z);
 
-	if (models_.size() > 0) {
+	/*if (models_.size() > 0) {
 		VertexBufferList::iterator it;
 		for (it = models_.begin(); it != models_.end(); ++it) {
 			Obj::VertexBuffer vb = (*it);
 			//Obj::Surface vb = (*it);
 			vb.gl();
 		}
-	}
+	}*/
 	//file_->Draw();
 
     Scene::Render();

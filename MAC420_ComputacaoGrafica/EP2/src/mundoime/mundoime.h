@@ -5,8 +5,9 @@
 #include <engine/eventhandler.h>
 #include <engine/vector3D.h>
 
-#include <engine/objload/objload.h>
-#include <vector>
+namespace Obj {
+class File;
+}
 
 namespace mundoime {
 
@@ -35,9 +36,6 @@ protected:
 	engine::Vector3D center_;
 
 	Obj::File* file_;
-	//typedef std::vector<Obj::Surface> VertexBufferList;
-	typedef std::vector<Obj::VertexBuffer> VertexBufferList;
-	VertexBufferList models_;
 };
 
 }
