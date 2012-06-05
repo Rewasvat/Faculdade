@@ -3,7 +3,6 @@
 #include <string.h>
 #include <GL/glut.h>
 #include "bmpLoader.h"
-#include "pcxLoader.h"
 #include "tgaLoader.h"
 #include <iostream>
 #include <string>
@@ -143,14 +142,6 @@ unsigned int LoadTexture(const char* filename,bool compressed) {
 			return 0;
 	}
 	else
-	// load a pcx
-	if( (filename[len-3] == 'p' || filename[len-3] == 'P') &&
-		(filename[len-2] == 'c' || filename[len-2] == 'C') &&
-		(filename[len-1] == 'x' || filename[len-1] == 'X') ) {
-		if(!LoadPcxImage(filename,&pixels,&w,&h,&bpp))
-			return 0;
-	}
-	else
 	// load a tga 
 	if( (filename[len-3] == 't' || filename[len-3] == 'T') &&
 		(filename[len-2] == 'g' || filename[len-2] == 'G') &&
@@ -164,7 +155,7 @@ unsigned int LoadTexture(const char* filename,bool compressed) {
 	}
 
 	// generat the correct texture type for the image
-	unsigned int tex_object;
+	unsigned int tex_object = 0;
 	switch(bpp) {
 	case 1:
 		tex_object = MakeGlTexture(GL_ALPHA,pixels,w,h,compressed);
@@ -196,7 +187,7 @@ unsigned int LoadTexture(const char* filename,bool compressed) {
 	// insert the texture into a map to keep track of it
 	g_Textures.insert( std::make_pair( std::string(filename), TexRef(tex_object,data_size) ) );
 
-	printf("[Texture Manager] Loaded texture '%s'\n", filename);
+	std::cout << "[Texture Manager] Loaded Texture '" << filename << "'" << std::endl;
 	// return GL texture object
 	return tex_object;
 

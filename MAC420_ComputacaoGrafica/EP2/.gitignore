@@ -13,3 +13,7 @@ Win32/*
 ZERO_CHECK*
 ipch/*
 ALL_BUILD*
+BulletLib/BulletCollision/CMakeFiles/*
+BulletLib/BulletDynamics/CMakeFiles/*
+BulletLib/BulletMultiThreaded/CMakeFiles/*
+BulletLib/LinearMath/CMakeFiles/*

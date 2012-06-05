@@ -21,7 +21,7 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 
 	file_ = new Obj::File();
 	if (file_->Load("Models/teste.obj")) {
-		file_->GroupsToSurfaces(models_); //file_->GroupsToVertexArrays(models_);
+		file_->GroupsToVertexArrays(models_); //file_->GroupsToVertexArrays(models_);   GroupsToSurfaces
         printf("Number of models: %d\n", models_.size());
 	}
 	//delete file_;
@@ -199,15 +199,15 @@ void MundoIME::Render() {
     //moving the entire scene (the cube) so that its center is in the origin - that helps with the camera and the projection (mainly perspective)
 	glTranslated(-center_.x, -center_.y, -center_.z);
 
-	/*if (models_.size() > 0) {
+	if (models_.size() > 0) {
 		VertexBufferList::iterator it;
 		for (it = models_.begin(); it != models_.end(); ++it) {
-			//Obj::VertexBuffer vb = (*it);
-			Obj::Surface vb = (*it);
+			Obj::VertexBuffer vb = (*it);
+			//Obj::Surface vb = (*it);
 			vb.gl();
 		}
-	}*/
-	file_->Draw();
+	}
+	//file_->Draw();
 
     Scene::Render();
 }

@@ -35,7 +35,8 @@ protected:
 	engine::Vector3D center_;
 
 	Obj::File* file_;
-	typedef std::vector<Obj::Surface> VertexBufferList;
+	//typedef std::vector<Obj::Surface> VertexBufferList;
+	typedef std::vector<Obj::VertexBuffer> VertexBufferList;
 	VertexBufferList models_;
 };
 

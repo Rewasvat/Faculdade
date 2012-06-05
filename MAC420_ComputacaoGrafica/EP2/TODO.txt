@@ -28,6 +28,12 @@ Resources needed:
 -IME panorama texture (for skybox)
 ==================================
 
+
+Model:  Object, VertexBuffer, BulletCollisionObject|RigidBody
+
+
+
+
 -Ambiente:
     -Prédios do IME-USP e terreno ao redor.
     -prédios e terreno com texturas "reais".
