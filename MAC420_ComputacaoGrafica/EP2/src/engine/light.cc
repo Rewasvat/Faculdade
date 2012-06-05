@@ -2,6 +2,7 @@
 #include <engine/vector3D.h>
 #include <engine/color.h>
 #include <GL/glut.h>
+#include <cmath>
 
 #define LIGHT_ID(id) GL_LIGHT##id
 

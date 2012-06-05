@@ -1,8 +1,11 @@
+MundoIME
 MundoIME*
 CMakeFiles/*
 CMakeCache.txt
 Makefile
 cmake_install.cmake
+*/CMakeFiles/*
+*.a
 Debug/*
 MAC0420_EP2*
 MundoIME.dir/*
