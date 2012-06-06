@@ -33,6 +33,21 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
     light->Activate();
     light->ReparentTo(this);
 
+    /****************/
+	// Broadphase is the initial collision detecting: checks for colliding pairs given their bounding boxes
+	broadphase_ = new btDbvtBroadphase();
+ 
+    // Set up the collision configuration and dispatcher
+    config_ = new btDefaultCollisionConfiguration();
+    dispatcher_ = new btCollisionDispatcher(config_);
+ 
+    // The actual physics solver
+    solver_ = new btSequentialImpulseConstraintSolver;
+ 
+    // The world.
+    world_ = new btDiscreteDynamicsWorld(dispatcher_,broadphase_,solver_,config_);
+    world_->setGravity(btVector3(0,-10,0));
+    /****************/
 
 	file_ = new Obj::File();
 	if (file_->Load("Models/teste.obj")) {
@@ -48,13 +63,19 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
             Vector3D mdir (0.0, 0.0, 0.0);
             objects::Model* model = new objects::Model(mpos, mdir, (*it) );
             model->ReparentTo(this);
+            world_->addRigidBody(model_->body() );
         }
 	}
-	//delete file_;
+
 }
 
 MundoIME::~MundoIME() {
-
+    delete file_;
+	delete broadphase_;
+    delete config_;
+    delete dispatcher_;
+    delete solver_;
+    delete world_;
 }
 
 void MundoIME::Start() {
