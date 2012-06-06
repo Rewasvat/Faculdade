@@ -3,13 +3,15 @@
 #include <math.h>
 #include <GL/glut.h>
 #include <btBulletDynamicsCommon.h>
+#include <mundoime/physicsmanager.h>
+#include <cstdlib>
 
 #define PI 3.14159265358979323846
 
 namespace mundoime {
 namespace objects {
 
-Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape = NULL) : mass_(mass) {
+Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape) : mass_(mass) {
 	position_ = pos;
 	direction_ = direction;
 	direction_.Normalize();
@@ -17,9 +19,18 @@ Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuff
     
     if (shape != NULL) {
         shape_ = shape;
+        btTIVA_ = NULL;
     }
     else {
-        //TODO: create collision shape based on our mesh
+        btTIVA_ = new btTriangleIndexVertexArray(   mesh.m_Indices.size(),               /*number of triangles in mesh*/
+                                                    (int*) &mesh.m_Indices[0],           /*pointer to first element in index array*/
+                                                    sizeof(unsigned int),                /*number of bytes in each index element*/
+                                                    mesh.m_Vertices.size(),              /*number of vertices in mesh*/
+                                                    (btScalar*) &mesh.m_Vertices[0].x,   /*pointer to first element in vertex array*/
+                                                    3*sizeof(float));                    /*number of bytes in each vertex element*/
+
+	    bool useQuantizedAabbCompression = true;
+	    shape_ = new btBvhTriangleMeshShape(btTIVA_,useQuantizedAabbCompression);
     }
     
     //transform(rotation, translation)
@@ -42,14 +53,16 @@ Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuff
 }
 
 Model::~Model() {
-
-    //TODO: remove from DynamicsWorld
+    PhysicsManager::reference()->RemoveBody(body_);
     delete body_->getMotionState();
     delete body_;
+    if (btTIVA_)
+        delete btTIVA_;
     delete shape_;
 }
 
 void Model::Update(double dt) {
+    //TODO: update pos and dir according to physics
 }
 
 void Model::Render() {

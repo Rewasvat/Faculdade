@@ -5,17 +5,18 @@
 #include <engine/object.h>
 #include <engine/objload/objload.h>
 
+class btCollisionShape;
+class btRigidBody;
+class btTriangleIndexVertexArray;
+
 namespace mundoime {
 namespace objects {
 
-/*Model:  Object, VertexBuffer, BulletCollisionObject|RigidBody
-*/
-class btCollisionShape;
-class btRigidBody;
-
 class Model : public engine::Object {
 public:
-    Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape = NULL);
+    static const double STATIC_MASS = 0.0;
+
+    Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape = 0);
     ~Model();
 
 	void Update(double dt);
@@ -32,6 +33,7 @@ protected:
 	
 	double mass_;
 	btCollisionShape* shape_;
+    btTriangleIndexVertexArray* btTIVA_;
 	btRigidBody* body_;
 };
 

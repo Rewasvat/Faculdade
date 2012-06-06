@@ -9,12 +9,6 @@ namespace Obj {
 class File;
 }
 
-class btBroadphaseInterface;
-class btDefaultCollisionConfiguration;
-class btCollisionDispatcher;
-class btSequentialImpulseConstraintSolver;
-class btDiscreteDynamicsWorld;
-
 namespace mundoime {
 
 
@@ -43,11 +37,6 @@ protected:
 
 	Obj::File* file_;
 	
-	btBroadphaseInterface* broadphase_;
-    btDefaultCollisionConfiguration* config_;
-    btCollisionDispatcher* dispatcher_;
-    btSequentialImpulseConstraintSolver* solver_;
-    btDiscreteDynamicsWorld* world_;
 };
 
 }

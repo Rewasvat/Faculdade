@@ -4,10 +4,14 @@
 #include <engine/engineconfig.h>
 #include <mundoime/mundoime.h>
 #include <mundoime/loaderutil.h>
+#include <mundoime/physicsmanager.h>
 
 void mundoIME_exitCallback() {
 	mundoime::LoaderUtil* loader = mundoime::LoaderUtil::reference();
 	delete loader;
+
+    mundoime::PhysicsManager* physics = mundoime::PhysicsManager::reference();
+    delete physics;
 }
 
 int main(int argc, char* argv[]) {
@@ -26,6 +30,8 @@ int main(int argc, char* argv[]) {
 	config->set_window_name("MAC420 EP2 - Mundo IME");
 	e->Configure(config);
 	e->Initialize(argc, argv);
+
+    mundoime::PhysicsManager::reference()->Initialize();
 	
 	mundoime::MundoIME* scene = new mundoime::MundoIME( );
 
