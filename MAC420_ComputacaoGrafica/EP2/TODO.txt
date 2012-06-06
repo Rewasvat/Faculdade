@@ -17,7 +17,7 @@
 #########################################
 Basic Features needed:
 -model loading [DONE]
--texture loading
+-texture loading [DONE apparently]
 -skybox
 -dynamic illumination  [perhaps DONE]
 -dynamic shadows
