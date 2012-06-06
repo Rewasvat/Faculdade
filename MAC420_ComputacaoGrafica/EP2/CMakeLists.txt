@@ -58,6 +58,7 @@ SET(EP_SRCS
     ./src/mundoime/loaderutil.cc
     ./src/mundoime/physicsmanager.cc
     ./src/mundoime/objects/model.cc
+    ./src/mundoime/objects/player.cc
 
     ./src/engine/engine.cc
     ./src/engine/engineconfig.cc

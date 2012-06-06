@@ -19,8 +19,8 @@ public:
     Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape = 0);
     ~Model();
 
-	void Update(double dt);
-	void Render();
+	virtual void Update(double dt);
+	virtual void Render();
 	
 	engine::Vector3D direction() { return direction_; }
 	void set_direction(engine::Vector3D& dir) { direction_ = dir; }

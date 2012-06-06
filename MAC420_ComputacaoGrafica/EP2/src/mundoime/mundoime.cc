@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <btBulletDynamicsCommon.h>
 #include <mundoime/objects/model.h>
+#include <mundoime/objects/player.h>
 #include <mundoime/physicsmanager.h>
 
 #include <engine/light.h>
@@ -39,16 +40,36 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 	if (ime_file_->Load("Models/teste.obj")) {
 	
 	    std::vector<Obj::VertexBuffer> meshes;
+
+        std::vector<Obj::Surface> surfaces;
 	
 		ime_file_->GroupsToVertexArrays(meshes);
+        ime_file_->GroupsToSurfaces(surfaces);
         printf("Number of models: %d\n", meshes.size());
         
         std::vector<Obj::VertexBuffer>::iterator it;
-        for (it = meshes.begin(); it != meshes.end(); ++it) {
+        std::vector<Obj::Surface>::iterator its = surfaces.begin();
+        for (it = meshes.begin(); it != meshes.end(); ++it, ++its) {
             Vector3D mpos (0.0, 0.0, 0.0);
             Vector3D mdir (0.0, 0.0, 0.0);
+            btCollisionShape* mshape = NULL;
             //btCollisionShape* mshape = new btStaticPlaneShape(btVector3(0,1,0),1);
-            objects::Model* model = new objects::Model(mpos, mdir, (*it), objects::Model::STATIC_MASS);
+            /******/
+            btTriangleMesh* bttm = new btTriangleMesh(true, false);
+            int i;
+            printf("Going to build triangle mesh collision shape [%d]\n", its->m_Triangles.size());
+            for (i=0; i<its->m_Triangles.size(); i++) {
+                printf("Building Triangle Mesh i=%d/%d\n", i, its->m_Triangles.size());
+                btVector3 v0 (its->m_Vertices[ its->m_Triangles[i].v[0] ].x, its->m_Vertices[ its->m_Triangles[i].v[0] ].y, its->m_Vertices[ its->m_Triangles[i].v[0] ].z);
+                btVector3 v1 (its->m_Vertices[ its->m_Triangles[i].v[1] ].x, its->m_Vertices[ its->m_Triangles[i].v[1] ].y, its->m_Vertices[ its->m_Triangles[i].v[1] ].z);
+                btVector3 v2 (its->m_Vertices[ its->m_Triangles[i].v[2] ].x, its->m_Vertices[ its->m_Triangles[i].v[2] ].y, its->m_Vertices[ its->m_Triangles[i].v[2] ].z);
+                bttm->addTriangle (v0, v1, v2, false);
+            }
+
+            bool useQuantizedAabbCompression = true;
+	        mshape = new btBvhTriangleMeshShape(bttm,useQuantizedAabbCompression);
+            /******/
+            objects::Model* model = new objects::Model(mpos, mdir, (*it), objects::Model::STATIC_MASS, mshape);
             model->ReparentTo(this);
             PhysicsManager::reference()->AddBody( model->body() );
         }
@@ -65,9 +86,9 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
         Vector3D ppos (0.0, 7.0, 0.0);
         Vector3D pdir (0.0, 0.0, 1.0);
         btCollisionShape* pshape = new btCapsuleShape(1.0, 4.0);
-        objects::Model* pmodel = new objects::Model(ppos, pdir, pmeshes[0], 68.0, pshape);
-        pmodel->ReparentTo(this);
-        PhysicsManager::reference()->AddBody( pmodel->body() );
+        objects::Player* player = new objects::Player(ppos, pdir, pmeshes[0], 68.0, pshape);
+        player->ReparentTo(this);
+        PhysicsManager::reference()->AddBody( player->body() );
 	}
 }
 
