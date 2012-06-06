@@ -35,7 +35,8 @@ protected:
 	double camera_distance_;
 	engine::Vector3D center_;
 
-	Obj::File* file_;
+	Obj::File* ime_file_;
+	Obj::File* player_file_;
 	
 };
 

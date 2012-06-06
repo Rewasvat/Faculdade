@@ -29,6 +29,8 @@ public:
 
 protected:
 	engine::Vector3D direction_;
+    engine::Vector3D rot_axis_;
+    double rot_angle_;
 	Obj::VertexBuffer mesh_;
 	
 	double mass_;

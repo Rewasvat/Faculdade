@@ -35,28 +35,45 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
     light->ReparentTo(this);
 
 
-	file_ = new Obj::File();
-	if (file_->Load("Models/teste.obj")) {
+	ime_file_ = new Obj::File();
+	if (ime_file_->Load("Models/teste.obj")) {
 	
 	    std::vector<Obj::VertexBuffer> meshes;
 	
-		file_->GroupsToVertexArrays(meshes);
+		ime_file_->GroupsToVertexArrays(meshes);
         printf("Number of models: %d\n", meshes.size());
         
         std::vector<Obj::VertexBuffer>::iterator it;
         for (it = meshes.begin(); it != meshes.end(); ++it) {
             Vector3D mpos (0.0, 0.0, 0.0);
             Vector3D mdir (0.0, 0.0, 0.0);
+            //btCollisionShape* mshape = new btStaticPlaneShape(btVector3(0,1,0),1);
             objects::Model* model = new objects::Model(mpos, mdir, (*it), objects::Model::STATIC_MASS);
             model->ReparentTo(this);
             PhysicsManager::reference()->AddBody( model->body() );
         }
 	}
 
+    player_file_ = new Obj::File();
+	if (player_file_->Load("Models/player.obj")) {
+	
+	    std::vector<Obj::VertexBuffer> pmeshes;
+	
+		player_file_->GroupsToVertexArrays(pmeshes);
+        printf("Number of player models: %d\n", pmeshes.size());
+        
+        Vector3D ppos (0.0, 7.0, 0.0);
+        Vector3D pdir (0.0, 0.0, 1.0);
+        btCollisionShape* pshape = new btCapsuleShape(1.0, 4.0);
+        objects::Model* pmodel = new objects::Model(ppos, pdir, pmeshes[0], 68.0, pshape);
+        pmodel->ReparentTo(this);
+        PhysicsManager::reference()->AddBody( pmodel->body() );
+	}
 }
 
 MundoIME::~MundoIME() {
-    delete file_;
+    delete ime_file_;
+    delete player_file_;
 }
 
 void MundoIME::Start() {
@@ -74,8 +91,10 @@ void MundoIME::Start() {
 }
 
 void MundoIME::Update(double dt) {
-	if (!paused_)
+	if (!paused_) {
+        PhysicsManager::reference()->Update(dt);
 		Scene::Update(dt);
+    }
 }
 
 void MundoIME::Render() {

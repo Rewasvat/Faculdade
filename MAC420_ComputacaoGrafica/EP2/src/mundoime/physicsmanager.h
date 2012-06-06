@@ -18,6 +18,7 @@ public:
 	~PhysicsManager();
 
     void Initialize();
+    void Update(double dt);
 
     void AddBody(btRigidBody* body);
     void RemoveBody(btRigidBody* body);
