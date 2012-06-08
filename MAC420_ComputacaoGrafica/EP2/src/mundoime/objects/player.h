@@ -23,6 +23,15 @@ public:
 
     void MoveForward(double amount, bool forward);
     void MoveSideways(double amount, bool right);
+
+	engine::Vector3D eye_position();
+	engine::Vector3D up() { return up_; }
+
+protected:
+	engine::Vector3D up_;
+	double vertical_angle_, horizontal_angle_;
+	bool mouse_warped_;
+	bool forward_move_[2], side_move_[2];
 };
 
 }

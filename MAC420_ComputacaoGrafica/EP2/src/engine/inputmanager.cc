@@ -80,14 +80,15 @@ void InputManager::CallMouseMotionHandlers(int x, int y) {
 	last_mouse_coords_[0] = x;
 	last_mouse_coords_[1] = y;
 
-	int i;
-	for (i=0; i<3; i++) {
-		if (buttons_[i]) {
-			HandlerList::iterator it;
-			for (it = handlers_.begin(); it != handlers_.end(); ++it) {
-				if ( (*it)->handles_mouse() )
+	HandlerList::iterator it;
+	for (it = handlers_.begin(); it != handlers_.end(); ++it) {
+		if ( (*it)->handles_mouse() ) {
+			for (int i=0; i<3; i++) {
+				if (buttons_[i]) {
 					(*it)->MouseMotionHandler(buttons_map_[i], dx, dy);
+				}
 			}
+			(*it)->MouseMotionHandler(-1, dx, dy);
 		}
 	}
 }

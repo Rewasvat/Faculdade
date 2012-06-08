@@ -3,8 +3,10 @@
 #include <math.h>
 #include <GL/glut.h>
 #include <btBulletDynamicsCommon.h>
+#include <BulletWorldImporter/btBulletWorldImporter.h>
 #include <mundoime/physicsmanager.h>
 #include <cstdlib>
+#include <string>
 
 #define PI 3.14159265358979323846
 
@@ -17,20 +19,49 @@ Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuff
 	direction_.Normalize();
     mesh_ = mesh;
     
+	btTIVA_ = NULL;
     if (shape != NULL) {
         shape_ = shape;
-        btTIVA_ = NULL;
     }
     else {
-        btTIVA_ = new btTriangleIndexVertexArray(   mesh.m_Indices.size(),               /*number of triangles in mesh*/
-                                                    (int*) &mesh.m_Indices[0],           /*pointer to first element in index array*/
-                                                    sizeof(unsigned int),                /*number of bytes in each index element*/
-                                                    mesh.m_Vertices.size(),              /*number of vertices in mesh*/
-                                                    (btScalar*) &mesh.m_Vertices[0].x,   /*pointer to first element in vertex array*/
-                                                    3*sizeof(float));                    /*number of bytes in each vertex element*/
+		std::string optMeshShapeFileName = "Models/OptimizedShapes/" + mesh.name + ".bullet";
+		FILE* opt_shape_file = fopen(optMeshShapeFileName.c_str(), "rb"); /*Try to read first to check if file exists*/
+		if (opt_shape_file != NULL) {
+			fclose(opt_shape_file);
+			btBulletWorldImporter import(0);//don't store info into the world
+			if (import.loadFile(optMeshShapeFileName.c_str()))
+			{
+				int numShape = import.getNumCollisionShapes();
+				if (numShape)
+				{
+					shape_ = (btBvhTriangleMeshShape*)import.getCollisionShapeByIndex(0);
+				}
+			}
+			printf("[Model] Imported saved optimized collision shape mesh for model %s\n", mesh.name.c_str());
+		}
+		else {
+			btTIVA_ = new btTriangleIndexVertexArray(   mesh_.m_Indices.size()/3,               /*number of triangles in mesh*/
+														(int*) &mesh_.m_Indices[0],           /*pointer to first element in index array*/
+														3*sizeof(unsigned int),                /*number of bytes in each index element*/
+														mesh_.m_Vertices.size(),              /*number of vertices in mesh*/
+														(btScalar*) &mesh_.m_Vertices[0].x,   /*pointer to first element in vertex array*/
+														3*sizeof(float));                    /*number of bytes in each vertex element*/
+			bool useQuantizedAabbCompression = true;
+			shape_ = new btBvhTriangleMeshShape(btTIVA_,useQuantizedAabbCompression);
+			printf("[Model] created Bullet triangle mesh collision shape for model %s\n", mesh.name.c_str());
 
-	    bool useQuantizedAabbCompression = true;
-	    shape_ = new btBvhTriangleMeshShape(btTIVA_,useQuantizedAabbCompression);
+			int max_buffer_size = 1024*1024*5;
+			btDefaultSerializer*	serializer = new btDefaultSerializer(max_buffer_size);
+			serializer->startSerialization();
+			serializer->registerNameForPointer(shape_, mesh.name.c_str());
+			shape_->serializeSingleShape(serializer);
+			serializer->finishSerialization();
+
+			opt_shape_file = fopen(optMeshShapeFileName.c_str(), "wb");
+			fwrite(serializer->getBufferPointer(),serializer->getCurrentBufferSize(),1,opt_shape_file);
+			fclose(opt_shape_file);
+			printf("[Model] Saved optimized collision shape mesh for model %s\n", mesh.name.c_str());
+		}
     }
     
     //transform(rotation, translation)
@@ -56,6 +87,7 @@ Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuff
     btRigidBody::btRigidBodyConstructionInfo  bodyInfo(mass_,motionState,shape_,inertia);
     body_ = new btRigidBody(bodyInfo);
     body_->setLinearFactor(btVector3(1,1,1));
+	body_->setActivationState(DISABLE_DEACTIVATION);
 }
 
 Model::~Model() {
@@ -72,14 +104,14 @@ void Model::Update(double dt) {
     btTransform t;
     body_->getMotionState()->getWorldTransform(t);
     //btDefaultMotionState* motionState = body_->getMotionState();
-    printf("Model %s Height: %f\n", mesh_.name.c_str(), t.getOrigin().getY());
+    //printf("Model %s Height: %f\n", mesh_.name.c_str(), t.getOrigin().getY());
 
     btVector3 pos = t.getOrigin();
     position_.x = pos.x();
     position_.y = pos.y();
     position_.z = pos.z();
     
-    printf("Model %s position=(%f,%f,%f)\n", mesh_.name.c_str(), position_.x, position_.y, position_.z);
+    //printf("Model %s position=(%f,%f,%f)\n", mesh_.name.c_str(), position_.x, position_.y, position_.z);
     
     btQuaternion rot = t.getRotation();
     rot_angle_ = rot.getAngle();

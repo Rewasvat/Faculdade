@@ -21,10 +21,10 @@ Basic Features needed:
 -skybox
 -dynamic illumination  [perhaps DONE]
 -dynamic shadows
--colisão  [we has bullet, precisa implementar agora]
+-colisão  [DONE apparently]
 
 Resources needed:
--IME model  [done: 10%]
+-IME model  [done: 25%]
 -IME panorama texture (for skybox)
 ==================================
 

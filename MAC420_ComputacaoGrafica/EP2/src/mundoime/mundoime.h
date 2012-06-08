@@ -11,6 +11,9 @@ class File;
 
 namespace mundoime {
 
+namespace objects {
+class Player;
+}
 
 class MundoIME : public engine::Scene, public engine::EventHandler {
 public:
@@ -29,15 +32,9 @@ public:
 protected:
 	bool paused_;
 
-	double azimuth_;
-	double elevation_;
-	double zoom_;
-	double camera_distance_;
-	engine::Vector3D center_;
-
 	Obj::File* ime_file_;
 	Obj::File* player_file_;
-	
+	objects::Player* player_;
 };
 
 }

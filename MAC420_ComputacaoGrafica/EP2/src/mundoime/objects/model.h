@@ -14,8 +14,6 @@ namespace objects {
 
 class Model : public engine::Object {
 public:
-    static const double STATIC_MASS = 0.0;
-
     Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape = 0);
     ~Model();
 

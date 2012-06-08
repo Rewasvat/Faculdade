@@ -83,8 +83,9 @@ find_package(OpenGL REQUIRED)
 include_directories(${OPENGL_INCLUDE_DIR})
 
 subdirs(BulletLib)
-set(PROJECT_BULLET_LIBS BulletDynamics BulletCollision  LinearMath)
-include_directories(BulletLib)
+set(PROJECT_BULLET_LIBS BulletWorldImporter BulletFileLoader BulletDynamics BulletCollision  LinearMath)
+include_directories( BulletLib/src )
+include_directories( BulletLib/Extras )
 
 find_package(GLUT REQUIRED)
 if (WIN32)
