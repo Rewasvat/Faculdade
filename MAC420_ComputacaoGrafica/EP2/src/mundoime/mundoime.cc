@@ -6,6 +6,7 @@
 #include <btBulletDynamicsCommon.h>
 #include <mundoime/objects/model.h>
 #include <mundoime/objects/player.h>
+#include <mundoime/objects/skybox.h>
 #include <mundoime/physicsmanager.h>
 
 #include <engine/light.h>
@@ -16,6 +17,9 @@ using namespace engine;
 namespace mundoime {
 
 MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
+
+	objects::Skybox* skybox = new objects::Skybox("Models/skybox", 50);
+	skybox->ReparentTo(this);
 
 	light_ = new Light(GL_LIGHT0, Light::DIRECTIONAL);
     light_->SetSpotlightParameters(10.0);
