@@ -104,9 +104,9 @@ void MundoIME::Render() {
 	//TODO: Still haven't decided on a unified transformation system for the framework, so lets do this hardcoded for now
 	glLoadIdentity(); /*Resets transformation state*/
 
-	Vector3D& eye = player_->eye_position();
-	Vector3D& dir = player_->direction();
-	Vector3D& up = player_->up();
+	Vector3D eye = player_->eye_position();
+	Vector3D dir = player_->direction();
+	Vector3D up = player_->up();
 	gluLookAt(eye.x, eye.y, eye.z, eye.x+dir.x, eye.y+dir.y, eye.z+dir.z, up.x, up.y, up.z);
 	
 

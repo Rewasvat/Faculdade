@@ -64,7 +64,9 @@ void Player::MouseMotionHandler(int btn, int dx, int dy) {
 
 		if (dx != 0.0 || dy != 0.0) {
 			mouse_warped_ = true;
+#ifdef WIN32
 			glutWarpPointer(Engine::reference()->window_width()/2, Engine::reference()->window_height()/2);
+#endif
 		}
 	}
 	else
