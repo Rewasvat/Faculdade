@@ -23,13 +23,14 @@ Light::~Light() {
 }
 
 void Light::Render() {
-    if (active_)
-        glCallList(gl_list_);
+    if (active_) {
+		applyAllSettings();
+	}
 }
 
 void Light::Activate() {
     active_ = true;
-    this->buildGLlist();
+	applyAllSettings();
     glEnable(light_id_);
 }
 
@@ -38,41 +39,107 @@ void Light::Deactivate() {
     glDisable(light_id_);
 }
 
-void Light::buildGLlist() {
-    gl_list_ = glGenLists(1);
-    glNewList(gl_list_, GL_COMPILE);
-    
-    glLightfv(light_id_, GL_AMBIENT, ambient_.val);
-    glLightfv(light_id_, GL_DIFFUSE, diffuse_.val);
-    glLightfv(light_id_, GL_SPECULAR, specular_.val);
+void Light::SetType(LightType type) { 
+	type_ = type;
+}
 
+/*angle in degrees, in range [0, 90], or special value 180.0 (no spotlight)*/
+void Light::SetAmbientColor(Color ambient) { 
+	ambient_ = ambient;
+}
+
+void Light::SetDiffuseColor(Color diffuse) { 
+	diffuse_ = diffuse;
+}
+
+void Light::SetSpecularColor(Color specular) { 
+	specular_ = specular;
+}
+
+void Light::SetColors(Color ambient, Color diffuse, Color specular) { 
+	this->SetAmbientColor(ambient);
+	this->SetDiffuseColor(diffuse);
+	this->SetSpecularColor(specular);
+}
+
+void Light::SetSpotlightParameters(float angle, float exponent) { 
+	spot_angle_ = angle; 
+	spot_exponent_ = exponent;
+}
+
+void Light::SetAttenuationParameters(float constant, float linear, float quadratic) {
+    atte_constant_ = constant;
+    atte_linear_ = linear;
+    atte_quadratic_ = quadratic;
+}
+
+void Light::set_direction(Vector3D& dir) { 
+	direction_ = dir;
+	direction_.Normalize();
+}
+
+void Light::set_position(Vector3D& pos) {
+	Object::set_position(pos);
+}
+
+void Light::applyAmbientColor() { 
+	glLightfv(light_id_, GL_AMBIENT, ambient_.val);
+}
+
+void Light::applyDiffuseColor() { 
+	glLightfv(light_id_, GL_DIFFUSE, diffuse_.val);
+}
+
+void Light::applySpecularColor() { 
+	glLightfv(light_id_, GL_SPECULAR, specular_.val);
+}
+
+void Light::applySpotlightParameters() {
+	if (type_ == SPOTLIGHT) {
+		glLightf(light_id_, GL_SPOT_CUTOFF, spot_angle_);
+		glLightf(light_id_, GL_SPOT_EXPONENT, spot_exponent_);
+	}
+	else {
+		glLightf(light_id_, GL_SPOT_CUTOFF, 180.0);
+	}
+}
+
+void Light::applyAttenuation() {
     glLightf(light_id_, GL_CONSTANT_ATTENUATION, atte_linear_);
     glLightf(light_id_, GL_LINEAR_ATTENUATION, atte_linear_);
     glLightf(light_id_, GL_QUADRATIC_ATTENUATION, atte_quadratic_);
-    
+}
 
-    double x, y, z, w;
-    x=y=z=w=0.0;
+void Light::applyDirection() { 
     if (type_ == DIRECTIONAL) {
-        x = direction_.x; y = direction_.y; z = direction_.z; w = 0.0;
-    }
-    else if (type_ == POINT) {
-        x = position_.x; y = position_.y; z = position_.z; w = 1.0;
-        glTranslated(position_.x, position_.y, position_.z);
+        float gldir[] = {static_cast<float>(direction_.x), static_cast<float>(direction_.y), static_cast<float>(direction_.z), 0.0};
+        glLightfv(light_id_, GL_POSITION, gldir);
     }
     else if (type_ == SPOTLIGHT) {
-        x = position_.x; y = position_.y; z = position_.z; w = 1.0;
-        glLightf(light_id_, GL_SPOT_CUTOFF, spot_angle_);
-        glLightf(light_id_, GL_SPOT_EXPONENT, spot_exponent_);
-        float dir[] = {static_cast<float>(direction_.x), static_cast<float>(direction_.y), static_cast<float>(direction_.z)};
-        glLightfv(light_id_, GL_SPOT_DIRECTION, dir);
-        //glTranslated(position_.x, position_.y, position_.z);
-		//rotateToDirection();
+        float gldir[] = {static_cast<float>(direction_.x), static_cast<float>(direction_.y), static_cast<float>(direction_.z)};
+        glLightfv(light_id_, GL_SPOT_DIRECTION, gldir);
     }
-    float pos[] = {static_cast<float>(x), static_cast<float>(y), static_cast<float>(z), static_cast<float>(w)};
-    glLightfv(light_id_, GL_POSITION, pos);
-   
-    glEndList();
+}
+
+void Light::applyPosition() {
+    if (type_ == POINT) {
+        float glpos[] = {static_cast<float>(position_.x), static_cast<float>(position_.y), static_cast<float>(position_.z), static_cast<float>(1.0)};
+        glLightfv(light_id_, GL_POSITION, glpos);
+    }
+    else if (type_ == SPOTLIGHT) {
+        float glpos[] = {static_cast<float>(position_.x), static_cast<float>(position_.y), static_cast<float>(position_.z), static_cast<float>(1.0)};
+        glLightfv(light_id_, GL_POSITION, glpos);
+    }
+}
+
+void Light::applyAllSettings() {
+	applyAmbientColor();
+	applyDiffuseColor();
+	applySpecularColor();
+	applySpotlightParameters();
+	applyAttenuation();
+	applyDirection();
+	applyPosition();
 }
 
 void Light::rotateToDirection() {
@@ -85,6 +152,20 @@ void Light::rotateToDirection() {
         double angle_deg = (180.0 * angle) / PI;
         glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
     }
+}
+
+void Light::SetGlobalAmbientLight(Color color) {
+	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, color.val);
+}
+
+void Light::SetUseLocalViewport(bool use) {
+	int value = (use) ? GL_TRUE : GL_FALSE;
+	glLightModeli(GL_LIGHT_MODEL_LOCAL_VIEWER, value);
+}
+
+void Light::SetUseTwoSidedLighting(bool use) {
+	int value = (use) ? GL_TRUE : GL_FALSE;
+	glLightModeli(GL_LIGHT_MODEL_TWO_SIDE, value);
 }
 
 }

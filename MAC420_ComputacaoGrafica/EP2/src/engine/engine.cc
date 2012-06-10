@@ -51,7 +51,6 @@ void Engine::Initialize(int argc, char* argv[]) {
 	glEnable(GL_DEPTH_TEST);
 	//glDepthMask(GL_TRUE);
 	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
 	glEnable(GL_TEXTURE_2D);
 	//glEnable(GL_COLOR_MATERIAL);
     

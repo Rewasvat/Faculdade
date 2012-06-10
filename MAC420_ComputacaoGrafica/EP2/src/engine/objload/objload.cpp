@@ -166,10 +166,8 @@ namespace Obj {
 		gltex_Ka = gltex_Kd = gltex_Ks = gltex_Bump = 0;
 	}
 	Material::~Material() {
-		if(gltex_Ka)   glDeleteTextures(1,&gltex_Ka);
-		if(gltex_Kd)   glDeleteTextures(1,&gltex_Kd);
-		if(gltex_Ks)   glDeleteTextures(1,&gltex_Ks);
-		if(gltex_Bump) glDeleteTextures(1,&gltex_Bump);
+		/*DO NOT DELETE GL TEXTURES!
+		  We're not the ones which loaded them in the first place, so whoever loaded them should destroy them. (and they do that)*/
 	}
 	
 	//----------------------------------------------------------------------	Material :: Material
@@ -187,6 +185,10 @@ namespace Obj {
 		map_Bump = mat.map_Bump;
 		illum = mat.illum;
 		Bm = mat.Bm;
+		gltex_Ka = mat.gltex_Ka;
+		gltex_Kd = mat.gltex_Kd;
+		gltex_Ks = mat.gltex_Ks;
+		gltex_Bump = mat.gltex_Bump;
 	}
 
 	//----------------------------------------------------------------------	Material :: gl

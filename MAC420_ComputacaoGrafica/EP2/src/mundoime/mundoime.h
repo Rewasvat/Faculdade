@@ -9,6 +9,10 @@ namespace Obj {
 class File;
 }
 
+namespace engine{
+class Light;
+}
+
 namespace mundoime {
 
 namespace objects {
@@ -31,7 +35,7 @@ public:
 
 protected:
 	bool paused_;
-
+	engine::Light* light_;
 	Obj::File* ime_file_;
 	Obj::File* player_file_;
 	objects::Player* player_;

@@ -123,8 +123,9 @@ unsigned int LoadTexture(const char* filename,bool compressed) {
 
 	// check to see if file is already loaded.
 	std::map<std::string,TexRef>::iterator it = g_Textures.find(filename);
-	if ( it!=g_Textures.end()) {
+	if ( it != g_Textures.end()) {
 		it->second.ref++;
+		//std::cout << "[Texture Manager] Reusing texture '" << filename << "'" << "(GL Code:" << it->second.idx << ")" << std::endl;
 		return it->second.idx;
 	}
 
@@ -187,7 +188,7 @@ unsigned int LoadTexture(const char* filename,bool compressed) {
 	// insert the texture into a map to keep track of it
 	g_Textures.insert( std::make_pair( std::string(filename), TexRef(tex_object,data_size) ) );
 
-	std::cout << "[Texture Manager] Loaded Texture '" << filename << "'" << std::endl;
+	std::cout << "[Texture Manager] Loaded Texture '" << filename << "'" << "(GL Code:" << tex_object << ")" << std::endl;
 	// return GL texture object
 	return tex_object;
 

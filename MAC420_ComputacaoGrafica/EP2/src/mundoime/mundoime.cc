@@ -17,54 +17,35 @@ namespace mundoime {
 
 MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 
-    Light* light = new Light(GL_LIGHT0, Light::DIRECTIONAL);
-    light->SetSpotlightParameters(10.0);
-    light->SetAmbientColor(Color(1.0, 1.0, 1.0, 0.7));
-    light->SetDiffuseColor(Color(1.0, 1.0, 1.0, 1.0));
-    light->SetSpecularColor(Color(1.0, 1.0, 1.0, 1.0));
-    Vector3D pos(0.0, 0.0, 0.0);
-    light->set_position( pos );
+	light_ = new Light(GL_LIGHT0, Light::DIRECTIONAL);
+    light_->SetSpotlightParameters(10.0);
+    light_->SetAmbientColor(Color(1.0, 1.0, 1.0, 0.7));
+    light_->SetDiffuseColor(Color(1.0, 1.0, 1.0, 1.0));
+    light_->SetSpecularColor(Color(1.0, 1.0, 1.0, 1.0));
+    Vector3D pos(0.0, 2.0, 0.0);
+    light_->set_position( pos );
     Vector3D dir(-1.0, -1.0, -1.0);
-    light->set_direction( dir );
-    light->Activate();
-    light->ReparentTo(this);
+    light_->set_direction( dir );
+    light_->Activate();
+    light_->ReparentTo(this);
 
+	Light::SetGlobalAmbientLight( Color(1.0, 1.0, 1.0, 1.0) );
 
 	ime_file_ = new Obj::File();
-	if (ime_file_->Load("Models/teste.obj")) {
+	if (ime_file_->Load("Models/IMEblocoB.obj")) {
 	
 	    std::vector<Obj::VertexBuffer> meshes;
 
-        std::vector<Obj::Surface> surfaces;
-	
 		ime_file_->GroupsToVertexArrays(meshes);
-        ime_file_->GroupsToSurfaces(surfaces);
         printf("Number of models: %d\n", meshes.size());
         
         std::vector<Obj::VertexBuffer>::iterator it;
-        std::vector<Obj::Surface>::iterator its = surfaces.begin();
-        for (it = meshes.begin(); it != meshes.end(); ++it, ++its) {
+        for (it = meshes.begin(); it != meshes.end(); ++it) {
             Vector3D mpos (0.0, 0.0, 0.0);
             Vector3D mdir (0.0, 0.0, 0.0);
             btCollisionShape* mshape = NULL;
             //btCollisionShape* mshape = new btStaticPlaneShape(btVector3(0,1,0),1);
-            /******
-            btTriangleMesh* bttm = new btTriangleMesh(true, false);
-            int i;
-            printf("Going to build triangle mesh collision shape [%d]\n", its->m_Triangles.size());
-            for (i=0; i<its->m_Triangles.size(); i++) {
-                printf("Building Triangle Mesh i=%d/%d\n", i, its->m_Triangles.size());
-                btVector3 v0 (its->m_Vertices[ its->m_Triangles[i].v[0] ].x, its->m_Vertices[ its->m_Triangles[i].v[0] ].y, its->m_Vertices[ its->m_Triangles[i].v[0] ].z);
-                btVector3 v1 (its->m_Vertices[ its->m_Triangles[i].v[1] ].x, its->m_Vertices[ its->m_Triangles[i].v[1] ].y, its->m_Vertices[ its->m_Triangles[i].v[1] ].z);
-                btVector3 v2 (its->m_Vertices[ its->m_Triangles[i].v[2] ].x, its->m_Vertices[ its->m_Triangles[i].v[2] ].y, its->m_Vertices[ its->m_Triangles[i].v[2] ].z);
-                bttm->addTriangle (v0, v1, v2, false);
-            }
-
-            bool useQuantizedAabbCompression = true;
-	        mshape = new btBvhTriangleMeshShape(bttm,useQuantizedAabbCompression);
             /******/
-			printf("#Indexes=%d || #Triangles=%d\n", it->m_Indices.size(), its->m_Triangles.size());
-			/******/
             objects::Model* model = new objects::Model(mpos, mdir, (*it), 0, mshape);
             model->ReparentTo(this);
             PhysicsManager::reference()->AddBody( model->body() );
@@ -119,20 +100,11 @@ void MundoIME::Render() {
 	//TODO: Still haven't decided on a unified transformation system for the framework, so lets do this hardcoded for now
 	glLoadIdentity(); /*Resets transformation state*/
 
-	/*Apply the viewing transformation of the scene*/
-	//gluLookAt(camera_pos_.x, camera_pos_.y, camera_pos_.z, center_.x, center_.y, center_.z, camera_up_.x, camera_up_.y, camera_up_.z);
-	//gluLookAt(camera_pos_.x, camera_pos_.y, camera_pos_.z, 0.0,0.0,-1.0  , 0.0, 1.0, 0.0);
-
 	Vector3D& eye = player_->eye_position();
 	Vector3D& dir = player_->direction();
 	Vector3D& up = player_->up();
 	gluLookAt(eye.x, eye.y, eye.z, eye.x+dir.x, eye.y+dir.y, eye.z+dir.z, up.x, up.y, up.z);
-
-	//trying to position camera in polar coordinates around the origin
-    
-	/*glRotated(up.x, 1.0, 0.0, 0.0); //angle of rotation of the camera in the y-z plane, measured from the positive z-axis
-	glRotated(up.y, 0.0, 1.0, 0.0); //angle of rotation of the camera about the object in the x-y plane, measured from the positive y-axis
-	glTranslated(eye.x, eye.y, eye.z);*/
+	
 
     Scene::Render();
 }

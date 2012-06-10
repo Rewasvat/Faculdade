@@ -1,14 +1,5 @@
 # Blender MTL File: 'IMEblocoB.blend'
-# Material Count: 8
-newmtl 
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-
-
+# Material Count: 15
 newmtl BeigeWall_beigeConcrete.tga
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -20,6 +11,39 @@ illum 2
 map_Kd Models/beigeConcrete.tga
 
 
+newmtl BlueConcreteMat_blueConcrete.tga
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/blueConcrete.tga
+
+
+newmtl ConcreteMat
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/concrete.tga
+
+
+newmtl ConcreteMat_concrete.tga
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/concrete.tga
+
+
 newmtl ConcreteWall_concrete.tga
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -29,6 +53,17 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd Models/concrete.tga
+
+
+newmtl GrassMat_grass.tga
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/grass.tga
 
 
 newmtl Material.001
@@ -52,6 +87,27 @@ illum 2
 map_Kd Models/concrete.tga
 
 
+newmtl Material.002
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+
+
+newmtl Material.002_blueConcrete.tga
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/blueConcrete.tga
+
+
 newmtl Material_concrete.tga
 Ns 96.078431
 Ka 0.000000 0.000000 0.000000
@@ -72,6 +128,28 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd Models/redConcrete.tga
+
+
+newmtl WhiteConcreteMat_whiteConcrete.tga
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/whiteConcrete.tga
+
+
+newmtl WindowMat.001_window.tga
+Ns 96.078431
+Ka 0.000000 0.000000 0.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/window.tga
 
 
 newmtl WindowMat_window.tga

@@ -19,8 +19,8 @@ public:
 
 	void ReparentTo(ObjectContainer* new_parent);
 
-	Vector3D position() { return position_; }
-	void set_position(Vector3D& pos) { position_ = pos; }
+	virtual Vector3D position() { return position_; }
+	virtual void set_position(Vector3D& pos) { position_ = pos; }
 
 protected:
 	ObjectContainer* parent_;

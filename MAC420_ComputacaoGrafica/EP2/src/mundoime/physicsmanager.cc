@@ -101,7 +101,7 @@ void PhysicsManager::Initialize() {
     world_->setGravity(btVector3(0,-10,0));
 
 	btContactSolverInfo& info = world_->getSolverInfo();
-	info.m_splitImpulse = 1; //enable split impulse feature
+	//info.m_splitImpulse = 1; //enable split impulse feature
 }
 
 void PhysicsManager::Update(double dt) {

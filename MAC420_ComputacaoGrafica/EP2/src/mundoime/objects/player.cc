@@ -27,7 +27,7 @@ Player::~Player() {
 void Player::Update(double dt) {
     Model::Update(dt);
 
-	double speed = 2.0 * dt;
+	double speed = 10.0 * dt;
 	if (forward_move_[0])
 		MoveForward(speed, true);
 	if (forward_move_[1])
@@ -58,6 +58,8 @@ void Player::MouseMotionHandler(int btn, int dx, int dy) {
 
 		Vector3D right = Vector3D( sin(horizontal_angle_ - PI/2.0),	0, cos(horizontal_angle_ - PI/2.0) );
 
+		right.Normalize();
+		direction_.Normalize();
 		up_ = right.CrossProduct(direction_);
 
 		if (dx != 0.0 || dy != 0.0) {

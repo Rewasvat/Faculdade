@@ -121,25 +121,12 @@ void Model::Update(double dt) {
 }
 
 void Model::Render() {
-    glPushMatrix();
-
     glTranslated(position_.x, position_.y, position_.z);
     
-	/*engine::Vector3D z_axis (0.0, 0.0, 1.0);
-    double angle = acos( direction_ * z_axis );
-    if ( direction_.Length() > 0.0 && fabs(angle) > 0.0 ) {
-        engine::Vector3D rot_axis = direction_.CrossProduct(z_axis);
-        rot_axis.Normalize();
-        rot_axis.Scale(-1.0);
-        double angle_deg = (180.0 * angle) / PI;
-        glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
-    }*/
     double angle_deg = (180.0 * rot_angle_) / PI;
     glRotated(angle_deg, rot_axis_.x, rot_axis_.y, rot_axis_.z);    
 
     mesh_.gl();
-
-    glPopMatrix();
 }
 
 }
