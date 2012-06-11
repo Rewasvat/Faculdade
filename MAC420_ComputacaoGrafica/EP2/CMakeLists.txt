@@ -60,6 +60,7 @@ SET(EP_SRCS
     ./src/mundoime/objects/model.cc
 	./src/mundoime/objects/skybox.cc
     ./src/mundoime/objects/player.cc
+    ./src/mundoime/objects/sun.cc
 
     ./src/engine/engine.cc
     ./src/engine/engineconfig.cc
