@@ -22,6 +22,8 @@ public:
 	
 	engine::Vector3D direction() { return direction_; }
 	void set_direction(engine::Vector3D& dir) { direction_ = dir; }
+
+	void set_position(engine::Vector3D& pos);
 	
 	btRigidBody* body() { return body_; }
 

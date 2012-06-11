@@ -129,5 +129,15 @@ void Model::Render() {
     mesh_.gl();
 }
 
+void Model::set_position(engine::Vector3D& pos) {
+	position_ = pos;
+
+	btTransform t;
+    body_->getMotionState()->getWorldTransform(t);
+	t.setOrigin( btVector3(pos.x, pos.y, pos.z) );
+
+	body_->getMotionState()->setWorldTransform(t);
+}
+
 }
 }

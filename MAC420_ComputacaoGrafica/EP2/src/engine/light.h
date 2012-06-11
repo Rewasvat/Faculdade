@@ -53,7 +53,6 @@ protected:
     Color ambient_, diffuse_, specular_;
     float spot_angle_, spot_exponent_;
     float atte_constant_, atte_linear_, atte_quadratic_;
-	void rotateToDirection();
 
 	void applyAmbientColor();
 	void applyDiffuseColor();

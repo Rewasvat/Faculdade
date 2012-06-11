@@ -24,7 +24,7 @@ Basic Features needed:
 -colisão  [DONE apparently]
 
 Resources needed:
--IME model  [done: 40%]
+-IME model  [done: 60%]
 -IME panorama texture (for skybox)
 ==================================
 

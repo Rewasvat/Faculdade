@@ -9,14 +9,11 @@ namespace Obj {
 class File;
 }
 
-namespace engine{
-class Light;
-}
-
 namespace mundoime {
 
 namespace objects {
 class Player;
+class Sun;
 }
 
 class MundoIME : public engine::Scene, public engine::EventHandler {
@@ -35,10 +32,11 @@ public:
 
 protected:
 	bool paused_;
-	engine::Light* light_;
+	
 	Obj::File* ime_file_;
 	Obj::File* player_file_;
 	objects::Player* player_;
+	objects::Sun* sun_;
 };
 
 }

@@ -27,7 +27,7 @@ Player::~Player() {
 void Player::Update(double dt) {
     Model::Update(dt);
 
-	double speed = 4.0 * dt;
+	double speed = 2.5 * dt;
 	if (forward_move_[0])
 		MoveForward(speed, true);
 	if (forward_move_[1])
@@ -50,7 +50,12 @@ void Player::MouseHandler(int btn, int state, int x, int y) {
 void Player::MouseMotionHandler(int btn, int dx, int dy) {
 	if (!mouse_warped_) {
 		horizontal_angle_ -= dx*0.01;
+
 		vertical_angle_ -= dy*0.01;
+		if (vertical_angle_ > PI/2)
+			vertical_angle_ = PI/2;
+		if (vertical_angle_ < -PI/2)
+			vertical_angle_ = -PI/2;
 
 		direction_.x = cos(vertical_angle_) * sin(horizontal_angle_);
 		direction_.y = sin(vertical_angle_);

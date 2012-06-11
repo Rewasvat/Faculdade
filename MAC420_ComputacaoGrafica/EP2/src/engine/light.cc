@@ -142,18 +142,6 @@ void Light::applyAllSettings() {
 	applyPosition();
 }
 
-void Light::rotateToDirection() {
-	Vector3D z_axis (0.0, 0.0, 1.0);
-    double angle = acos( direction_ * z_axis );
-    if ( fabs(angle) > 0.0 ) {
-        Vector3D rot_axis = direction_.CrossProduct(z_axis);
-        rot_axis.Normalize();
-        rot_axis.Scale(-1.0);
-        double angle_deg = (180.0 * angle) / PI;
-        glRotated(angle_deg, rot_axis.x, rot_axis.y, rot_axis.z);
-    }
-}
-
 void Light::SetGlobalAmbientLight(Color color) {
 	glLightModelfv(GL_LIGHT_MODEL_AMBIENT, color.val);
 }

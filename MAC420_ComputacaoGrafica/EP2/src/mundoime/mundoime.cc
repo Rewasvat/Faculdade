@@ -8,9 +8,7 @@
 #include <mundoime/objects/player.h>
 #include <mundoime/objects/skybox.h>
 #include <mundoime/physicsmanager.h>
-
-#include <engine/light.h>
-#include <engine/color.h>
+#include <mundoime/objects/sun.h>
 
 using namespace engine;
 
@@ -21,19 +19,8 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 	objects::Skybox* skybox = new objects::Skybox("Models/skybox", 50);
 	skybox->ReparentTo(this);
 
-	light_ = new Light(GL_LIGHT0, Light::DIRECTIONAL);
-    light_->SetSpotlightParameters(10.0);
-    light_->SetAmbientColor(Color(1.0, 1.0, 1.0, 0.7));
-    light_->SetDiffuseColor(Color(1.0, 1.0, 1.0, 1.0));
-    light_->SetSpecularColor(Color(1.0, 1.0, 1.0, 1.0));
-    Vector3D pos(0.0, 2.0, 0.0);
-    light_->set_position( pos );
-    Vector3D dir(-1.0, -1.0, -1.0);
-    light_->set_direction( dir );
-    light_->Activate();
-    light_->ReparentTo(this);
-
-	Light::SetGlobalAmbientLight( Color(1.0, 1.0, 1.0, 1.0) );
+	sun_ = new objects::Sun(1.0, 50.0);
+    sun_->ReparentTo(this);
 
 	ime_file_ = new Obj::File();
 	if (ime_file_->Load("Models/IMEblocoB.obj")) {
@@ -131,6 +118,15 @@ void MundoIME::KeyboardHandler(unsigned char key, int x, int y) {
 		break;
 	case ' ':
 		paused_ = !paused_;
+		break;
+	case '+':
+		sun_->IncreateTimeRate();
+		break;
+	case '-':
+		sun_->DecreaseTimeRate();
+		break;
+	case 'r':
+		player_->set_position(Vector3D(0.0, 3.0, 0.0));
 		break;
 	}
 }
