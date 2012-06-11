@@ -39,7 +39,7 @@ void Skybox::Render() {
  
     // Just in case we set all vertices to white.
     glColor4f(1,1,1,1);
-	glTranslated(0.0, size_*0.7, 0.0);
+	glTranslated(0.0, size_*0.55, 0.0);
  
     // Render the front quad
     glBindTexture(GL_TEXTURE_2D, left_tex_);

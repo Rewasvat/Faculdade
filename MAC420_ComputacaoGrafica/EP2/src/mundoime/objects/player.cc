@@ -27,7 +27,7 @@ Player::~Player() {
 void Player::Update(double dt) {
     Model::Update(dt);
 
-	double speed = 10.0 * dt;
+	double speed = 4.0 * dt;
 	if (forward_move_[0])
 		MoveForward(speed, true);
 	if (forward_move_[1])
@@ -65,6 +65,7 @@ void Player::MouseMotionHandler(int btn, int dx, int dy) {
 		if (dx != 0.0 || dy != 0.0) {
 			mouse_warped_ = true;
 #ifdef WIN32
+			//apparently this works on Windows but not on Linux...
 			glutWarpPointer(Engine::reference()->window_width()/2, Engine::reference()->window_height()/2);
 #endif
 		}
@@ -114,7 +115,7 @@ void Player::MoveSideways(double amount, bool right) {
 }
 
 Vector3D Player::eye_position() {
-	return position_ + Vector3D(0.0, 0.45, 0.0);
+	return position_ + Vector3D(0.0, 0.225, 0.0);
 }
 
 }

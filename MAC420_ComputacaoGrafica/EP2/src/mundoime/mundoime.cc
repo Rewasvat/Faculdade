@@ -66,7 +66,7 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
         
         Vector3D ppos (0.0, 7.0, 0.0);
         Vector3D pdir (0.0, 0.0, 1.0);
-        btCollisionShape* pshape = new btCapsuleShape(0.25, 0.5);
+        btCollisionShape* pshape = new btCapsuleShape(0.125, 0.25);
         player_ = new objects::Player(ppos, pdir, pmeshes[0], 68.0, pshape);
         player_->ReparentTo(this);
         PhysicsManager::reference()->AddBody( player_->body() );
