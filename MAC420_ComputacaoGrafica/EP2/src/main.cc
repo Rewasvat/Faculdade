@@ -3,30 +3,18 @@
 #include <engine/engine.h>
 #include <engine/engineconfig.h>
 #include <mundoime/mundoime.h>
-#include <mundoime/loaderutil.h>
 #include <mundoime/physicsmanager.h>
 
 void mundoIME_exitCallback() {
-	mundoime::LoaderUtil* loader = mundoime::LoaderUtil::reference();
-	delete loader;
-
     mundoime::PhysicsManager* physics = mundoime::PhysicsManager::reference();
     delete physics;
 }
 
 int main(int argc, char* argv[]) {
-	mundoime::LoaderUtil* loader = mundoime::LoaderUtil::reference();
-
-	loader->Load(argc, argv);
-
-	/*if (!loader->GetVectorField()) {
-		loader->PrintUsage();
-		return 0;
-	}*/
 
 	engine::Engine* e = engine::Engine::reference();
 	e->RegisterCustomExitCallback(mundoIME_exitCallback);
-	engine::EngineConfig* config = loader->GetEngineConfig();
+	engine::EngineConfig* config = new engine::EngineConfig();
 	config->set_window_name("MAC420 EP2 - Mundo IME");
 	e->Configure(config);
 	e->Initialize(argc, argv);

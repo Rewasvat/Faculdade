@@ -125,9 +125,9 @@ void MundoIME::KeyboardHandler(unsigned char key, int x, int y) {
 	case '-':
 		sun_->DecreaseTimeRate();
 		break;
-	case 'r':
+	/*case 'r':
 		player_->set_position(Vector3D(0.0, 3.0, 0.0));
-		break;
+		break;*/
 	}
 }
 
