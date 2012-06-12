@@ -1,0 +1,106 @@
+﻿###############################################################################
+#   MAC420 - Computação Gráfica
+#   EP2 - Mundo IME
+#
+#   Fernando Omar Aluani    #USP: 6797226
+###############################################################################
+
+
+################################
+#  Instruções de Compilação
+################################
+Requerimentos:
+    -CMake (ao menos versão 2.6)
+    -Compilador de C++
+    -OpenGL e GLUT
+
+OBS.: O CMake deve conseguir encontrar o Compilador, o OpenGL e o GLUT. O CMake conheçe
+e testa vários locais no sistema para encontrá-los, e isso normalmente funciona em quase
+todos sistemas onde tais coisas foram instaladas de forma normal. Caso eles não sejam
+encontrados, sugiro checar documentação do CMake sobre como corrigir isto.
+
+O CMake gera arquivos necessários para compilar o projeto em várias plataformas e compiladores,
+o exemplo mais básico disso é ele gerar Makefiles em Linux, que usam o GCC para compilar projetos
+em C/C++.
+Este EP foi compilado e testado com sucesso em:
+-Windows, cmake gerou projetos de Visual Studio.
+-Linux, cmake gerou Makefile/G++.
+E acredito que ele deva funcionar em Windows/MinGW e Macintosh/G++.
+
+Para compilar o EP então, siga esses passos:
+1) Execute este comando em um terminal na pasta raiz do EP:
+	cmake .
+
+2) Execute a ferramenta para o qual o CMake gerou arquivos para. Neste caso, isso provavelmente sera:
+
+2A) [Linux] Execute o seguinte comando em um terminal, ainda na pasta raiz do EP
+	make
+
+2B) [Windows] Abra a solução de Visual Studio que foi gerada 'MAC0420_EP2'. 
+3B) [Windows] Compile o projeto 'MundoIME' (ignore os outros projetos que o CMake gera, eles são usados internamente pelo CMake)
+
+Pronto, agora o EP2 está compilado, e você pode usá-lo.
+O arquivo executável gerado fica localizado na pasta <pasta raiz do EP>
+No caso do Windows, é capaz do Visual Studio colocar o executável dentro de outra pasta dentro desta, 
+dependendo do modo de compilação (Debug ou Release).
+
+
+################################
+#  Instruções de Uso do EP
+################################
+Em seu terminal, com o EP2 compilado, navegue para a pasta do EP.
+Então, para executar o EP rode o comando:
+
+./MundoIME
+
+Com o EP2 rodando e sua janela aberta, existem os seguintes comandos para serem usados:
+- '+': aumenta a velocidade de passagem do tempo;
+- '-': diminui a velocidade da passagem do tempo;
+-a: movimenta o jogador para a esquerda;
+-w: movimenta o jogador para frente;
+-s: movimenta o jogador para trás;
+-d: movimenta o jogador para a direita;
+
+E finalmente, movendo o mouse na janela do programa movimenta a direção da camera do jogo, e a camera está localizada aonde estariam
+seus olhos caso você estivesse andando pelo modelo do IME.
+
+CUIDADO com o movimento do jogador: enquanto a detecção de colisão funciona, não tive tempo de deixá-la (e o movimento) perfeita... Se você ficar
+andando para cima de uma parede em um certo ângulo, sem parar, é capaz de você entrar no modelo. Nesse caso 2 coisas podem acontecer:
+você andar por dentro do modelo, o que fica feio, então repita o acima para voltar para a parte de fora; ou você pode cair no abismo.
+Se você andar pelo terreno além do tamanho do modelo, você irá sair de cima dele e cair no abismo, pois não tive tempo de arrumar isso...
+Ao "cair no abismo", o personagem fica caindo infinitamente, e a única solução é reiniciar o programa (fechar e abrir de novo).
+
+
+OBS.: O EP é compilado linkando dinâmicamente com a biblioteca do glut. Isso normalmente não é um problema no Linux, mas é
+      capaz, dependendo do seu sistema, de acontecer no Windows. Em qualquer caso, é só fazer com que a lib dinâmica
+      (.dll no Windows, .so no Linux) esteja em uma pasta no sistema que o executável/SO encontrem. Só para rodar o programa,
+      o jeito mais fácil é colocar a lib dinâmica na mesma pasta onde se encontra o executável.
+
+
+################################
+#  Notas sobre o código fonte
+################################
+Como você pode ter notado, o código fonte deste EP está dividido em 2 pastas (2 namespaces no C++),
+o Engine e o MundoIME mais o main.cc
+A Engine compõe um simples framework para fazer aplicações gráficas (de tempo real) que eu fiz desde o EP1 e melhorei neste EP,
+e minha idéia é reutilizá-lo para os próximos EPs de MAC420, talvez alterando uma coisa ou outra se eu achar algum
+problema durante os próximos EPs.
+O MundoIME contém a verdadeira lógica do EP, contendo as implementações de classes da framework usadas no programa.
+Com isso, o main.cc simplesmente inicializa a framework e cria a cena do MundoIME.
+
+Sobre bibliotecas externas usadas, usei 3 bibliotecas externas, todas open-source e livres para usar:
+-libobj/objload: biblioteca usada para carregar e renderizar os modelos .OBJ e seus materiais, usados para carregar os modelos 3D no programa.
+	Inclui seu código fonte no programa e alterei algumas coisas, corrigindo problemas que encontrei.
+	Código localizado em src/engine/objload/, e no começo do header (que está nessa pasta) está o nome do autor, site dele, etc.
+-texture_manager: biblioteca usada para carregar texturas .TGA e .BMP no OpenGL, usada pelo programa para carregar as texturas quando necessário.
+	Essa biblioteca é do mesmo autor da libobj/objload acima, e também inclui seu código fonte e altere algumas partes.
+	Código localizado em src/engine/texture/
+-Bullet: biblioteca usada para detecção de colisão e aplicação da física relacionada.
+	Site: http://www.bulletphysics.org/
+	Inclui o código fonte dos módulos da Bullet que eu uso nesse EP, na pasta /BulletLib/.
+	O processo de compilação do EP irá compilar as bibliotecas da Bullet e linkar elas com o EP.
+
+	Para a detecção de colisão, são criados "modelos de colisão" na Bullet. A criação do modelo de colisão para o modelo do IME pode levar
+	algum tempo, então como uma forma de otimização, ao criar o modelo de colisão para os modelos 3D do programa, o EP (usando ferramentas
+	da Bullet) irá salvar esse modelo de colisão num arquivo .BULLET localizado em /Models/OptimizedShapes/, e na próxima vez irá usar
+	esses modelos salvos para carregar o modelo de colisão de forma mais rápida.
