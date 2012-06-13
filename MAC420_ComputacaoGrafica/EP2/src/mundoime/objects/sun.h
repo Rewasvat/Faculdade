@@ -19,6 +19,7 @@ public:
 	void DecreaseTimeRate();
 
     void GetCurrentTimeStr(char* str);
+    bool IsDaytime();
 
 protected:
 	double radius_;

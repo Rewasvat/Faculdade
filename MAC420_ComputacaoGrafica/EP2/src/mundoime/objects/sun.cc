@@ -71,6 +71,10 @@ void Sun::GetCurrentTimeStr(char* str) {
     sprintf(str, "Time of Day: %d:%d", hours, minutes);
 }
 
+bool Sun::IsDaytime() {
+    return (angle_ > 0.0 && angle_ <= PI);
+}
+
 void Sun::updatePosAndDir() {
 	/*rotate around X -> angle_
 			y' = y*cos q - z*sin q
@@ -107,7 +111,7 @@ double normalDistribution(double x, double mean, double variance) {
 }
 
 void Sun::updateColors() {
-	if (angle_ > 0.0 && angle_ <= PI) {
+	if (IsDaytime()) {
 		double mean = PI/2.0;
 		double variance = 0.7;
 		double max_f = normalDistribution(PI/2.0, mean, variance);

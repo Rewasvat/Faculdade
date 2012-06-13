@@ -5,9 +5,14 @@
 #include <mundoime/objects/model.h>
 #include <engine/eventhandler.h>
 
+namespace engine {
+class Light;
+}
 
 namespace mundoime {
 namespace objects {
+
+class Sun;
 
 class Player : public Model, public engine::EventHandler {
 public:
@@ -37,6 +42,10 @@ protected:
 	double speed_;
 	double min_speed_, max_speed_;
     bool jetpack_;
+    Sun* sun_;
+    engine::Light* spotlight_;
+
+    void updateSpotlight();
 };
 
 }

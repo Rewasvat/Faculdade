@@ -5,6 +5,8 @@
 #include <math.h>
 #include <cstdlib>
 #include <GL/glut.h>
+#include <mundoime/mundoime.h>
+#include <mundoime/objects/sun.h>
 
 #define PI 3.14159265358979323846
 
@@ -24,6 +26,13 @@ Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBu
 	min_speed_ = 1.0;
 	max_speed_ = 6.0;
     jetpack_ = false;
+
+    spotlight_ = new Light(GL_LIGHT1, Light::SPOTLIGHT);
+    spotlight_->SetAmbientColor(Color(1.0,1.0,1.0,1.0));
+    spotlight_->SetDiffuseColor(Color(1.0,1.0,1.0,1.0));
+    spotlight_->SetSpecularColor(Color(1.0,1.0,1.0,1.0));
+    spotlight_->SetSpotlightParameters(12.0);
+    spotlight_->SetAttenuationParameters();
 }
 
 Player::~Player() {
@@ -52,6 +61,9 @@ void Player::Update(double dt) {
     }
 
 	forward_move_[0] = forward_move_[1] = side_move_[0] = side_move_[1] = false;
+
+    spotlight_->set_position( position_ );
+    spotlight_->set_direction( direction_ );
 }
 
 void Player::Render() {
@@ -151,6 +163,21 @@ void Player::MoveSideways(double amount, bool right) {
 
 Vector3D Player::eye_position() {
 	return position_ + Vector3D(0.0, 0.21, 0.0);
+}
+
+void Player::updateSpotlight() {
+    if (sun_ == NULL) {
+        MundoIME* mime = dynamic_cast<MundoIME*>(parent_);
+        sun_ = mime->sun();
+        spotlight_->ReparentTo(parent_);
+    }
+
+    if (sun_->IsDaytime()) {
+        if (spotlight_->active())   spotlight_->Deactivate();
+    }
+    else {
+        if (!spotlight_->active())  spotlight_->Activate();
+    }
 }
 
 }

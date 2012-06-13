@@ -24,6 +24,7 @@ public:
 
     void Activate();
     void Deactivate();
+    bool active() { return active_; }
 
     void SetType(LightType type);
     LightType type() { return type_; }

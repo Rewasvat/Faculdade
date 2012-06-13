@@ -30,6 +30,8 @@ public:
 	virtual void MouseMotionHandler(int btn, int dx, int dy);
 	virtual void KeyboardHandler(unsigned char key, int x, int y);
 
+    objects::Sun* sun () { return sun_; }
+
 protected:
 	bool paused_;
 	
