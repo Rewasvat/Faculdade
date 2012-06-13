@@ -6,6 +6,7 @@
 #include <math.h>
 
 #define PI 3.14159265358979323846
+#define E  2.71828182845904523536
 
 using namespace engine;
 
@@ -15,7 +16,7 @@ namespace objects {
 Sun::Sun(double radius, double distance) : Light(GL_LIGHT0, DIRECTIONAL) {
 	radius_ = radius;
 	distance_ = distance;
-	angle_ = PI/2;
+	angle_ = PI/6;
 	time_rate_ = 2*PI/300.0; //default is a day in 300 secs (5 minutes)
 	position_ = Vector3D();
     updatePosAndDir();
@@ -43,6 +44,9 @@ void Sun::Render() {
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, sun_color_);
 	glTranslated(position_.x, position_.y, position_.z);
     glutSolidSphere(radius_, 6, 6);
+
+	float zero[] = {0.0, 0.0, 0.0, 1.0};
+	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, zero);
 }
 
 void Sun::IncreateTimeRate() {
@@ -79,23 +83,32 @@ void Sun::updatePosAndDir() {
 	position_.z = nz;			
 
     Vector3D dir = -position_; //direction pointing towards origin
-    set_direction( dir );
+    set_direction( -dir );
+}
+
+double normalDistribution(double x, double mean, double variance) {
+	double exponent = -pow((x - mean), 2) / (2*pow(variance, 2));
+	return (pow(E, exponent)) / (sqrt(2*PI*pow(variance,2)));
 }
 
 void Sun::updateColors() {
 	if (angle_ > 0.0 && angle_ <= PI) {
-		double factor = fabs( (PI/2.0) - angle_ ) / (PI/2.0); /*this is wrong =( */
-		//printf("SUN ANGLE = %lf [%lf]\n", angle_, factor);
-		SetAmbientColor(Color(0.3*factor, 0.3*factor, 0.3*factor, 0.5*factor));
-		SetDiffuseColor(Color(1.0, 1.0, 1.0, factor));
+		double mean = PI/2.0;
+		double variance = 0.7;
+		double max_f = normalDistribution(PI/2.0, mean, variance);
+		double offset = 1.0 - max_f;
+		double factor = normalDistribution(angle_, mean, variance) + offset;
+
+		SetAmbientColor(Color(0.2*factor, 0.2*factor, 0.2*factor, 0.5*factor));
+		SetDiffuseColor(Color(1.0, factor, factor, factor));
 		SetSpecularColor(Color(1.0, 1.0, 1.0, factor));
 		sun_color_[0] = 1.0;
-		sun_color_[1] = 1.0;
-		sun_color_[2] = 0.8;
-		sun_color_[3] = factor;
+		sun_color_[1] = factor;
+		sun_color_[2] = 0.7*factor;
+		sun_color_[3] = 1.0;
 	}
 	else {
-		SetAmbientColor(Color(0.1, 0.1, 0.1, 0.05));
+		SetAmbientColor(Color(0.07, 0.07, 0.07, 0.05));
 		SetDiffuseColor(Color(0.0, 0.0, 0.0, 0.0));
 		SetSpecularColor(Color(0.0, 0.0, 0.0, 0.0));
 		sun_color_[0] = 0.0;

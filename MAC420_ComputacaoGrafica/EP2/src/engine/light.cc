@@ -43,7 +43,6 @@ void Light::SetType(LightType type) {
 	type_ = type;
 }
 
-/*angle in degrees, in range [0, 90], or special value 180.0 (no spotlight)*/
 void Light::SetAmbientColor(Color ambient) { 
 	ambient_ = ambient;
 }
@@ -62,6 +61,7 @@ void Light::SetColors(Color ambient, Color diffuse, Color specular) {
 	this->SetSpecularColor(specular);
 }
 
+/*angle in degrees, in range [0, 90], or special value 180.0 (no spotlight)*/
 void Light::SetSpotlightParameters(float angle, float exponent) { 
 	spot_angle_ = angle; 
 	spot_exponent_ = exponent;

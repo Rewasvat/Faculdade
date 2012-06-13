@@ -24,44 +24,16 @@ Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuff
         shape_ = shape;
     }
     else {
-		std::string optMeshShapeFileName = "Models/OptimizedShapes/" + mesh.name + ".bullet";
-		FILE* opt_shape_file = fopen(optMeshShapeFileName.c_str(), "rb"); /*Try to read first to check if file exists*/
-		if (opt_shape_file != NULL) {
-			fclose(opt_shape_file);
-			btBulletWorldImporter import(0);//don't store info into the world
-			if (import.loadFile(optMeshShapeFileName.c_str()))
-			{
-				int numShape = import.getNumCollisionShapes();
-				if (numShape)
-				{
-					shape_ = (btBvhTriangleMeshShape*)import.getCollisionShapeByIndex(0);
-				}
-			}
-			printf("[Model] Imported saved optimized collision shape mesh for model %s\n", mesh.name.c_str());
-		}
-		else {
-			btTIVA_ = new btTriangleIndexVertexArray(   mesh_.m_Indices.size()/3,               /*number of triangles in mesh*/
-														(int*) &mesh_.m_Indices[0],           /*pointer to first element in index array*/
-														3*sizeof(unsigned int),                /*number of bytes in each index element*/
-														mesh_.m_Vertices.size(),              /*number of vertices in mesh*/
-														(btScalar*) &mesh_.m_Vertices[0].x,   /*pointer to first element in vertex array*/
-														3*sizeof(float));                    /*number of bytes in each vertex element*/
-			bool useQuantizedAabbCompression = true;
-			shape_ = new btBvhTriangleMeshShape(btTIVA_,useQuantizedAabbCompression);
-			printf("[Model] created Bullet triangle mesh collision shape for model %s\n", mesh.name.c_str());
-
-			int max_buffer_size = 1024*1024*5;
-			btDefaultSerializer*	serializer = new btDefaultSerializer(max_buffer_size);
-			serializer->startSerialization();
-			serializer->registerNameForPointer(shape_, mesh.name.c_str());
-			shape_->serializeSingleShape(serializer);
-			serializer->finishSerialization();
-
-			opt_shape_file = fopen(optMeshShapeFileName.c_str(), "wb");
-			fwrite(serializer->getBufferPointer(),serializer->getCurrentBufferSize(),1,opt_shape_file);
-			fclose(opt_shape_file);
-			printf("[Model] Saved optimized collision shape mesh for model %s\n", mesh.name.c_str());
-		}
+		btTIVA_ = new btTriangleIndexVertexArray(   mesh_.m_Indices.size()/3,               /*number of triangles in mesh*/
+													(int*) &mesh_.m_Indices[0],           /*pointer to first element in index array*/
+													3*sizeof(unsigned int),                /*number of bytes in each index element*/
+													mesh_.m_Vertices.size(),              /*number of vertices in mesh*/
+													(btScalar*) &mesh_.m_Vertices[0].x,   /*pointer to first element in vertex array*/
+													3*sizeof(float));                    /*number of bytes in each vertex element*/
+		bool useQuantizedAabbCompression = true;
+		shape_ = new btBvhTriangleMeshShape(btTIVA_,useQuantizedAabbCompression);
+		printf("[Model] created Bullet triangle mesh collision shape for model %s\n", mesh.name.c_str());
+		
     }
     
     //transform(rotation, translation)

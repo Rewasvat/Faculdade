@@ -13,19 +13,29 @@
 -Não é necessário, mas se quiser pode usar shaders (somente GLSL).
 
 #########################################
-# FASE I
+# TASKS
 #########################################
 Basic Features needed:
--model loading [DONE]
--texture loading [DONE apparently]
--skybox
--dynamic illumination  [perhaps DONE]
+[DONE] -model loading 
+[DONE] -texture loading 
+[DONE] -skybox
+	-night skybox
+[DONE] -dynamic illumination  [DONE]
 -dynamic shadows
--colisão  [DONE apparently]
+[DONE] -colisão
+-chuva (check fase 2)
+-FPS counter
+-current time display
+-player nighttime spotlight
+-terrain "invisible" barriers
+-way to increase player speed
+-improve player movement (current translate method is ugly)
+-improve player collision (so that he can't enter the buildings even on increased speeds)
 
 Resources needed:
 -IME model  [done: 60%]
--IME panorama texture (for skybox)
+-IME skybox panorama texture [please fix it]
+-IME nighttime skybox panorama texture 
 ==================================
 
 -Ambiente:

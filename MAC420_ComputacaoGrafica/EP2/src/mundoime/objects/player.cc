@@ -27,7 +27,7 @@ Player::~Player() {
 void Player::Update(double dt) {
     Model::Update(dt);
 
-	double speed = 2.5 * dt;
+	double speed = 5.0;
 	if (forward_move_[0])
 		MoveForward(speed, true);
 	if (forward_move_[1])
@@ -98,7 +98,7 @@ void Player::MoveForward(double amount, bool forward) {
 	if (!forward)
         delta.Scale(-1.0);
 
-	body_->translate(btVector3(delta.x, delta.y, delta.z));
+	body_->setLinearVelocity(btVector3(delta.x, delta.y, delta.z));
 
 	//printf("Moving forward[%d]\n", forward);
 }
@@ -114,7 +114,7 @@ void Player::MoveSideways(double amount, bool right) {
     if (!right)
         delta.Scale(-1.0);
 
-	body_->translate(btVector3(delta.x, delta.y, delta.z));
+	body_->setLinearVelocity(btVector3(delta.x, delta.y, delta.z));
 
 	//printf("Moving sideways[%d]\n", right);
 }

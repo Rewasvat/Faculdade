@@ -52,6 +52,9 @@ void Engine::Initialize(int argc, char* argv[]) {
 	//glDepthMask(GL_TRUE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_POLYGON_SMOOTH);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//glEnable(GL_COLOR_MATERIAL);
     
 	input_manager_->Initialize();
