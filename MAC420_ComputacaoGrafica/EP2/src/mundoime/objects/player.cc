@@ -23,6 +23,7 @@ Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBu
 	speed_ = 2.0;
 	min_speed_ = 1.0;
 	max_speed_ = 6.0;
+    jetpack_ = false;
 }
 
 Player::~Player() {
@@ -107,6 +108,9 @@ void Player::KeyboardHandler(unsigned char key, int x, int y) {
 	    speed_ -= 0.2;
 	    if (speed_ < min_speed_) speed_ = min_speed_;
 	}
+
+    if (key == 'J')
+        jetpack_ = !jetpack_;
 }
 
 void Player::MoveForward(double amount, bool forward) {
@@ -114,7 +118,8 @@ void Player::MoveForward(double amount, bool forward) {
     body_->getMotionState()->getWorldTransform(t);
 
     engine::Vector3D delta = direction_;
-    delta.y = 0.0; /*we don't want the player moving around up and down... After all he doesn't fly*/
+    if (!jetpack_)
+        delta.y = 0.0; /*we don't want the player moving around up and down... After all he doesn't fly*/
     delta.Normalize();
     delta.Scale(amount);
 
@@ -131,7 +136,8 @@ void Player::MoveSideways(double amount, bool right) {
     body_->getMotionState()->getWorldTransform(t);
 
     engine::Vector3D delta = direction_.CrossProduct(up_);
-    delta.y = 0.0; /*we don't want the player moving around up and down... After all he doesn't fly*/
+    if (!jetpack_)
+        delta.y = 0.0; /*we don't want the player moving around up and down... After all he doesn't fly*/
     delta.Normalize();
     delta.Scale(amount);
 

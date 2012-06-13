@@ -3,6 +3,7 @@
 #include <engine/color.h>
 #include <GL/glut.h>
 #include <cstdlib>
+#include <cstdio>
 #include <math.h>
 
 #define PI 3.14159265358979323846
@@ -39,7 +40,7 @@ void Sun::Update(double dt) {
 void Sun::Render() {
 	Light::Render();
 
-    glColor4d(sun_color_[0], sun_color_[1], sun_color_[2], sun_color_[3]);
+    glColor4f(sun_color_[0], sun_color_[1], sun_color_[2], sun_color_[3]);
     glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, sun_color_);
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, sun_color_);
 	glTranslated(position_.x, position_.y, position_.z);
@@ -57,6 +58,17 @@ void Sun::IncreateTimeRate() {
 void Sun::DecreaseTimeRate() {
 	time_rate_ -= PI/100.0;
 	if (time_rate_ < -PI)  time_rate_ = -PI;
+}
+
+void Sun::GetCurrentTimeStr(char* str) {
+    int hours = 0, minutes = 0;
+    minutes = 6*60 + abs(angle_ * 24 * 60 / (2*PI));
+    while (minutes > 60) {
+        minutes -= 60;
+        hours++;
+        if (hours > 23) hours = 0;
+    }
+    sprintf(str, "Time of Day: %d:%d", hours, minutes);
 }
 
 void Sun::updatePosAndDir() {

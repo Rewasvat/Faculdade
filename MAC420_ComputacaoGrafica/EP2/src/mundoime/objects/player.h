@@ -27,6 +27,8 @@ public:
 	engine::Vector3D eye_position();
 	engine::Vector3D up() { return up_; }
 
+    double speed() { return speed_; }
+
 protected:
 	engine::Vector3D up_;
 	double vertical_angle_, horizontal_angle_;
@@ -34,6 +36,7 @@ protected:
 	bool forward_move_[2], side_move_[2];
 	double speed_;
 	double min_speed_, max_speed_;
+    bool jetpack_;
 };
 
 }

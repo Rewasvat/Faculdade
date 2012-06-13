@@ -24,10 +24,10 @@ Basic Features needed:
 -dynamic shadows
 [DONE] -colisão
 -chuva (check fase 2)
--FPS counter
+[DONE] -FPS counter
 -extra displays (optional):
-    -time of day
-    -player speed
+    [DONE] -time of day
+    [DONE] -player speed
 -player nighttime spotlight
 -terrain "invisible" barriers
 [DONE] -way to increase player speed

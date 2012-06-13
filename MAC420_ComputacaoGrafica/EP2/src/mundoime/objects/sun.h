@@ -18,6 +18,8 @@ public:
 	void IncreateTimeRate();
 	void DecreaseTimeRate();
 
+    void GetCurrentTimeStr(char* str);
+
 protected:
 	double radius_;
 	double distance_;

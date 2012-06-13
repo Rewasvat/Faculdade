@@ -98,6 +98,16 @@ void MundoIME::Render() {
 	
 
     Scene::Render();
+
+    char draw_str[32];
+    sprintf(draw_str, "FPS: %4.2lf", Engine::reference()->FPS());
+    Engine::reference()->DrawString(5.0, 20.0, &draw_str[0], BLACK);
+
+    sprintf(draw_str, "Player Speed: %2.3lf", player_->speed());
+    Engine::reference()->DrawString(5.0, 40.0, &draw_str[0], BLACK);
+
+    sun_->GetCurrentTimeStr(draw_str);
+    Engine::reference()->DrawString(5.0, 60.0, &draw_str[0], BLACK);
 }
 
 void MundoIME::End() {
@@ -125,6 +135,8 @@ void MundoIME::KeyboardHandler(unsigned char key, int x, int y) {
 	case '-':
 		sun_->DecreaseTimeRate();
 		break;
+    case 'F':
+        Engine::reference()->ToggleFullscreen();
 	/*case 'r':
 		player_->set_position(Vector3D(0.0, 3.0, 0.0));
 		break;*/

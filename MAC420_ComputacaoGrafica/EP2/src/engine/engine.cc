@@ -15,6 +15,8 @@ ExitCallbackFunc Engine::custom_exit_callback_ = NULL;
 
 Engine::Engine() : width_(0), height_(0), config_(NULL) {
 	input_manager_ = new InputManager;
+    frames_ = previous_ = 0;
+    fullscreen_ = false;
 }
 
 Engine::~Engine() {
@@ -72,8 +74,8 @@ void Engine::Update() {
 		
 		DeleteFinishedScenes();
 
+        calculateFPS();
 		input_manager_->Update();
-
 		if (scenes_.size() > 0) {
 		    scenes_.back()->Update(dt);
 			glutPostRedisplay();
@@ -124,6 +126,59 @@ void Engine::RemoveScene(Scene* scene) {
 
 void Engine::PopScene() {
 	if(!scenes_.empty()) scenes_.pop_back();
+}
+
+void Engine::DrawString(double x, double y, const char* str, const Color& color) {
+    /*Firstly, go to ortho projection to draw text at the screen in 2D*/
+    glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+	gluOrtho2D(0, width_, 0, height_);
+	glScalef(1, -1, 1);
+	glTranslatef(0, -height_, 0);
+	glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glPushAttrib(GL_ENABLE_BIT);
+    glDisable(GL_LIGHTING);
+
+    /*render the string*/
+    glColor4fv(color.val);
+    const char *c;
+    glRasterPos2d(x, y);
+    for (c=str; *c != '\0'; c++) {
+        glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, *c);
+    }
+
+    /*restore previous projection*/
+    glPopAttrib();
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+}
+
+void Engine::ToggleFullscreen() {
+    if (fullscreen_) {
+        glutReshapeWindow(800, 600);
+        glutReshapeWindow(width_, height_);
+        glutPositionWindow(50,50);
+    }
+    else {
+        glutFullScreen();
+    }
+    fullscreen_ = !fullscreen_;
+}
+
+void Engine::calculateFPS() {
+    frames_++;
+	unsigned time = glutGet(GLUT_ELAPSED_TIME);
+	if (time - previous_ > 1000) {
+		fps_ = frames_*1000.0/(time-previous_);
+		previous_ = time;
+		frames_ = 0;
+	}
 }
 
 void Engine::DeleteFinishedScenes() {

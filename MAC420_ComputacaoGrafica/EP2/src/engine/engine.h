@@ -4,6 +4,7 @@
 #include <string>
 #include <list>
 #include <engine/timer.h>
+#include <engine/color.h>
 
 namespace engine {
 
@@ -34,10 +35,16 @@ public:
 	void RemoveScene(Scene* scene);
 	void PopScene();
 
+    void DrawString(double x, double y, const char* str, const Color& color);
+
+    bool fullscreen() { return fullscreen_; }
+    void ToggleFullscreen();
+
 	InputManager* input_manager() { return input_manager_; }
 
 	int window_width() { return width_; }
 	int window_height() { return height_; }
+    double FPS() { return fps_; }
 
 	static void RegisterCustomExitCallback( ExitCallbackFunc callback) { custom_exit_callback_ = callback; }
 
@@ -47,6 +54,7 @@ private:
 
 	int width_;
 	int height_;
+    bool fullscreen_;
 	EngineConfig* config_;
 	SceneList scenes_;
 	InputManager* input_manager_;
@@ -55,6 +63,11 @@ private:
 	Timer clock_;
 	
 	Engine();
+
+    double fps_;
+    unsigned frames_;
+    unsigned previous_;
+    void calculateFPS();
 
 	void DeleteFinishedScenes();
 
