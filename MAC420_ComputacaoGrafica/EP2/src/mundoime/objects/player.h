@@ -32,6 +32,8 @@ protected:
 	double vertical_angle_, horizontal_angle_;
 	bool mouse_warped_;
 	bool forward_move_[2], side_move_[2];
+	double speed_;
+	double min_speed_, max_speed_;
 };
 
 }

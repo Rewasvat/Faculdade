@@ -51,7 +51,7 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
 		player_file_->GroupsToVertexArrays(pmeshes);
         printf("Number of player models: %d\n", pmeshes.size());
         
-        Vector3D ppos (0.0, 7.0, 0.0);
+        Vector3D ppos (0.0, 3.0, 0.0);
         Vector3D pdir (0.0, 0.0, 1.0);
         btCollisionShape* pshape = new btCapsuleShape(0.125, 0.25);
         player_ = new objects::Player(ppos, pdir, pmeshes[0], 68.0, pshape);

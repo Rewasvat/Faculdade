@@ -25,12 +25,14 @@ Basic Features needed:
 [DONE] -colisão
 -chuva (check fase 2)
 -FPS counter
--current time display
+-extra displays (optional):
+    -time of day
+    -player speed
 -player nighttime spotlight
 -terrain "invisible" barriers
--way to increase player speed
--improve player movement (current translate method is ugly)
--improve player collision (so that he can't enter the buildings even on increased speeds)
+[DONE] -way to increase player speed
+[DONE] -improve player movement (current translate method is ugly)
+[DONE] -improve player collision (so that he can't enter the buildings even on increased speeds)
 
 Resources needed:
 -IME model  [done: 60%]

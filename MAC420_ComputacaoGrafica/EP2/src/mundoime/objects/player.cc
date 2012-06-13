@@ -15,10 +15,14 @@ namespace objects {
 
 Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape) : Model(pos,direction,mesh,mass,shape) {
 	body_->setAngularFactor(btVector3(0.0, 0.0, 0.0));
+	body_->setDamping(0.975, 0.9);
 	up_ = Vector3D(0.0, 1.0, 0.0);
 	vertical_angle_ = horizontal_angle_ = 0.0;
 	mouse_warped_ = false;
 	forward_move_[0] = forward_move_[1] = side_move_[0] = side_move_[1] = false;
+	speed_ = 2.0;
+	min_speed_ = 1.0;
+	max_speed_ = 6.0;
 }
 
 Player::~Player() {
@@ -27,15 +31,24 @@ Player::~Player() {
 void Player::Update(double dt) {
     Model::Update(dt);
 
-	double speed = 5.0;
 	if (forward_move_[0])
-		MoveForward(speed, true);
+		MoveForward(speed_, true);
 	if (forward_move_[1])
-		MoveForward(speed, false);
+		MoveForward(speed_, false);
 	if (side_move_[0])
-		MoveSideways(speed, false);
+		MoveSideways(speed_, false);
 	if (side_move_[1])
-		MoveSideways(speed, true);
+		MoveSideways(speed_, true);
+
+    Vector3D dir (direction_.x, 0.0, direction_.z);
+    dir.Normalize();
+    Vector3D z_axis(0.0,0.0,1.0);
+    rot_angle_ = acos( dir * z_axis );
+    if ( fabs(rot_angle_) > 0.0 ) {
+        rot_axis_ = dir.CrossProduct(z_axis);
+        rot_axis_.Normalize();
+        rot_axis_.Scale(-1.0);
+    }
 
 	forward_move_[0] = forward_move_[1] = side_move_[0] = side_move_[1] = false;
 }
@@ -85,6 +98,15 @@ void Player::KeyboardHandler(unsigned char key, int x, int y) {
 	forward_move_[1] = (key == 's');
 	side_move_[0] = (key == 'a');
 	side_move_[1] = (key == 'd');
+	
+	if (key == 'W') {
+	    speed_ += 0.2;
+	    if (speed_ > max_speed_) speed_ = max_speed_;
+	}
+	if (key == 'S') {
+	    speed_ -= 0.2;
+	    if (speed_ < min_speed_) speed_ = min_speed_;
+	}
 }
 
 void Player::MoveForward(double amount, bool forward) {
@@ -92,6 +114,7 @@ void Player::MoveForward(double amount, bool forward) {
     body_->getMotionState()->getWorldTransform(t);
 
     engine::Vector3D delta = direction_;
+    delta.y = 0.0; /*we don't want the player moving around up and down... After all he doesn't fly*/
     delta.Normalize();
     delta.Scale(amount);
 
@@ -108,6 +131,7 @@ void Player::MoveSideways(double amount, bool right) {
     body_->getMotionState()->getWorldTransform(t);
 
     engine::Vector3D delta = direction_.CrossProduct(up_);
+    delta.y = 0.0; /*we don't want the player moving around up and down... After all he doesn't fly*/
     delta.Normalize();
     delta.Scale(amount);
 
@@ -120,7 +144,7 @@ void Player::MoveSideways(double amount, bool right) {
 }
 
 Vector3D Player::eye_position() {
-	return position_ + Vector3D(0.0, 0.225, 0.0);
+	return position_ + Vector3D(0.0, 0.21, 0.0);
 }
 
 }

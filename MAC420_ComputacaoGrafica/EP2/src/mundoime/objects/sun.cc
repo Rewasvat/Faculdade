@@ -51,10 +51,12 @@ void Sun::Render() {
 
 void Sun::IncreateTimeRate() {
 	time_rate_ += PI/100.0;
+	if (time_rate_ > PI)  time_rate_ = PI;
 }
 
 void Sun::DecreaseTimeRate() {
 	time_rate_ -= PI/100.0;
+	if (time_rate_ < -PI)  time_rate_ = -PI;
 }
 
 void Sun::updatePosAndDir() {
@@ -83,7 +85,8 @@ void Sun::updatePosAndDir() {
 	position_.z = nz;			
 
     Vector3D dir = -position_; //direction pointing towards origin
-    set_direction( -dir );
+    dir.Scale(-1.0); /*for some bizarre reason, in OpenGL, if we keep changing direction in each frame the direction vector gets inverted...*/
+    set_direction( dir );
 }
 
 double normalDistribution(double x, double mean, double variance) {
@@ -108,7 +111,7 @@ void Sun::updateColors() {
 		sun_color_[3] = 1.0;
 	}
 	else {
-		SetAmbientColor(Color(0.07, 0.07, 0.07, 0.05));
+		SetAmbientColor(Color(0.04, 0.04, 0.04, 0.04));
 		SetDiffuseColor(Color(0.0, 0.0, 0.0, 0.0));
 		SetSpecularColor(Color(0.0, 0.0, 0.0, 0.0));
 		sun_color_[0] = 0.0;
