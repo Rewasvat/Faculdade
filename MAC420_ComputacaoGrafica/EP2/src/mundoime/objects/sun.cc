@@ -127,7 +127,7 @@ void Sun::updateColors() {
 		sun_color_[3] = 1.0;
 	}
 	else {
-		SetAmbientColor(Color(0.04, 0.04, 0.04, 0.04));
+		SetAmbientColor(Color(0.004, 0.004, 0.004, 1.0));
 		SetDiffuseColor(Color(0.0, 0.0, 0.0, 0.0));
 		SetSpecularColor(Color(0.0, 0.0, 0.0, 0.0));
 		sun_color_[0] = 0.0;

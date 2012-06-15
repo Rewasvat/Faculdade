@@ -27,12 +27,13 @@ Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBu
 	max_speed_ = 6.0;
     jetpack_ = false;
 
+	sun_ = NULL;
     spotlight_ = new Light(GL_LIGHT1, Light::SPOTLIGHT);
     spotlight_->SetAmbientColor(Color(1.0,1.0,1.0,1.0));
     spotlight_->SetDiffuseColor(Color(1.0,1.0,1.0,1.0));
     spotlight_->SetSpecularColor(Color(1.0,1.0,1.0,1.0));
-    spotlight_->SetSpotlightParameters(12.0);
-    spotlight_->SetAttenuationParameters();
+    spotlight_->SetSpotlightParameters(10.0);
+    spotlight_->SetAttenuationParameters(1.2, 0.3, 0.1);
 }
 
 Player::~Player() {
@@ -62,8 +63,7 @@ void Player::Update(double dt) {
 
 	forward_move_[0] = forward_move_[1] = side_move_[0] = side_move_[1] = false;
 
-    spotlight_->set_position( position_ );
-    spotlight_->set_direction( direction_ );
+	updateSpotlight();
 }
 
 void Player::Render() {
@@ -172,6 +172,8 @@ void Player::updateSpotlight() {
         spotlight_->ReparentTo(parent_);
     }
 
+	spotlight_->set_position( position_ );
+    spotlight_->set_direction( direction_ );
     if (sun_->IsDaytime()) {
         if (spotlight_->active())   spotlight_->Deactivate();
     }
