@@ -1,5 +1,6 @@
 #include <mundoime/objects/skybox.h>
 #include <engine/texture/texture.h>
+#include <mundoime/objects/sun.h>
 #include <GL/glut.h>
 #include <cstdlib>
 #include <string>
@@ -24,21 +25,27 @@ Skybox::~Skybox() {
 }
 
 void Skybox::Update(double dt) {
-
 }
 
 void Skybox::Render() {
-	// Reset and transform the matrix.
- 
     // Enable/Disable features
     glPushAttrib(GL_ENABLE_BIT);
     glEnable(GL_TEXTURE_2D);
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glDisable(GL_BLEND);
- 
+	glEnable(GL_COLOR_MATERIAL);
+
     // Just in case we set all vertices to white.
-    glColor4f(1,1,1,1);
+	float tf = static_cast<float>(related_sun_->time_factor());
+	if (related_sun_->IsDaytime())
+		glColor4f(1.0,tf,tf,tf);
+	else
+		glColor4f(0.09,0.09,0.09,0.8);
+	float sky_ambient[] = {1.0, tf, tf, 1.0};
+	float sky_diffuse[] = {0.0, 0.0, 0.0, 0.0};
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, sky_ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, sky_diffuse);
 	glTranslated(0.0, size_*0.55, 0.0);
  
     // Render the front quad

@@ -19,7 +19,7 @@ Basic Features needed:
 [DONE] -model loading 
 [DONE] -texture loading 
 [DONE] -skybox
-       -night skybox
+[DONE] -night skybox
 [DONE] -dynamic illumination  [DONE]
        -dynamic shadows
 [DONE] -colisão
@@ -34,9 +34,8 @@ Basic Features needed:
 [DONE] -improve player collision (so that he can't enter the buildings even on increased speeds)
 
 Resources needed:
--IME model  [done: 60%]
--IME skybox panorama texture [please fix it]
--IME nighttime skybox panorama texture 
+[=60%] -IME model
+[++--] -IME skybox panorama texture [please fix it]
 ==================================
 
 -Ambiente:

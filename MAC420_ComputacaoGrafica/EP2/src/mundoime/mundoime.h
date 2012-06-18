@@ -33,8 +33,6 @@ public:
     objects::Sun* sun () { return sun_; }
 
 protected:
-	bool paused_;
-	
 	Obj::File* ime_file_;
 	Obj::File* player_file_;
 	objects::Player* player_;

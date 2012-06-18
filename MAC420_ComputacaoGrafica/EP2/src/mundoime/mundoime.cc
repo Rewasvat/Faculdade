@@ -14,13 +14,14 @@ using namespace engine;
 
 namespace mundoime {
 
-MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
+MundoIME::MundoIME() : Scene(), EventHandler() {
 
 	objects::Skybox* skybox = new objects::Skybox("Models/skybox", 50);
 	skybox->ReparentTo(this);
 
 	sun_ = new objects::Sun(1.0, 50.0);
     sun_->ReparentTo(this);
+	skybox->set_related_sun(sun_);
 
 	ime_file_ = new Obj::File();
 	if (ime_file_->Load("Models/IME.obj")) {
@@ -83,10 +84,8 @@ void MundoIME::Start() {
 }
 
 void MundoIME::Update(double dt) {
-	if (!paused_) {
-        PhysicsManager::reference()->Update(dt);
-		Scene::Update(dt);
-    }
+    PhysicsManager::reference()->Update(dt);
+	Scene::Update(dt);
 }
 
 void MundoIME::Render() {
@@ -127,9 +126,6 @@ void MundoIME::KeyboardHandler(unsigned char key, int x, int y) {
 	case 27: // 27 = '\e' = ESCAPE  (for some magical reason, '\e' does not exist in Windows >_>)
 	case 'q':
 		Finish();
-		break;
-	case ' ':
-		paused_ = !paused_;
 		break;
 	case '+':
 		sun_->IncreateTimeRate();

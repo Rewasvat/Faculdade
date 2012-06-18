@@ -113,17 +113,17 @@ double normalDistribution(double x, double mean, double variance) {
 void Sun::updateColors() {
 	if (IsDaytime()) {
 		double mean = PI/2.0;
-		double variance = 0.7;
+		double variance = 0.95;
 		double max_f = normalDistribution(PI/2.0, mean, variance);
 		double offset = 1.0 - max_f;
-		double factor = normalDistribution(angle_, mean, variance) + offset;
+		time_factor_ = normalDistribution(angle_, mean, variance) + offset;
 
-		SetAmbientColor(Color(0.2*factor, 0.2*factor, 0.2*factor, 0.5*factor));
-		SetDiffuseColor(Color(1.0, factor, factor, factor));
-		SetSpecularColor(Color(1.0, 1.0, 1.0, factor));
+		SetAmbientColor(Color(0.2*time_factor_, 0.2*time_factor_, 0.2*time_factor_, 0.5*time_factor_));
+		SetDiffuseColor(Color(1.0, time_factor_, time_factor_, time_factor_));
+		SetSpecularColor(Color(1.0, 1.0, 1.0, time_factor_));
 		sun_color_[0] = 1.0;
-		sun_color_[1] = factor;
-		sun_color_[2] = 0.7*factor;
+		sun_color_[1] = time_factor_;
+		sun_color_[2] = 0.7*time_factor_;
 		sun_color_[3] = 1.0;
 	}
 	else {
