@@ -1,4 +1,4 @@
-################################################################################
+﻿################################################################################
 #
 #  EP2 de Computacao Grafica - 'Mundo IME Virtual'
 #
@@ -19,17 +19,16 @@ Basic Features needed:
 [DONE] -model loading 
 [DONE] -texture loading 
 [DONE] -skybox
-	-night skybox
+       -night skybox
 [DONE] -dynamic illumination  [DONE]
--dynamic shadows
+       -dynamic shadows
 [DONE] -colisão
--chuva (check fase 2)
+       -chuva (check fase 2)
 [DONE] -FPS counter
--extra displays (optional):
-    [DONE] -time of day
-    [DONE] -player speed
--player nighttime spotlight
--terrain "invisible" barriers
+[DONE] -time of day (optional display)
+[DONE] -player speed (optional display)
+[DONE] -player nighttime spotlight
+       -terrain "invisible" barriers
 [DONE] -way to increase player speed
 [DONE] -improve player movement (current translate method is ugly)
 [DONE] -improve player collision (so that he can't enter the buildings even on increased speeds)

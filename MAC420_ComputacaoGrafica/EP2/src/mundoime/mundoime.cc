@@ -23,7 +23,7 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
     sun_->ReparentTo(this);
 
 	ime_file_ = new Obj::File();
-	if (ime_file_->Load("Models/IMEblocoB.obj")) {
+	if (ime_file_->Load("Models/IME.obj")) {
 	
 	    std::vector<Obj::VertexBuffer> meshes;
 
