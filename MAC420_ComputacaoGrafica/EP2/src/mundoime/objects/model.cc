@@ -18,6 +18,7 @@ Model::Model(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuff
 	direction_ = direction;
 	direction_.Normalize();
     mesh_ = mesh;
+	mesh_visible_ = true;
     
 	btTIVA_ = NULL;
     if (shape != NULL) {
@@ -93,12 +94,14 @@ void Model::Update(double dt) {
 }
 
 void Model::Render() {
-    glTranslated(position_.x, position_.y, position_.z);
+	if (mesh_visible_) {
+		glTranslated(position_.x, position_.y, position_.z);
     
-    double angle_deg = (180.0 * rot_angle_) / PI;
-    glRotated(angle_deg, rot_axis_.x, rot_axis_.y, rot_axis_.z);    
+		double angle_deg = (180.0 * rot_angle_) / PI;
+		glRotated(angle_deg, rot_axis_.x, rot_axis_.y, rot_axis_.z);    
 
-    mesh_.gl();
+		mesh_.gl();
+	}
 }
 
 void Model::set_position(engine::Vector3D& pos) {

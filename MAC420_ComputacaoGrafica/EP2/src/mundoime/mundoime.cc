@@ -40,6 +40,8 @@ MundoIME::MundoIME() : Scene(), EventHandler(), paused_(false) {
             objects::Model* model = new objects::Model(mpos, mdir, (*it), 0, mshape);
             model->ReparentTo(this);
             PhysicsManager::reference()->AddBody( model->body() );
+			if ( (*it).name.find("Barrier") != std::string::npos)
+				model->set_mesh_visible(false);
         }
 	}
 

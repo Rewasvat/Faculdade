@@ -1,8 +1,17 @@
-# Blender MTL File: 'IMEblocoB.blend'
-# Material Count: 16
+# Blender MTL File: 'IME.blend'
+# Material Count: 18
+newmtl 
+Ns 0
+Ka 0.250000 0.250000 0.250000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+
+
 newmtl BeigeWall_beigeConcrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -13,7 +22,7 @@ map_Kd Models/beigeConcrete.tga
 
 newmtl BlueConcreteMat_blueConcrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -24,7 +33,7 @@ map_Kd Models/blueConcrete.tga
 
 newmtl ConcreteMat
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -35,7 +44,7 @@ map_Kd Models/concrete.tga
 
 newmtl ConcreteMat_concrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -46,7 +55,7 @@ map_Kd Models/concrete.tga
 
 newmtl ConcretePathMat_concretePath.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -57,7 +66,7 @@ map_Kd Models/concretePath.tga
 
 newmtl ConcreteWall_concrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -68,7 +77,7 @@ map_Kd Models/concrete.tga
 
 newmtl GrassMat_grass.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -79,7 +88,7 @@ map_Kd Models/grass.tga
 
 newmtl Material.001
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -89,7 +98,7 @@ illum 2
 
 newmtl Material.001_concrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -100,7 +109,7 @@ map_Kd Models/concrete.tga
 
 newmtl Material.002
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -110,7 +119,7 @@ illum 2
 
 newmtl Material_concrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -121,7 +130,7 @@ map_Kd Models/concrete.tga
 
 newmtl ParkingMat_concreteParking.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -130,9 +139,20 @@ illum 2
 map_Kd Models/concreteParking.tga
 
 
+newmtl ParkingMat_concretePath.tga
+Ns 96.078431
+Ka 0.250000 0.250000 0.250000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd Models/concretePath.tga
+
+
 newmtl RedWall_redConcrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -143,7 +163,7 @@ map_Kd Models/redConcrete.tga
 
 newmtl WhiteConcreteMat_whiteConcrete.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -154,7 +174,7 @@ map_Kd Models/whiteConcrete.tga
 
 newmtl WindowMat.001_window.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000
@@ -165,7 +185,7 @@ map_Kd Models/window.tga
 
 newmtl WindowMat_window.tga
 Ns 96.078431
-Ka 0.500000 0.500000 0.500000
+Ka 0.250000 0.250000 0.250000
 Kd 0.640000 0.640000 0.640000
 Ks 0.500000 0.500000 0.500000
 Ni 1.000000

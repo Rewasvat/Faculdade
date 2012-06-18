@@ -25,6 +25,9 @@ public:
 
 	void set_position(engine::Vector3D& pos);
 	
+	void set_mesh_visible(bool visible) { mesh_visible_ = visible; }
+	bool mesh_visible() { return mesh_visible_; }
+
 	btRigidBody* body() { return body_; }
 
 protected:
@@ -32,6 +35,7 @@ protected:
     engine::Vector3D rot_axis_;
     double rot_angle_;
 	Obj::VertexBuffer mesh_;
+	bool mesh_visible_;
 	
 	double mass_;
 	btCollisionShape* shape_;
