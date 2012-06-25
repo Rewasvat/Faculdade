@@ -8,6 +8,7 @@
 namespace engine {
 
 class Object;
+class Light;
 
 typedef std::list<Object*> ChildList;
 
@@ -18,6 +19,7 @@ public:
 
 	void UpdateChilds(double dt);
 	void RenderChilds();
+	void RenderShadowChilds(Light* light);
 
 	/* If needed, this should return the Position of this entity in the 3D space,
 	   as given to the childs.*/

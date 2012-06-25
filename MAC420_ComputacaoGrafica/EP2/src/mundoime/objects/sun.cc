@@ -125,6 +125,7 @@ void Sun::updateColors() {
 		sun_color_[1] = time_factor_;
 		sun_color_[2] = 0.7*time_factor_;
 		sun_color_[3] = 1.0;
+		casts_shadow_ = true;
 	}
 	else {
 		SetAmbientColor(Color(0.004, 0.004, 0.004, 1.0));
@@ -134,6 +135,7 @@ void Sun::updateColors() {
 		sun_color_[1] = 0.0;
 		sun_color_[2] = 0.0;
 		sun_color_[3] = 0.0;
+		casts_shadow_ = false;
 	}
 }
 

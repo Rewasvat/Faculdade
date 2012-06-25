@@ -6,6 +6,7 @@
 #include <engine/inputmanager.h>
 #include <stdlib.h>
 #include <engine/scene.h>
+#include <engine/light.h>
 #include <engine/texture/texture.h>
 
 namespace engine {
@@ -49,16 +50,16 @@ void Engine::Initialize(int argc, char* argv[]) {
     
 	if (config_->do_multisampling())
 		glEnable(GLUT_MULTISAMPLE);
-	//glEnable(GL_CULL_FACE);
+	
+	glCullFace(GL_BACK);
+	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
-	//glDepthMask(GL_TRUE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_TEXTURE_2D);
 	glEnable(GL_LINE_SMOOTH);
 	glEnable(GL_POLYGON_SMOOTH);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	//glEnable(GL_COLOR_MATERIAL);
     
 	input_manager_->Initialize();
 }
@@ -91,11 +92,21 @@ void Engine::Update() {
 }
 
 void Engine::Render() {
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     
 	SceneList::iterator it;
 	for (it = scenes_.begin(); it != scenes_.end(); ++it)
 		(*it)->Render();
+
+	if (scenes_.size() > 0) {
+		LightList::iterator lit;
+		for (lit = lights_.begin(); lit != lights_.end(); ++lit) {
+			if ( (*lit)->casts_shadow() ) {
+				glClear(GL_STENCIL_BUFFER_BIT);
+				scenes_.back()->RenderShadows( (*lit) );
+			}
+		}
+	}
 
 	glutSwapBuffers();
 }
@@ -134,9 +145,9 @@ void Engine::DrawString(double x, double y, const char* str, const Color& color)
     glMatrixMode(GL_PROJECTION);
 	glPushMatrix();
 	glLoadIdentity();
-	gluOrtho2D(0, width_, 0, height_);
+	gluOrtho2D(0.0, static_cast<double>(width_), 0.0, static_cast<double>(height_));
 	glScalef(1, -1, 1);
-	glTranslatef(0, -height_, 0);
+	glTranslatef(0.0, -static_cast<float>(height_), 0.0);
 	glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();

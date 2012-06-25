@@ -276,6 +276,8 @@ namespace Obj {
 			// -1 indicates not used
 			n[0] = n[1] = n[2] = -1;
 			t[0] = t[1] = t[2] = -1;
+			neighbourIndices[0] = neighbourIndices[1] = neighbourIndices[2] = -1;
+			visible = false;
 		}
 
 		/// vertex indices for the triangle
@@ -283,7 +285,19 @@ namespace Obj {
 		/// normal indices for the triangle
 		int n[3];
 		/// texture coordinate indices for the triangle
-		int t[3];	
+		int t[3];
+
+		// Equation Of A Plane That Contains This Triangle
+		struct
+		{
+			GLfloat a, b, c, d;
+		} planeEquation;
+
+		// Index Of Each Face That Neighbours This One Within The Object
+		int neighbourIndices[3];
+		// Is The Face Visible By The Light?
+		bool visible;
+
 		/// stream insertion operator
 		friend std::ostream& operator << (std::ostream& ofs,const Face& f) ;
 	};
@@ -554,6 +568,9 @@ namespace Obj {
 		
 		/// a function to render the vertex array
 		void gl() const ;
+
+		void SetConnectivity();
+		void CalculatePlanes();
 		
 	public:
 
@@ -573,6 +590,9 @@ namespace Obj {
 		std::vector<MaterialGroup> m_AssignedMaterials;
 		/// the lines in the obj file.
 		std::vector<GL_Line> m_Lines;
+
+		/// the triangles in the obj file
+		std::vector<Face>     m_Triangles;
 
 	private:
 		/// pointer to file to access material data

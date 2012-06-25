@@ -9,6 +9,10 @@ namespace Obj {
 class File;
 }
 
+namespace engine {
+class Light;
+}
+
 namespace mundoime {
 
 namespace objects {
@@ -24,6 +28,7 @@ public:
     virtual void Start();
 	virtual void Update(double dt);
 	virtual void Render();
+	virtual void RenderShadows(engine::Light* light);
 	virtual void End();
 
     virtual void MouseHandler(int btn, int state, int x, int y);

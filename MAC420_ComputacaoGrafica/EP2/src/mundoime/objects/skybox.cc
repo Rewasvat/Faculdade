@@ -34,6 +34,7 @@ void Skybox::Render() {
     glDisable(GL_DEPTH_TEST);
     glDisable(GL_LIGHTING);
     glDisable(GL_BLEND);
+	glDisable(GL_CULL_FACE);
 	glEnable(GL_COLOR_MATERIAL);
 
     // Just in case we set all vertices to white.

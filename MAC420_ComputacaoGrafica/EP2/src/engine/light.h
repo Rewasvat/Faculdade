@@ -25,6 +25,8 @@ public:
     void Activate();
     void Deactivate();
     bool active() { return active_; }
+	bool casts_shadow() { return casts_shadow_; }
+	void set_casts_shadow(bool casts_shadow) { casts_shadow_ = casts_shadow; }
 
     void SetType(LightType type);
     LightType type() { return type_; }
@@ -49,6 +51,7 @@ public:
 protected:
 	GLenum light_id_;
     bool active_;
+	bool casts_shadow_;
     LightType type_;
     Vector3D direction_;
     Color ambient_, diffuse_, specular_;

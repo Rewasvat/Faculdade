@@ -39,4 +39,17 @@ void ObjectContainer::RenderChilds() {
     }
 }
 
+void ObjectContainer::RenderShadowChilds(Light* light) {
+	ChildList::iterator it;
+    for (it = childs_.begin(); it != childs_.end(); ++it) {
+        Object* obj = (*it);
+        
+		if (obj->casts_shadow()) {
+			glPushMatrix(); /*glPushMatrix copies the current matrix (top of the matrix stack), and places the copy at the top*/
+			obj->RenderShadow(light);
+			glPopMatrix(); /*glPopMatrix removes the top matrix of the stack*/
+		}
+    }
+}
+
 }

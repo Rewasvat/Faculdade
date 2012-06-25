@@ -9,10 +9,12 @@
 namespace engine {
 
 class Scene;
+class Light;
 class EngineConfig;
 class InputManager;
 
 typedef std::list<Scene*> SceneList;
+typedef std::list<Light*> LightList;
 typedef void (*ExitCallbackFunc)(void);
 
 class Engine {
@@ -34,6 +36,9 @@ public:
 	void PushScene(Scene* scene);
 	void RemoveScene(Scene* scene);
 	void PopScene();
+
+	void AddLight(Light* light) { lights_.push_back(light); }
+	void RemoveLight(Light* light) { lights_.remove(light); }
 
     void DrawString(double x, double y, const char* str, const Color& color);
 
@@ -57,6 +62,7 @@ private:
     bool fullscreen_;
 	EngineConfig* config_;
 	SceneList scenes_;
+	LightList lights_;
 	InputManager* input_manager_;
 
 	int window_state_;

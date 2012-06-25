@@ -377,6 +377,61 @@ namespace Obj {
 		glDisableClientState(GL_NORMAL_ARRAY);
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 	}
+
+	//----------------------------------------------------------------------	VertexBuffer :: SetConnectivity
+	void VertexBuffer::SetConnectivity() {
+		int i, j, iNeigh, jNeigh;
+		int p1i, p2i, p1j, p2j;
+		unsigned int actualP1i, actualP2i, actualP1j, actualP2j;
+		for (i = 0; i < m_Triangles.size(); i++) {
+			for (j = i+1; j < m_Triangles.size(); j++) {
+				for (iNeigh=0; iNeigh<3; iNeigh++) {
+					if (m_Triangles[i].neighbourIndices[iNeigh] == -1) {
+						for (jNeigh=0; jNeigh<3; jNeigh++) {
+							p1i=iNeigh;
+							p2i=(iNeigh+1)%3;
+
+							p1j=jNeigh;
+							p2j=(jNeigh+1)%3;
+
+							p1i=m_Triangles[i].v[p1i];
+							p2i=m_Triangles[i].v[p2i];
+
+							p1j=m_Triangles[j].v[p1j];
+							p2j=m_Triangles[j].v[p2j];
+
+							actualP1i=((p1i+p2i)-abs(p1i-p2i))/2;
+							actualP2i=((p1i+p2i)+abs(p1i-p2i))/2;
+							actualP1j=((p1j+p2j)-abs(p1j-p2j))/2;
+							actualP2j=((p1j+p2j)+abs(p1j-p2j))/2;
+
+							if((actualP1i==actualP1j) && (actualP2i==actualP2j)){  //they are neighbours
+								m_Triangles[i].neighbourIndices[iNeigh] = j;	  
+								m_Triangles[j].neighbourIndices[jNeigh] = i;	  
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	//----------------------------------------------------------------------	VertexBuffer :: CalculatePlanes
+	void VertexBuffer::CalculatePlanes() {
+		std::vector<Face>::iterator it;
+		for (it = m_Triangles.begin(); it != m_Triangles.end(); ++it) {
+			const Vertex& v1 = m_Vertices[ it->v[0] ];//object.pVertices[face.vertexIndices[0]];
+			const Vertex& v2 = m_Vertices[ it->v[1] ];
+			const Vertex& v3 = m_Vertices[ it->v[2] ];
+ 
+			it->planeEquation.a = v1.y*(v2.z-v3.z) + v2.y*(v3.z-v1.z) + v3.y*(v1.z-v2.z);
+			it->planeEquation.b = v1.z*(v2.x-v3.x) + v2.z*(v3.x-v1.x) + v3.z*(v1.x-v2.x);
+			it->planeEquation.c = v1.x*(v2.y-v3.y) + v2.x*(v3.y-v1.y) + v3.x*(v1.y-v2.y);
+			it->planeEquation.d = -( v1.x*( v2.y*v3.z - v3.y*v2.z ) +
+						v2.x*(v3.y*v1.z - v1.y*v3.z) +
+						v3.x*(v1.y*v2.z - v2.y*v1.z) );
+		}
+	}
 	
 	//#######################################################################################################	File Reading Utils
 	//=======================================================================================================
@@ -1378,10 +1433,13 @@ vinf: ;
 
 			// copy material assignments
 			itb->m_AssignedMaterials = its->m_AssignedMaterials;
+
+			itb->m_Triangles.resize( its->m_Triangles.size() );
 			
 			// determine new vertex and index arrays.
 			std::vector<Face>::iterator itf = its->m_Triangles.begin();
-			for( ; itf != its->m_Triangles.end(); ++itf ) {
+			std::vector<Face>::iterator newFace = itb->m_Triangles.begin();
+			for( ; itf != its->m_Triangles.end(); ++itf, ++newFace ) {
 				for(int i=0;i!=3;++i) {
 
 					const Vertex* v   = &its->m_Vertices[ itf->v[i] ];
@@ -1406,6 +1464,9 @@ vinf: ;
 							itb->m_TexCoords.push_back(*t);
 						}
 						itb->m_Indices.push_back(idx);
+						newFace->v[i] = idx;
+						newFace->n[i] = idx;
+						newFace->t[i] = idx;
 					}
 					else if(n) {
 						std::vector<Vertex>::const_iterator itv = itb->m_Vertices.begin();
@@ -1418,6 +1479,8 @@ vinf: ;
 							itb->m_Normals.push_back(*n);
 						}
 						itb->m_Indices.push_back(idx);
+						newFace->v[i] = idx;
+						newFace->n[i] = idx;
 					}
 					else if(t) {
 						std::vector<Vertex>::const_iterator itv   = itb->m_Vertices.begin();
@@ -1430,6 +1493,8 @@ vinf: ;
 							itb->m_TexCoords.push_back(*t);
 						}
 						itb->m_Indices.push_back(idx);
+						newFace->v[i] = idx;
+						newFace->t[i] = idx;
 					}
 					else {
 						std::vector<Vertex>::const_iterator itv = itb->m_Vertices.begin();
@@ -1437,6 +1502,7 @@ vinf: ;
 							if( *v == *itv ) 
 								break;
 						itb->m_Indices.push_back(idx);
+						newFace->v[i] = idx;
 					}
 				}
 			}

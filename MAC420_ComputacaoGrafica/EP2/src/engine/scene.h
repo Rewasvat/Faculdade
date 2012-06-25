@@ -7,6 +7,7 @@
 namespace engine {
 
 class Object;
+class Light;
 
 class Scene : public ObjectContainer {
 public:
@@ -16,6 +17,7 @@ public:
     virtual void Start() {}
 	virtual void Update(double dt) { if (is_visible_)	UpdateChilds(dt); }
 	virtual void Render() { if (is_visible_)	RenderChilds(); }
+	virtual void RenderShadows(Light* light) { if (is_visible_)	RenderShadowChilds(light); }
 	virtual void End() {};
 	
 	void Finish() { End(); finished_ = true; }

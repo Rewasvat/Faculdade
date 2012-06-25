@@ -41,8 +41,15 @@ MundoIME::MundoIME() : Scene(), EventHandler() {
             objects::Model* model = new objects::Model(mpos, mdir, (*it), 0, mshape);
             model->ReparentTo(this);
             PhysicsManager::reference()->AddBody( model->body() );
-			if ( (*it).name.find("Barrier") != std::string::npos)
+			if ( (*it).name.find("Barrier") != std::string::npos) {
 				model->set_mesh_visible(false);
+				model->set_casts_shadow(false);
+			}
+
+			/*model->set_casts_shadow(false);
+			if ( (*it).name.find("BlocoA") != std::string::npos) {
+				model->set_casts_shadow(true);
+			}*/
         }
 	}
 
@@ -59,6 +66,7 @@ MundoIME::MundoIME() : Scene(), EventHandler() {
         btCollisionShape* pshape = new btCapsuleShape(0.125, 0.25);
         player_ = new objects::Player(ppos, pdir, pmeshes[0], 68.0, pshape);
         player_->ReparentTo(this);
+		//player_->set_casts_shadow(false);
         PhysicsManager::reference()->AddBody( player_->body() );
 	}
 }
@@ -72,7 +80,7 @@ void MundoIME::Start() {
 	glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-	gluPerspective(60.0, 1.0, 0.05, 300);
+	gluPerspective(60.0, 1.0, 0.05, 3000);
     glMatrixMode(GL_MODELVIEW);
 
 	glLoadIdentity();
@@ -88,6 +96,11 @@ void MundoIME::Update(double dt) {
 	Scene::Update(dt);
 }
 
+void clearCharBuffer(char* buffer, int size) {
+	for (int i =0; i<size; i++)
+		buffer[i] = 0;
+}
+
 void MundoIME::Render() {
 	//TODO: Still haven't decided on a unified transformation system for the framework, so lets do this hardcoded for now
 	glLoadIdentity(); /*Resets transformation state*/
@@ -100,15 +113,91 @@ void MundoIME::Render() {
 
     Scene::Render();
 
-    char draw_str[32];
+	/*ChildList::iterator it;
+    for (it = childs_.begin(); it != childs_.end(); ++it) {
+        Object* obj = (*it);
+        objects::Model* model = dynamic_cast<objects::Model*>(obj);
+        glPushMatrix();
+		if (model != NULL)
+			model->RenderVisibleFaces(sun_, false);
+        glPopMatrix();
+    }*/
+
+    char draw_str[64];
+	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "FPS: %4.2lf", Engine::reference()->FPS());
     Engine::reference()->DrawString(5.0, 20.0, &draw_str[0], BLACK);
-
+	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "Player Speed: %2.3lf", player_->speed());
     Engine::reference()->DrawString(5.0, 40.0, &draw_str[0], BLACK);
-
+	clearCharBuffer(draw_str, 64);
     sun_->GetCurrentTimeStr(draw_str);
     Engine::reference()->DrawString(5.0, 60.0, &draw_str[0], BLACK);
+}
+
+void MundoIME::RenderShadows(Light* light) { 
+	if (!is_visible_) return;
+
+	glPushAttrib(GL_ENABLE_BIT);
+ 	glDisable(GL_LIGHTING);
+	glDepthMask(GL_FALSE);
+	glDepthFunc(GL_LESS);
+
+	glColorMask(0, 0, 0, 0);
+	glEnable(GL_STENCIL_TEST);
+	//glStencilFunc(GL_ALWAYS, 1, 0xffffffff);
+	glStencilFunc(GL_ALWAYS, 0, ~0);
+	glEnable(GL_CULL_FACE);
+	/*******
+	// for shadow volumes that the camera is not inside
+	glCullFace(GL_BACK);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
+	RenderShadowChilds(light);
+
+	// second pass, stencil operation increases stencil value
+	glCullFace(GL_FRONT);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
+	RenderShadowChilds(light);
+	/*******/
+	// for shadow volumes with the camera inside
+	glCullFace(GL_FRONT);
+	glStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
+	RenderShadowChilds(light);
+
+	glCullFace(GL_BACK);
+	glStencilOp(GL_KEEP, GL_DECR, GL_KEEP);
+	RenderShadowChilds(light);
+	/*******/
+
+	//glFrontFace(GL_CCW);
+	glCullFace(GL_BACK);
+	glColorMask(1, 1, 1, 1);
+
+	//draw a shadowing rectangle covering the entire screen
+	glColor4f(0.0f, 0.0f, 0.0f, 0.5f);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	//glStencilFunc(GL_NOEQUAL, 0, 0xffffffff);
+	glStencilFunc(GL_NOTEQUAL, 0, ~0);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+	glPushMatrix();
+	glLoadIdentity();
+	glBegin(GL_TRIANGLE_STRIP);
+		glVertex3f(-0.1f, 0.1f,-0.10f);
+		glVertex3f(-0.1f,-0.1f,-0.10f);
+		glVertex3f( 0.1f, 0.1f,-0.10f);
+		glVertex3f( 0.1f,-0.1f,-0.10f);
+	glEnd();
+	glPopMatrix();
+	glDisable(GL_BLEND);
+
+	glDepthFunc(GL_LEQUAL);
+	glDepthMask(GL_TRUE);
+	glEnable(GL_LIGHTING);
+	glDisable(GL_STENCIL_TEST);
+	glShadeModel(GL_SMOOTH);
+
+	glPopAttrib();
 }
 
 void MundoIME::End() {

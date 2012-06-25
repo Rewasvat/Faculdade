@@ -1,6 +1,7 @@
 #include <engine/light.h>
 #include <engine/vector3D.h>
 #include <engine/color.h>
+#include <engine/engine.h>
 #include <GL/glut.h>
 #include <cmath>
 
@@ -10,7 +11,7 @@
 
 namespace engine {
 
-Light::Light(unsigned id, LightType type) : light_id_(id), active_(false), type_(type) {
+Light::Light(unsigned id, LightType type) : light_id_(id), active_(false), casts_shadow_(true), type_(type) {
 /*
 guardar um vetor de indices de luzes -> bool, pra saber quais luzes estao disponiveis
 escolher um
@@ -32,11 +33,13 @@ void Light::Activate() {
     active_ = true;
 	applyAllSettings();
     glEnable(light_id_);
+	Engine::reference()->AddLight(this);
 }
 
 void Light::Deactivate() {
     active_ = false;
     glDisable(light_id_);
+	Engine::reference()->RemoveLight(this);
 }
 
 void Light::SetType(LightType type) { 

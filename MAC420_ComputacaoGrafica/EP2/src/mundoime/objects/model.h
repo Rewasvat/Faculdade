@@ -9,8 +9,18 @@ class btCollisionShape;
 class btRigidBody;
 class btTriangleIndexVertexArray;
 
+namespace engine {
+class Light; 
+}
+
 namespace mundoime {
 namespace objects {
+
+struct Prism {
+	engine::Vector3D p1, p2, p3, p4, p5, p6, p7, p8, p9, p10;
+
+	void render();
+};
 
 class Model : public engine::Object {
 public:
@@ -19,6 +29,9 @@ public:
 
 	virtual void Update(double dt);
 	virtual void Render();
+	void RenderShadowXXX(engine::Light* light);
+	void RenderShadow(engine::Light* light);
+	void RenderVisibleFaces(engine::Light* light, bool visible);
 	
 	engine::Vector3D direction() { return direction_; }
 	void set_direction(engine::Vector3D& dir) { direction_ = dir; }
@@ -41,6 +54,10 @@ protected:
 	btCollisionShape* shape_;
     btTriangleIndexVertexArray* btTIVA_;
 	btRigidBody* body_;
+
+	std::vector<engine::Vector3D> frontFaceVertices;
+	std::vector<engine::Vector3D> backFaceVertices;
+	std::vector<Prism> prism;
 };
 
 }

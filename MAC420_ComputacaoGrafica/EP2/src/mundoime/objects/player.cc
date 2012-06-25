@@ -34,6 +34,7 @@ Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBu
     spotlight_->SetSpecularColor(Color(1.0,1.0,1.0,1.0));
     spotlight_->SetSpotlightParameters(10.0);
     spotlight_->SetAttenuationParameters(1.2, 0.3, 0.1);
+	spotlight_->set_casts_shadow(false);
 }
 
 Player::~Player() {
