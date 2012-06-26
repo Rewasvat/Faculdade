@@ -20,6 +20,7 @@ class Color {
 };
 
 static const Color WHITE(1.0, 1.0, 1.0);
+static const Color GRAY(0.5, 0.5, 0.5);
 static const Color BLACK(0.0, 0.0, 0.0);
 
 } 

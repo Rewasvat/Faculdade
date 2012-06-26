@@ -126,13 +126,13 @@ void MundoIME::Render() {
     char draw_str[64];
 	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "FPS: %4.2lf", Engine::reference()->FPS());
-    Engine::reference()->DrawString(5.0, 20.0, &draw_str[0], BLACK);
+    Engine::reference()->DrawString(5.0, 20.0, &draw_str[0], GRAY);
 	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "Player Speed: %2.3lf", player_->speed());
-    Engine::reference()->DrawString(5.0, 40.0, &draw_str[0], BLACK);
+    Engine::reference()->DrawString(5.0, 40.0, &draw_str[0], GRAY);
 	clearCharBuffer(draw_str, 64);
     sun_->GetCurrentTimeStr(draw_str);
-    Engine::reference()->DrawString(5.0, 60.0, &draw_str[0], BLACK);
+    Engine::reference()->DrawString(5.0, 60.0, &draw_str[0], GRAY);
 }
 
 void MundoIME::RenderShadows(Light* light) { 
