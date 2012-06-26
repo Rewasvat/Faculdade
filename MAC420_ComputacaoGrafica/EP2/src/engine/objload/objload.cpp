@@ -14,6 +14,7 @@
 #include <iostream>
 #include <vector>
 #include <engine/texture/texture.h>
+#include <cstdlib>
 
 namespace Obj {
 
@@ -380,7 +381,7 @@ namespace Obj {
 
 	//----------------------------------------------------------------------	VertexBuffer :: SetConnectivity
 	void VertexBuffer::SetConnectivity() {
-		int i, j, iNeigh, jNeigh;
+		unsigned int i, j, iNeigh, jNeigh;
 		int p1i, p2i, p1j, p2j;
 		unsigned int actualP1i, actualP2i, actualP1j, actualP2j;
 		for (i = 0; i < m_Triangles.size(); i++) {

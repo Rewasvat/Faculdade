@@ -195,10 +195,11 @@ void Model::RenderShadowXXX(engine::Light* light) {
 	glPopAttrib();
 }
 void Model::RenderShadow(engine::Light* light) {
-	int i, j, k, jj;
-	unsigned int	p1, p2;
+	unsigned int i, j;//, jj;
+    int k;
+	//unsigned int	p1, p2;
 	engine::Vector3D v1, v2, v3;
-	engine::Vector3D& lPos = light->position();
+	engine::Vector3D lPos = light->position();
 
 	//set visual parameter - checks visible faces.
 	//this function is called 2 times for each light, taking this computation out of here
@@ -382,10 +383,8 @@ void Model::RenderShadow(engine::Light* light) {
 	/*******/
 }
 void Model::RenderVisibleFaces(engine::Light* light, bool visible) {
-	int i, j, k, jj;
-	unsigned int	p1, p2;
-	engine::Vector3D v1, v2, v3;
-	engine::Vector3D& lPos = light->position();
+	unsigned int i;
+	engine::Vector3D lPos = light->position();
 
 	//set visual parameter - checks visible faces.
 	//this function is called 2 times for each light, taking this computation out of here
@@ -402,7 +401,6 @@ void Model::RenderVisibleFaces(engine::Light* light, bool visible) {
 
 	glTranslated(position_.x, position_.y, position_.z);
 
-	//render shadow volume
 	for (i=0; i < mesh_.m_Triangles.size(); i++){
 		if (mesh_.m_Triangles[i].visible == visible) {
 			engine::Vector3D meshV1 (mesh_.m_Vertices[mesh_.m_Triangles[i].v[0]].x, mesh_.m_Vertices[mesh_.m_Triangles[i].v[0]].y, mesh_.m_Vertices[mesh_.m_Triangles[i].v[0]].z);
