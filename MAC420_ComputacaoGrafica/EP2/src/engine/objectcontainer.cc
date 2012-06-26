@@ -22,10 +22,10 @@ ObjectContainer::~ObjectContainer() {
 
 void ObjectContainer::UpdateChilds(double dt) {
 	ChildList::iterator it;
-    for (it = childs_.begin(); it != childs_.end(); ++it) {
-        Object* obj = (*it);
-        obj->Update(dt);
-    }
+	for (it = childs_.begin(); it != childs_.end(); ++it) {
+		Object* obj = (*it);
+		obj->Update(dt);
+	}
 }
 
 void ObjectContainer::RenderChilds() {

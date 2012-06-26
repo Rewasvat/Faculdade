@@ -40,9 +40,9 @@ void Skybox::Render() {
     // Just in case we set all vertices to white.
 	float tf = static_cast<float>(related_sun_->time_factor());
 	if (related_sun_->IsDaytime())
-		glColor4f(1.0,tf,tf,tf);
+		glColor4fv(related_sun_->color().val);
 	else
-		glColor4f(0.09,0.09,0.09,0.8);
+		glColor4f(0.07,0.07,0.07,0.9);
 	float sky_ambient[] = {1.0, tf, tf, 1.0};
 	float sky_diffuse[] = {0.0, 0.0, 0.0, 0.0};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, sky_ambient);

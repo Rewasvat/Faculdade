@@ -3,12 +3,17 @@
 #include <engine/objload/objload.h>
 #include <GL/glut.h>
 #include <cstdio>
+#include <math.h>
 #include <btBulletDynamicsCommon.h>
+#include <mundoime/physicsmanager.h>
 #include <mundoime/objects/model.h>
 #include <mundoime/objects/player.h>
 #include <mundoime/objects/skybox.h>
-#include <mundoime/physicsmanager.h>
 #include <mundoime/objects/sun.h>
+#include <mundoime/objects/rain.h>
+
+#define PI 3.14159265358979323846
+#define E  2.71828182845904523536
 
 using namespace engine;
 
@@ -22,6 +27,10 @@ MundoIME::MundoIME() : Scene(), EventHandler() {
 	sun_ = new objects::Sun(1.0, 50.0);
     sun_->ReparentTo(this);
 	skybox->set_related_sun(sun_);
+
+	objects::Rain* rain = new objects::Rain();
+	rain->ReparentTo(this);
+	sun_->set_related_rain(rain);
 
 	ime_file_ = new Obj::File();
 	if (ime_file_->Load("Models/IME.obj")) {
@@ -123,16 +132,19 @@ void MundoIME::Render() {
         glPopMatrix();
     }*/
 
-    char draw_str[64];
+    //char draw_str[64];
 	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "FPS: %4.2lf", Engine::reference()->FPS());
     Engine::reference()->DrawString(5.0, 20.0, &draw_str[0], BLACK);
+
 	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "Player Speed: %2.3lf", player_->speed());
     Engine::reference()->DrawString(5.0, 40.0, &draw_str[0], BLACK);
+
 	clearCharBuffer(draw_str, 64);
     sun_->GetCurrentTimeStr(draw_str);
     Engine::reference()->DrawString(5.0, 60.0, &draw_str[0], BLACK);
+
 }
 
 void MundoIME::RenderShadows(Light* light) { 
@@ -230,5 +242,10 @@ void MundoIME::KeyboardHandler(unsigned char key, int x, int y) {
 	}
 }
 
+
+double NormalDistribution(double x, double mean, double variance) {
+	double exponent = -pow((x - mean), 2) / (2*pow(variance, 2));
+	return (pow(E, exponent)) / (sqrt(2*PI*pow(variance,2)));
+}
 
 }

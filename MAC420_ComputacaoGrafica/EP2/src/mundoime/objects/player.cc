@@ -124,6 +124,9 @@ void Player::KeyboardHandler(unsigned char key, int x, int y) {
 
     if (key == 'J')
         jetpack_ = !jetpack_;
+
+	if (key == 'p')
+		printf("position %f %f %f\n", position_.x, position_.y, position_.z);
 }
 
 void Player::MoveForward(double amount, bool forward) {

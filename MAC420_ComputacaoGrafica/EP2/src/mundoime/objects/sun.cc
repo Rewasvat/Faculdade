@@ -1,13 +1,14 @@
 #include <mundoime/objects/sun.h>
+#include <mundoime/objects/rain.h>
 #include <engine/light.h>
 #include <engine/color.h>
+#include <mundoime/mundoime.h>
 #include <GL/glut.h>
 #include <cstdlib>
 #include <cstdio>
 #include <math.h>
 
 #define PI 3.14159265358979323846
-#define E  2.71828182845904523536
 
 using namespace engine;
 
@@ -20,13 +21,17 @@ Sun::Sun(double radius, double distance) : Light(GL_LIGHT0, DIRECTIONAL) {
 	angle_ = PI/6;
 	time_rate_ = 2*PI/300.0; //default is a day in 300 secs (5 minutes)
 	position_ = Vector3D();
+	factor_mean_ = PI/2.0;
+	factor_variance_ = 0.95;
+	max_factor_ = NormalDistribution(factor_mean_, factor_mean_, factor_variance_);
+	sun_color_ = engine::Color(0.0,0.0,0.0,0.0);
+	related_rain_ = NULL;
     updatePosAndDir();
 	updateColors();
     Activate();
 }
 
 Sun::~Sun() {
-
 }
 
 void Sun::Update(double dt) {
@@ -40,11 +45,11 @@ void Sun::Update(double dt) {
 void Sun::Render() {
 	Light::Render();
 
-    glColor4f(sun_color_[0], sun_color_[1], sun_color_[2], sun_color_[3]);
-    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, sun_color_);
-	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, sun_color_);
+	glColor4fv(sun_color_.val);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, sun_color_.val);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE, sun_color_.val);
 	glTranslated(position_.x, position_.y, position_.z);
-    glutSolidSphere(radius_, 6, 6);
+    glutSolidSphere(radius_, 10, 10);
 
 	float zero[] = {0.0, 0.0, 0.0, 1.0};
 	glMaterialfv(GL_FRONT_AND_BACK, GL_EMISSION, zero);
@@ -105,36 +110,45 @@ void Sun::updatePosAndDir() {
     set_direction( dir );
 }
 
-double normalDistribution(double x, double mean, double variance) {
-	double exponent = -pow((x - mean), 2) / (2*pow(variance, 2));
-	return (pow(E, exponent)) / (sqrt(2*PI*pow(variance,2)));
+double interpolateTwo(double value1, double factor1, double value2, double factor2) {
+	return (value1*factor1 + value2*factor2) / (factor1 + factor2);
 }
 
 void Sun::updateColors() {
 	if (IsDaytime()) {
-		double mean = PI/2.0;
-		double variance = 0.95;
-		double max_f = normalDistribution(PI/2.0, mean, variance);
-		double offset = 1.0 - max_f;
-		time_factor_ = normalDistribution(angle_, mean, variance) + offset;
+		double offset = 1.0 - max_factor_;
+		time_factor_ = NormalDistribution(angle_, factor_mean_, factor_variance_) + offset;
 
-		SetAmbientColor(Color(0.2*time_factor_, 0.2*time_factor_, 0.2*time_factor_, 0.5*time_factor_));
-		SetDiffuseColor(Color(1.0, time_factor_, time_factor_, time_factor_));
-		SetSpecularColor(Color(1.0, 1.0, 1.0, time_factor_));
-		sun_color_[0] = 1.0;
-		sun_color_[1] = time_factor_;
-		sun_color_[2] = 0.7*time_factor_;
-		sun_color_[3] = 1.0;
+		double r = 1.0;
+		double g = time_factor_;
+		double b = 0.7 * time_factor_;
+		if (related_rain_ != NULL && related_rain_->raining()) {
+			time_factor_ = fabs(time_factor_ - related_rain_->intensity_factor());//time_factor_/2.0;
+			r = 0.9*time_factor_;
+			g = 0.8*time_factor_;
+			b = 0.8*time_factor_;
+			SetAmbientColor(Color(0.1*time_factor_, 0.1*time_factor_, 0.1*time_factor_, 0.75*time_factor_));
+		}
+		else {
+			SetAmbientColor(Color(0.2*time_factor_, 0.2*time_factor_, 0.2*time_factor_, 0.5*time_factor_));
+		}
+		SetDiffuseColor(Color(r, time_factor_, time_factor_, time_factor_));
+		SetSpecularColor(Color(r, r, r, time_factor_));
+		sun_color_.r = r;
+		sun_color_.g = g;
+		sun_color_.b = b;
+		sun_color_.a = 1.0;
+		
 		casts_shadow_ = true;
 	}
 	else {
 		SetAmbientColor(Color(0.004, 0.004, 0.004, 1.0));
 		SetDiffuseColor(Color(0.0, 0.0, 0.0, 0.0));
 		SetSpecularColor(Color(0.0, 0.0, 0.0, 0.0));
-		sun_color_[0] = 0.0;
-		sun_color_[1] = 0.0;
-		sun_color_[2] = 0.0;
-		sun_color_[3] = 0.0;
+		sun_color_.r = 0.0;
+		sun_color_.g = 0.0;
+		sun_color_.b = 0.0;
+		sun_color_.a = 0.0;
 		casts_shadow_ = false;
 	}
 }

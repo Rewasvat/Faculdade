@@ -1,5 +1,6 @@
 #include <cstdlib>
 #include <cstdio>
+#include <time.h>
 #include <engine/engine.h>
 #include <engine/engineconfig.h>
 #include <mundoime/mundoime.h>
@@ -11,7 +12,7 @@ void mundoIME_exitCallback() {
 }
 
 int main(int argc, char* argv[]) {
-
+	srand(time(NULL));
 	engine::Engine* e = engine::Engine::reference();
 	e->RegisterCustomExitCallback(mundoIME_exitCallback);
 	engine::EngineConfig* config = new engine::EngineConfig();

@@ -42,7 +42,11 @@ protected:
 	Obj::File* player_file_;
 	objects::Player* player_;
 	objects::Sun* sun_;
+	char draw_str[64];
 };
+
+
+double NormalDistribution(double x, double mean, double variance);
 
 }
 #endif

@@ -57,9 +57,10 @@ SET(EP_SRCS
     ./src/mundoime/mundoime.cc
     ./src/mundoime/physicsmanager.cc
     ./src/mundoime/objects/model.cc
-	./src/mundoime/objects/skybox.cc
+    ./src/mundoime/objects/skybox.cc
     ./src/mundoime/objects/player.cc
     ./src/mundoime/objects/sun.cc
+    ./src/mundoime/objects/rain.cc
 
     ./src/engine/engine.cc
     ./src/engine/engineconfig.cc
