@@ -67,7 +67,7 @@ void Sun::DecreaseTimeRate() {
 
 void Sun::GetCurrentTimeStr(char* str) {
     int hours = 0, minutes = 0;
-    minutes = 6*60 + abs(angle_ * 24 * 60 / (2*PI));
+    minutes = 6*60 + static_cast<int>(abs(angle_ * 24 * 60 / (2*PI)));
     while (minutes > 60) {
         minutes -= 60;
         hours++;
@@ -110,7 +110,7 @@ void Sun::updatePosAndDir() {
     set_direction( dir );
 }
 
-double interpolateTwo(double value1, double factor1, double value2, double factor2) {
+static double interpolateTwo(double value1, double factor1, double value2, double factor2) {
 	return (value1*factor1 + value2*factor2) / (factor1 + factor2);
 }
 
@@ -121,18 +121,20 @@ void Sun::updateColors() {
 
 		double r = 1.0;
 		double g = time_factor_;
-		double b = 0.7 * time_factor_;
+		double b = 0.8 * time_factor_;
+		double ambient_color = 0.2 * time_factor_;
+		double ambient_alpha = 0.5 * time_factor_;
 		if (related_rain_ != NULL && related_rain_->raining()) {
-			time_factor_ = fabs(time_factor_ - related_rain_->intensity_factor());//time_factor_/2.0;
-			r = 0.9*time_factor_;
-			g = 0.8*time_factor_;
-			b = 0.8*time_factor_;
-			SetAmbientColor(Color(0.1*time_factor_, 0.1*time_factor_, 0.1*time_factor_, 0.75*time_factor_));
+			r = interpolateTwo(r, time_factor_, 0.9*time_factor_, related_rain_->intensity_factor());
+			g = interpolateTwo(r, time_factor_, 0.8*time_factor_, related_rain_->intensity_factor());
+			b = interpolateTwo(r, time_factor_, 0.8*time_factor_, related_rain_->intensity_factor());
+			ambient_color = interpolateTwo(r, time_factor_, 0.1 * time_factor_, related_rain_->intensity_factor());
+			ambient_alpha = interpolateTwo(r, time_factor_, 0.75 * time_factor_, related_rain_->intensity_factor());
+
+			time_factor_ = interpolateTwo(1.0, time_factor_, 1.0, related_rain_->intensity_factor());
 		}
-		else {
-			SetAmbientColor(Color(0.2*time_factor_, 0.2*time_factor_, 0.2*time_factor_, 0.5*time_factor_));
-		}
-		SetDiffuseColor(Color(r, time_factor_, time_factor_, time_factor_));
+		SetAmbientColor(Color(ambient_color, ambient_color, ambient_color, ambient_alpha));
+		SetDiffuseColor(Color(r, g, b, time_factor_));
 		SetSpecularColor(Color(r, r, r, time_factor_));
 		sun_color_.r = r;
 		sun_color_.g = g;

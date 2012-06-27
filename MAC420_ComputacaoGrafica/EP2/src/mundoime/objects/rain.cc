@@ -75,6 +75,14 @@ void Rain::startRain() {
 	max_factor_ = NormalDistribution(factor_mean_, factor_mean_, factor_variance_);
 	drop_time_ = RandExpTime();
 	raining_ = true;
+
+	glEnable(GL_FOG);
+	GLfloat fogColor[4] = {0.5, 0.5, 0.5, 1.0};
+	glFogi (GL_FOG_MODE, GL_EXP); //GL_EXP2, GL_LINEAR
+	glFogfv (GL_FOG_COLOR, fogColor);
+	glFogf (GL_FOG_DENSITY, 0.35);
+	glFogf (GL_FOG_START, 1.0);
+	glFogf (GL_FOG_END, 5.0);
 }
 
 void Rain::waitForRain() {

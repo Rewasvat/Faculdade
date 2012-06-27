@@ -9,7 +9,6 @@
 #include <mundoime/objects/model.h>
 #include <mundoime/objects/player.h>
 #include <mundoime/objects/skybox.h>
-#include <mundoime/physicsmanager.h>
 #include <mundoime/objects/sun.h>
 #include <mundoime/objects/rain.h>
 
@@ -133,7 +132,6 @@ void MundoIME::Render() {
         glPopMatrix();
     }*/
 
-    char draw_str[64];
     //char draw_str[64];
 	clearCharBuffer(draw_str, 64);
     sprintf(draw_str, "FPS: %4.2lf", Engine::reference()->FPS());
@@ -146,7 +144,6 @@ void MundoIME::Render() {
 	clearCharBuffer(draw_str, 64);
     sun_->GetCurrentTimeStr(draw_str);
     Engine::reference()->DrawString(5.0, 60.0, &draw_str[0], GRAY);
-
 }
 
 void MundoIME::RenderShadows(Light* light) { 

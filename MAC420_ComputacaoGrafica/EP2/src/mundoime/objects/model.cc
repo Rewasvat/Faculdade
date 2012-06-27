@@ -407,7 +407,7 @@ void Model::RenderVisibleFaces(engine::Light* light, bool visible) {
 			engine::Vector3D meshV2 (mesh_.m_Vertices[mesh_.m_Triangles[i].v[1]].x, mesh_.m_Vertices[mesh_.m_Triangles[i].v[1]].y, mesh_.m_Vertices[mesh_.m_Triangles[i].v[1]].z);
 			engine::Vector3D meshV3 (mesh_.m_Vertices[mesh_.m_Triangles[i].v[2]].x, mesh_.m_Vertices[mesh_.m_Triangles[i].v[2]].y, mesh_.m_Vertices[mesh_.m_Triangles[i].v[2]].z);
 
-			glColor4f(0.1,0.8,0.8,0.5);
+			glColor4d(0.1,0.8,0.8,0.5);
 			glBegin(GL_TRIANGLES);
 				glVertex3dv(meshV1.val);
 				glVertex3dv(meshV2.val);
@@ -431,24 +431,24 @@ void Model::set_position(engine::Vector3D& pos) {
 void Prism::render() {
 	return;
 	glBegin(GL_TRIANGLE_STRIP);
-		glColor4f(0.0,1.0,0.0,0.6);
+		glColor4d(0.0,1.0,0.0,0.6);
 		glVertex3dv(p1.val);
 		glVertex3dv(p2.val);
 		glVertex3dv(p3.val);
 
-		glColor4f(1.0,0.0,0.0,0.6);
+		glColor4d(1.0,0.0,0.0,0.6);
 		glVertex3dv(p4.val);
 
-		glColor4f(0.0,1.0,0.0,0.6);
+		glColor4d(0.0,1.0,0.0,0.6);
 		glVertex3dv(p5.val);
 
-		glColor4f(1.0,0.0,0.0,0.6);
+		glColor4d(1.0,0.0,0.0,0.6);
 		glVertex3dv(p6.val);
 
-		glColor4f(0.0,1.0,0.0,0.6);
+		glColor4d(0.0,1.0,0.0,0.6);
 		glVertex3dv(p7.val);
 
-		glColor4f(1.0,0.0,0.0,0.6);
+		glColor4d(1.0,0.0,0.0,0.6);
 		glVertex3dv(p8.val);
 		glVertex3dv(p9.val);
 		glVertex3dv(p10.val);
