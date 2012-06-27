@@ -3,6 +3,7 @@
 #include <math.h>
 #include <GL/glut.h>
 #include <cstdlib>
+#include <cstdio>
 
 #define PI 3.14159265358979323846
 #define E  2.71828182845904523536
@@ -71,18 +72,18 @@ void Rain::startRain() {
 
 	time_elapsed_ = 0.0;
 	factor_mean_ = rain_time_/2;
-	factor_variance_ = 1.5;
+	factor_variance_ = 1.0; //1.5;
 	max_factor_ = NormalDistribution(factor_mean_, factor_mean_, factor_variance_);
 	drop_time_ = RandExpTime();
 	raining_ = true;
 
 	glEnable(GL_FOG);
-	GLfloat fogColor[4] = {0.5, 0.5, 0.5, 1.0};
+    float fcf = Random()*0.7;
+	GLfloat fogColor[4] = {fcf, fcf, fcf, 1.0};
 	glFogi (GL_FOG_MODE, GL_EXP); //GL_EXP2, GL_LINEAR
 	glFogfv (GL_FOG_COLOR, fogColor);
-	glFogf (GL_FOG_DENSITY, 0.35);
-	glFogf (GL_FOG_START, 1.0);
-	glFogf (GL_FOG_END, 5.0);
+	glFogf (GL_FOG_START, 0.7+Random());
+	glFogf (GL_FOG_END, 4.2+Random()*4.0);
 }
 
 void Rain::waitForRain() {
@@ -90,13 +91,17 @@ void Rain::waitForRain() {
 	actual_intensity_ = intensity_ = 0.01;
 	rain_time_ = RandExpTime();
 	time_elapsed_ = 0.0;
+    glDisable(GL_FOG);
 }
 
 void Rain::Update(double dt) {
 	if (raining_) {
 		//update actual intensity value
-		double offset = 1.0 - max_factor_;
-		actual_intensity_ = intensity_ * (NormalDistribution(time_elapsed_, factor_mean_, factor_variance_) + offset);
+		double yoffset = 1.0 - max_factor_;
+        double xoffset = (time_elapsed_ * 6.0 / rain_time_) - 3.0;
+        actual_intensity_ = intensity_ * ( NormalDistribution(xoffset, 0.0, factor_variance_) + yoffset );
+
+        glFogf (GL_FOG_DENSITY, 0.25f*(1+(intensity_factor()-0.5)));
 
 		//check for rain drop creating loop
 		drop_time_ -= dt;
@@ -139,7 +144,7 @@ void Rain::Update(double dt) {
 			startRain();
 		}
 	}
-	//printf("Rain update (%d) [I=%3.3lf/%3.3lf][T=%3.3lf/%3.3lf]\n", (int)raining_, actual_intensity_, intensity_, time_elapsed_, rain_time_);
+	printf("Rain update (%d) [I=%3.3lf/%3.3lf][T=%3.3lf/%3.3lf]\n", (int)raining_, actual_intensity_, intensity_, time_elapsed_, rain_time_);
 
 	//update rain drops
 	UpdateChilds(dt);

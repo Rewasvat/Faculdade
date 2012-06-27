@@ -10,6 +10,9 @@
 
 #define PI 3.14159265358979323846
 
+#define MAX_TIME_RATE PI/60.0
+#define MIN_TIME_RATE -MAX_TIME_RATE
+
 using namespace engine;
 
 namespace mundoime {
@@ -56,13 +59,13 @@ void Sun::Render() {
 }
 
 void Sun::IncreateTimeRate() {
-	time_rate_ += PI/100.0;
-	if (time_rate_ > PI)  time_rate_ = PI;
+	time_rate_ += PI/180.0;
+	if (time_rate_ > MAX_TIME_RATE)  time_rate_ = MAX_TIME_RATE;
 }
 
 void Sun::DecreaseTimeRate() {
-	time_rate_ -= PI/100.0;
-	if (time_rate_ < -PI)  time_rate_ = -PI;
+	time_rate_ -= PI/180.0;
+	if (time_rate_ < MIN_TIME_RATE)  time_rate_ = MIN_TIME_RATE;
 }
 
 void Sun::GetCurrentTimeStr(char* str) {
