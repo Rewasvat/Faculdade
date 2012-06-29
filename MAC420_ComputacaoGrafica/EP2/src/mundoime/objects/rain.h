@@ -7,6 +7,9 @@
 #include <engine/color.h>
 #include <engine/eventhandler.h>
 
+#define MIN_INTENSITY 5.0
+#define MAX_INTENSITY 150.0
+
 namespace engine {
 class Light; 
 }
@@ -45,6 +48,7 @@ public:
 	bool raining() { return raining_; }
 
 	double intensity_factor() { return actual_intensity_/intensity_; }
+    double real_intensity_factor() { return actual_intensity_/MAX_INTENSITY; }
 
 	virtual void MouseHandler(int btn, int state, int x, int y) {}
 	virtual void MouseMotionHandler(int btn, int dx, int dy) {}
@@ -63,6 +67,11 @@ protected:
 	engine::Vector3D rain_direction_;
 	engine::Vector3D min_coords_;
 	engine::Vector3D max_coords_;
+
+    enum RainCurve {
+        NORMAL, DESCENDING_GAMMA, ASCENDING_GAMMA
+    };
+    RainCurve curve_;
 
 	void startRain();
 	void waitForRain();

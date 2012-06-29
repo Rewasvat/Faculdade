@@ -124,15 +124,15 @@ void Sun::updateColors() {
 
 		double r = 1.0;
 		double g = time_factor_;
-		double b = 0.8 * time_factor_;
+		double b = time_factor_;
 		double ambient_color = 0.2 * time_factor_;
 		double ambient_alpha = 0.5 * time_factor_;
 		if (related_rain_ != NULL && related_rain_->raining()) {
 			r = interpolateTwo(r, time_factor_, 0.9*time_factor_, related_rain_->intensity_factor());
-			g = interpolateTwo(r, time_factor_, 0.8*time_factor_, related_rain_->intensity_factor());
-			b = interpolateTwo(r, time_factor_, 0.8*time_factor_, related_rain_->intensity_factor());
-			ambient_color = interpolateTwo(r, time_factor_, 0.1 * time_factor_, related_rain_->intensity_factor());
-			ambient_alpha = interpolateTwo(r, time_factor_, 0.75 * time_factor_, related_rain_->intensity_factor());
+			g = interpolateTwo(g, time_factor_, 0.8*time_factor_, related_rain_->intensity_factor());
+			b = interpolateTwo(b, time_factor_, 0.8*time_factor_, related_rain_->intensity_factor());
+			ambient_color = interpolateTwo(ambient_color, time_factor_, 0.1 * time_factor_, related_rain_->intensity_factor());
+			ambient_alpha = interpolateTwo(ambient_alpha, time_factor_, 0.75 * time_factor_, related_rain_->intensity_factor());
 
 			time_factor_ = interpolateTwo(1.0, time_factor_, 1.0, related_rain_->intensity_factor());
 		}

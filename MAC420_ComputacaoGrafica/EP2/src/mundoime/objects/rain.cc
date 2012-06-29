@@ -8,6 +8,7 @@
 #define PI 3.14159265358979323846
 #define E  2.71828182845904523536
 
+
 namespace mundoime {
 namespace objects {
 
@@ -66,24 +67,34 @@ Rain::~Rain() {
 }
 
 void Rain::startRain() {
-	actual_intensity_ = intensity_= 5.0 + 145.0*Random();
+	actual_intensity_ = intensity_= MIN_INTENSITY + (MAX_INTENSITY-MIN_INTENSITY)*Random();
 	rain_time_ = 30.0 + 270*Random();
 	rain_direction_ = engine::Vector3D(0.5-Random(), -2.0, 0.5-Random());
 
 	time_elapsed_ = 0.0;
 	factor_mean_ = rain_time_/2;
 	factor_variance_ = 1.0; //1.5;
-	max_factor_ = NormalDistribution(factor_mean_, factor_mean_, factor_variance_);
+	max_factor_ = NormalDistribution(0.0, 0.0, factor_variance_);//NormalDistribution(factor_mean_, factor_mean_, factor_variance_);
 	drop_time_ = RandExpTime();
 	raining_ = true;
 
-	glEnable(GL_FOG);
-    float fcf = Random()*0.7;
-	GLfloat fogColor[4] = {fcf, fcf, fcf, 1.0};
-	glFogi (GL_FOG_MODE, GL_EXP); //GL_EXP2, GL_LINEAR
-	glFogfv (GL_FOG_COLOR, fogColor);
-	glFogf (GL_FOG_START, 0.7+Random());
-	glFogf (GL_FOG_END, 4.2+Random()*4.0);
+    double choice = Random();
+    if (choice < 1.0/3)
+        curve_ = NORMAL;
+    else if (choice < 2.0/3)
+        curve_ = DESCENDING_GAMMA;
+    else
+        curve_ = ASCENDING_GAMMA;
+
+    if (Random() > 0.4) {
+    	glEnable(GL_FOG);
+        float fcf = 0.2 + Random()*0.5;
+	    GLfloat fogColor[4] = {fcf, fcf, fcf, 1.0};
+	    glFogi (GL_FOG_MODE, GL_EXP); //GL_EXP2, GL_LINEAR
+	    glFogfv (GL_FOG_COLOR, fogColor);
+	    glFogf (GL_FOG_START, 0.7+Random());
+	    glFogf (GL_FOG_END, 4.2+Random()*4.0);
+    }
 }
 
 void Rain::waitForRain() {
@@ -94,19 +105,37 @@ void Rain::waitForRain() {
     glDisable(GL_FOG);
 }
 
+static double InverseGamma(double x, double u, double l) {
+    double factor = sqrt(l/(2*PI*pow(x,3)));
+    double exponent = (-l*pow(x-u, 2)) / (2*pow(u,2)*x);
+    return factor * pow(E, exponent);
+}
+
 void Rain::Update(double dt) {
 	if (raining_) {
 		//update actual intensity value
-		double yoffset = 1.0 - max_factor_;
-        double xoffset = (time_elapsed_ * 6.0 / rain_time_) - 3.0;
-        actual_intensity_ = intensity_ * ( NormalDistribution(xoffset, 0.0, factor_variance_) + yoffset );
+        double xoffset, yoffset;
+        if (curve_ == NORMAL) {
+            yoffset = 1.0/max_factor_;
+            xoffset = (time_elapsed_ * 6.0 / rain_time_) - 3.0;
+            actual_intensity_ = intensity_ * ( NormalDistribution(xoffset, 0.0, factor_variance_) * yoffset );
+        }
+        else if (curve_ == DESCENDING_GAMMA) {
+            xoffset = (time_elapsed_ / rain_time_) * 3.0;
+            actual_intensity_ = intensity_ * ( InverseGamma(xoffset, 1.0, 3.0) );
+        }
+        else if (curve_ == ASCENDING_GAMMA) {
+            xoffset = 3.0 - (time_elapsed_ / rain_time_) * 3.0;
+            actual_intensity_ = intensity_ * ( InverseGamma(xoffset, 1.0, 3.0) );
+        }
 
-        glFogf (GL_FOG_DENSITY, 0.25f*(1+(intensity_factor()-0.5)));
+        glFogf (GL_FOG_DENSITY, 0.05f+(real_intensity_factor()* 0.15));
 
 		//check for rain drop creating loop
 		drop_time_ -= dt;
 		if (drop_time_ < 0.0) {
 			drop_time_ = RandExpTime();
+            //printf("DROP LOOP new time = %3.3lf\n", drop_time_);
 			for (int i=0; i < actual_intensity_; i++) {
 				double xf = Random();
 				double zf = Random();
@@ -144,7 +173,7 @@ void Rain::Update(double dt) {
 			startRain();
 		}
 	}
-	printf("Rain update (%d) [I=%3.3lf/%3.3lf][T=%3.3lf/%3.3lf]\n", (int)raining_, actual_intensity_, intensity_, time_elapsed_, rain_time_);
+	printf("Rain update (%d)(C=%d) [I=%3.3lf/%3.3lf][T=%3.3lf/%3.3lf]\n", (int)raining_, (int)curve_, actual_intensity_, intensity_, time_elapsed_, rain_time_);
 
 	//update rain drops
 	UpdateChilds(dt);
@@ -173,7 +202,7 @@ void Rain::Render() {
 
 // Returns ~exp(param)  time value
 double Rain::RandExpTime() {
-	double t = (1.0*-log(Random())/actual_intensity_);
+	double t = (1.0*-log(Random())/intensity_);
     return t;
 }
 
