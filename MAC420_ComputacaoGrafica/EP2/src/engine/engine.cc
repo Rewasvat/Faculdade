@@ -42,6 +42,9 @@ void Engine::Initialize(int argc, char* argv[]) {
 	glutInitWindowSize( config_->width() , config_->height() );
 	glutCreateWindow( config_->window_name().c_str() );
 
+	width_ = config_->width();
+	height_ = config_->height();
+
 	glutDisplayFunc(Engine::renderCallback);
 	glutReshapeFunc(Engine::reshapeCallback);
 	glutVisibilityFunc(Engine::visibilityCallback);
@@ -112,19 +115,12 @@ void Engine::Render() {
 }
 
 void Engine::WindowReshape(int w, int h) {
-    int x = 0;
-    int y = 0;
-    if (w > h) {
-        x = (w - h) / 2;
-        w = h;
-    }
-    else if (h > w) {
-        y = (h - w) / 2;
-        h = w;
-    }
+	if (scenes_.size() > 0) {
+		scenes_.back()->WindowResize(w, h);
+		glutPostRedisplay();
+	}
 	width_ = w;
 	height_ = h;
-	glViewport(x, y, (GLint)w, (GLint)h); 
 }
 
 void Engine::PushScene(Scene* scene) {

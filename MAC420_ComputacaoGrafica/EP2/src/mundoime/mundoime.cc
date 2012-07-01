@@ -45,7 +45,6 @@ MundoIME::MundoIME() : Scene(), EventHandler() {
             Vector3D mpos (0.0, 0.0, 0.0);
             Vector3D mdir (0.0, 0.0, 0.0);
             btCollisionShape* mshape = NULL;
-            //btCollisionShape* mshape = new btStaticPlaneShape(btVector3(0,1,0),1);
             /******/
             objects::Model* model = new objects::Model(mpos, mdir, (*it), 0, mshape);
             model->ReparentTo(this);
@@ -54,11 +53,6 @@ MundoIME::MundoIME() : Scene(), EventHandler() {
 				model->set_mesh_visible(false);
 				model->set_casts_shadow(false);
 			}
-
-			/*model->set_casts_shadow(false);
-			if ( (*it).name.find("BlocoA") != std::string::npos) {
-				model->set_casts_shadow(true);
-			}*/
         }
 	}
 
@@ -70,10 +64,11 @@ MundoIME::MundoIME() : Scene(), EventHandler() {
 		player_file_->GroupsToVertexArrays(pmeshes);
         printf("Number of player models: %d\n", pmeshes.size());
         
-        Vector3D ppos (0.0, 3.0, 0.0);
+        Vector3D ppos (0.0, 2.0, 0.0);
         Vector3D pdir (0.0, 0.0, 1.0);
-        btCollisionShape* pshape = new btCapsuleShape(0.125, 0.25);
-        player_ = new objects::Player(ppos, pdir, pmeshes[0], 68.0, pshape);
+		double model_height = 0.35;
+        btCollisionShape* pshape = new btCapsuleShape(model_height/4, model_height/2);
+        player_ = new objects::Player(ppos, pdir, pmeshes[0], 68.0, model_height, pshape);
         player_->ReparentTo(this);
 		//player_->set_casts_shadow(false);
         PhysicsManager::reference()->AddBody( player_->body() );
@@ -86,11 +81,7 @@ MundoIME::~MundoIME() {
 }
 
 void MundoIME::Start() {
-	glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-	gluPerspective(60.0, 1.0, 0.05, 3000);
-    glMatrixMode(GL_MODELVIEW);
+	setPerspective((double)Engine::reference()->window_width(), (double)Engine::reference()->window_height());
 
 	glLoadIdentity();
     glClearColor(1.0, 1.0, 1.0, 1.0);
@@ -98,6 +89,27 @@ void MundoIME::Start() {
 
 	glutWarpPointer(Engine::reference()->window_width()/2, Engine::reference()->window_height()/2);
 	glutSetCursor(GLUT_CURSOR_NONE);
+}
+
+void MundoIME::setPerspective(double w, double h) {
+	glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+
+	double aspect_ratio = w / h;
+	gluPerspective(60.0, aspect_ratio, 0.05, 3000);
+
+	/*double n = 0.05;
+	double r = 4.0;
+	double l = -4.0;
+	double t = 3.0;
+	double b = -3.0;
+	double persp[16] = { 2*n/(r-l), 0.0, (r+l)/(r-l), 0.0,
+						0.0, 2*n*(t-b), (t+b)/(t-b), 0.0,
+						0.0, 0.0, -1.0, -2*n,
+						0.0, 0.0, -1.0, 0.0 };
+	glLoadMatrixd(persp);*/
+
+    glMatrixMode(GL_MODELVIEW);
 }
 
 void MundoIME::Update(double dt) {
@@ -213,6 +225,11 @@ void MundoIME::RenderShadows(Light* light) {
 
 void MundoIME::End() {
     Scene::End();
+}
+
+void MundoIME::WindowResize(int w, int h) {
+	glViewport(0, 0, (GLint)w, (GLint)h);
+	setPerspective((double)w, (double)h);
 }
 
 void MundoIME::MouseHandler(int btn, int state, int x, int y) {

@@ -19,6 +19,7 @@ public:
 	virtual void Render() { if (is_visible_)	RenderChilds(); }
 	virtual void RenderShadows(Light* light) { if (is_visible_)	RenderShadowChilds(light); }
 	virtual void End() {};
+	virtual void WindowResize(int w, int h) { }
 	
 	void Finish() { End(); finished_ = true; }
 

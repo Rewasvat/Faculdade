@@ -15,7 +15,7 @@ using namespace engine;
 namespace mundoime {
 namespace objects {
 
-Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape) : Model(pos,direction,mesh,mass,shape) {
+Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, double model_height, btCollisionShape* shape) : Model(pos,direction,mesh,mass,shape) {
 	body_->setAngularFactor(btVector3(0.0, 0.0, 0.0));
 	body_->setDamping(0.975, 0.9);
 	up_ = Vector3D(0.0, 1.0, 0.0);
@@ -26,6 +26,8 @@ Player::Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBu
 	min_speed_ = 1.0;
 	max_speed_ = 6.0;
     jetpack_ = false;
+	third_person_ = false;
+	model_height_ = model_height;
 
 	sun_ = NULL;
     spotlight_ = new Light(GL_LIGHT1, Light::SPOTLIGHT);
@@ -125,6 +127,9 @@ void Player::KeyboardHandler(unsigned char key, int x, int y) {
     if (key == 'J')
         jetpack_ = !jetpack_;
 
+	if (key == 'T')
+		third_person_ = !third_person_;
+
 	if (key == 'p')
 		printf("position %f %f %f\n", position_.x, position_.y, position_.z);
 }
@@ -166,7 +171,17 @@ void Player::MoveSideways(double amount, bool right) {
 }
 
 Vector3D Player::eye_position() {
-	return position_ + Vector3D(0.0, 0.21, 0.0);
+	Vector3D pos = head_position();
+	if (third_person_) {
+		Vector3D offset = direction_;
+		offset.Scale(-model_height_*0.6);
+		pos = pos + offset;
+	}
+	return pos;
+}
+
+Vector3D Player::head_position() {
+	return position_ + Vector3D(0.0, model_height_*0.375, 0.0);
 }
 
 void Player::updateSpotlight() {

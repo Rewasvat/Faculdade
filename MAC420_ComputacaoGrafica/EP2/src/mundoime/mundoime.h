@@ -30,6 +30,7 @@ public:
 	virtual void Render();
 	virtual void RenderShadows(engine::Light* light);
 	virtual void End();
+	virtual void WindowResize(int w, int h);
 
     virtual void MouseHandler(int btn, int state, int x, int y);
 	virtual void MouseMotionHandler(int btn, int dx, int dy);
@@ -43,6 +44,8 @@ protected:
 	objects::Player* player_;
 	objects::Sun* sun_;
 	char draw_str[64];
+
+	void setPerspective(double w, double h);
 };
 
 

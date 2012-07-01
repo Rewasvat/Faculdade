@@ -16,7 +16,7 @@ class Sun;
 
 class Player : public Model, public engine::EventHandler {
 public:
-    Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, btCollisionShape* shape = 0);
+    Player(engine::Vector3D& pos, engine::Vector3D& direction, Obj::VertexBuffer& mesh, double mass, double model_height, btCollisionShape* shape = 0);
     ~Player();
 
 	void Update(double dt);
@@ -41,10 +41,13 @@ protected:
 	bool forward_move_[2], side_move_[2];
 	double speed_;
 	double min_speed_, max_speed_;
+	double model_height_;
     bool jetpack_;
+	bool third_person_;
     Sun* sun_;
     engine::Light* spotlight_;
 
+	engine::Vector3D head_position();
     void updateSpotlight();
 };
 
