@@ -173,7 +173,7 @@ void Rain::Update(double dt) {
 			startRain();
 		}
 	}
-	printf("Rain update (%d)(C=%d) [I=%3.3lf/%3.3lf][T=%3.3lf/%3.3lf]\n", (int)raining_, (int)curve_, actual_intensity_, intensity_, time_elapsed_, rain_time_);
+	//printf("Rain update (%d)(C=%d) [I=%3.3lf/%3.3lf][T=%3.3lf/%3.3lf]\n", (int)raining_, (int)curve_, actual_intensity_, intensity_, time_elapsed_, rain_time_);
 
 	//update rain drops
 	UpdateChilds(dt);

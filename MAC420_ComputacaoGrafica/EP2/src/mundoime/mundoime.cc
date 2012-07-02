@@ -96,18 +96,28 @@ void MundoIME::setPerspective(double w, double h) {
     glLoadIdentity();
 
 	double aspect_ratio = w / h;
-	gluPerspective(60.0, aspect_ratio, 0.05, 3000);
+    double fov = 60.0;
+	gluPerspective(fov, aspect_ratio, 0.05, 3000);
 
-	/*double n = 0.05;
-	double r = 4.0;
-	double l = -4.0;
-	double t = 3.0;
-	double b = -3.0;
-	double persp[16] = { 2*n/(r-l), 0.0, (r+l)/(r-l), 0.0,
+	double n = 0.05;
+
+    double rad_fov = PI * (fov) / 180.0;
+
+	double t = n * tan(rad_fov);
+	double b = -t;    
+	double r = t * aspect_ratio;
+	double l = -r;
+    printf("Perspective: AR=%lf (n=%lf|t=%lf|b=%lf|r=%lf|l=%lf)\n", aspect_ratio, n, t, b, r, l);
+	/*double persp[16] = { 2*n/(r-l), 0.0, (r+l)/(r-l), 0.0,
 						0.0, 2*n*(t-b), (t+b)/(t-b), 0.0,
 						0.0, 0.0, -1.0, -2*n,
 						0.0, 0.0, -1.0, 0.0 };
-	glLoadMatrixd(persp);*/
+        But we have to give transpose the matrix (in this array[16] definition to pass to OpenGL */
+    double persp[16] = { 2*n/(r-l),     0.0,            0.0,        0.0,
+						0.0,            2*n*(t-b),      0.0,        0.0,
+						(r+l)/(r-l),    (t+b)/(t-b),    -1.0,       -1.0,
+						0.0,            0.0,            -2*n,       0.0 };
+	glLoadMatrixd(persp);
 
     glMatrixMode(GL_MODELVIEW);
 }
