@@ -1,3 +1,15 @@
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: mundoime.cc                                        **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em 03/07/2012                                     **/
+/*******************************************************************/
 #include <engine/engine.h>
 #include <mundoime/mundoime.h>
 #include <engine/objload/objload.h>
@@ -99,25 +111,21 @@ void MundoIME::setPerspective(double w, double h) {
     double fov = 60.0;
 	gluPerspective(fov, aspect_ratio, 0.05, 3000);
 
-	double n = 0.05;
-
+	/*Trying to create a infinite-perspective projection matrix (far-plane at infinite distance)
+	  Some sources say it is a requirement for depth-fail shadow volume algorithms. 
+	  STILL NOT WORKING */
+	/*double n = 0.05;
     double rad_fov = PI * (fov) / 180.0;
-
 	double t = n * tan(rad_fov);
 	double b = -t;    
 	double r = t * aspect_ratio;
 	double l = -r;
     printf("Perspective: AR=%lf (n=%lf|t=%lf|b=%lf|r=%lf|l=%lf)\n", aspect_ratio, n, t, b, r, l);
-	/*double persp[16] = { 2*n/(r-l), 0.0, (r+l)/(r-l), 0.0,
-						0.0, 2*n*(t-b), (t+b)/(t-b), 0.0,
-						0.0, 0.0, -1.0, -2*n,
-						0.0, 0.0, -1.0, 0.0 };
-        But we have to give transpose the matrix (in this array[16] definition to pass to OpenGL */
     double persp[16] = { 2*n/(r-l),     0.0,            0.0,        0.0,
 						0.0,            2*n*(t-b),      0.0,        0.0,
 						(r+l)/(r-l),    (t+b)/(t-b),    -1.0,       -1.0,
 						0.0,            0.0,            -2*n,       0.0 };
-	glLoadMatrixd(persp);
+	glLoadMatrixd(persp);*/
 
     glMatrixMode(GL_MODELVIEW);
 }
@@ -127,7 +135,7 @@ void MundoIME::Update(double dt) {
 	Scene::Update(dt);
 }
 
-void clearCharBuffer(char* buffer, int size) {
+static void clearCharBuffer(char* buffer, int size) {
 	for (int i =0; i<size; i++)
 		buffer[i] = 0;
 }
@@ -141,18 +149,7 @@ void MundoIME::Render() {
 	Vector3D up = player_->up();
 	gluLookAt(eye.x, eye.y, eye.z, eye.x+dir.x, eye.y+dir.y, eye.z+dir.z, up.x, up.y, up.z);
 	
-
     Scene::Render();
-
-	/*ChildList::iterator it;
-    for (it = childs_.begin(); it != childs_.end(); ++it) {
-        Object* obj = (*it);
-        objects::Model* model = dynamic_cast<objects::Model*>(obj);
-        glPushMatrix();
-		if (model != NULL)
-			model->RenderVisibleFaces(sun_, false);
-        glPopMatrix();
-    }*/
 
     //char draw_str[64];
 	clearCharBuffer(draw_str, 64);
@@ -182,7 +179,7 @@ void MundoIME::RenderShadows(Light* light) {
 	glStencilFunc(GL_ALWAYS, 0, ~0);
 	glEnable(GL_CULL_FACE);
 	/*******
-	// for shadow volumes that the camera is not inside
+	// Depth-Pass method: for shadow volumes that the camera is not inside
 	glCullFace(GL_BACK);
 	glStencilOp(GL_KEEP, GL_KEEP, GL_INCR);
 	RenderShadowChilds(light);
@@ -192,7 +189,7 @@ void MundoIME::RenderShadows(Light* light) {
 	glStencilOp(GL_KEEP, GL_KEEP, GL_DECR);
 	RenderShadowChilds(light);
 	/*******/
-	// for shadow volumes with the camera inside
+	// Depth-Fail method: for shadow volumes with the camera inside
 	glCullFace(GL_FRONT);
 	glStencilOp(GL_KEEP, GL_INCR, GL_KEEP);
 	RenderShadowChilds(light);

@@ -1,3 +1,15 @@
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: rain.cc                                            **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em 03/07/2012                                     **/
+/*******************************************************************/
 #include <mundoime/objects/rain.h>
 #include <mundoime/mundoime.h>
 #include <math.h>
@@ -54,10 +66,6 @@ void Drop::Render() {
 
 /******************** RAIN *************************************/
 Rain::Rain() {
-	/*	position -14.884317 -0.834598 -11.474524
-		position 13.882018 0.100503 -11.474616
-		position 13.881560 -0.063596 17.402067
-		position -14.884803 -0.846410 17.402056*/
 	min_coords_ = engine::Vector3D(-15.0, -1.0, -12.0);
 	max_coords_ = engine::Vector3D(14.0, 10.0, 18.0);
 	waitForRain();
@@ -212,12 +220,12 @@ double Rain::Random() {
 
 void Rain::KeyboardHandler(unsigned char key, int x, int y) {
 	if (key == 'i') {
-		intensity_ += 0.1;
-		if (intensity_ > 120.0)	intensity_ = 100.0;
+		intensity_ += 1.0;
+		if (intensity_ > MAX_INTENSITY)	intensity_ = MAX_INTENSITY;
 	}
 	if (key == 'k') {
-		intensity_ -= 0.1;
-		if (intensity_ <= 5.0)	intensity_ = 3.0;
+		intensity_ -= 1.0;
+		if (intensity_ <= MIN_INTENSITY) intensity_ = MIN_INTENSITY;
 	}
 	if (key == 'R')
 		time_elapsed_ = rain_time_;

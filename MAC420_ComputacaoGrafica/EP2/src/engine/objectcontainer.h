@@ -1,3 +1,15 @@
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: objectcontainer.h                                  **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em 03/07/2012                                     **/
+/*******************************************************************/
 
 #ifndef OBJECTCONTAINER_H_
 #define OBJECTCONTAINER_H_

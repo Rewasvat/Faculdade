@@ -45,32 +45,6 @@ No caso do Windows, é capaz do Visual Studio colocar o executável dentro de ou
 dependendo do modo de compilação (Debug ou Release).
 
 
-################################
-#  Instruções de Uso do EP
-################################
-Em seu terminal, com o EP2 compilado, navegue para a pasta do EP.
-Então, para executar o EP rode o comando:
-
-./MundoIME
-
-Com o EP2 rodando e sua janela aberta, existem os seguintes comandos para serem usados:
-- '+': aumenta a velocidade de passagem do tempo;
-- '-': diminui a velocidade da passagem do tempo;
--a: movimenta o jogador para a esquerda;
--w: movimenta o jogador para frente;
--s: movimenta o jogador para trás;
--d: movimenta o jogador para a direita;
-
-E finalmente, movendo o mouse na janela do programa movimenta a direção da camera do jogo, e a camera está localizada aonde estariam
-seus olhos caso você estivesse andando pelo modelo do IME.
-
-CUIDADO com o movimento do jogador: enquanto a detecção de colisão funciona, não tive tempo de deixá-la (e o movimento) perfeita... Se você ficar
-andando para cima de uma parede em um certo ângulo, sem parar, é capaz de você entrar no modelo. Nesse caso 2 coisas podem acontecer:
-você andar por dentro do modelo, o que fica feio, então repita o acima para voltar para a parte de fora; ou você pode cair no abismo.
-Se você andar pelo terreno além do tamanho do modelo, você irá sair de cima dele e cair no abismo, pois não tive tempo de arrumar isso...
-Ao "cair no abismo", o personagem fica caindo infinitamente, e a única solução é reiniciar o programa (fechar e abrir de novo).
-
-
 OBS.: O EP é compilado linkando dinâmicamente com a biblioteca do glut. Isso normalmente não é um problema no Linux, mas é
       capaz, dependendo do seu sistema, de acontecer no Windows. Em qualquer caso, é só fazer com que a lib dinâmica
       (.dll no Windows, .so no Linux) esteja em uma pasta no sistema que o executável/SO encontrem. Só para rodar o programa,
@@ -78,15 +52,68 @@ OBS.: O EP é compilado linkando dinâmicamente com a biblioteca do glut. Isso n
 
 
 ################################
+#  Instruções de Uso do EP
+################################
+Em seu terminal, com o EP2 compilado, navegue para a pasta do EP.
+Então, para executar o EP rode o comando:
+
+./MundoIME [args do GLUT]
+
+Args do GLUT são argumentos opcionais passados pela linha de comando para o GLUT (pelo glutInit(...) ), ver as docs do GLUT para
+mais informações.
+
+Com o EP2 rodando e sua janela aberta, existem os seguintes comandos para serem usados:
+-F: entra/sai de Fullscreen;
+- '+': aumenta a velocidade de passagem do tempo;
+- '-': diminui a velocidade da passagem do tempo;
+-a: movimenta o jogador para a esquerda;
+-w: movimenta o jogador para frente;
+-s: movimenta o jogador para trás;
+-d: movimenta o jogador para a direita;
+-W: aumenta a velocidade de movimento do jogador;
+-S: diminui a velocidade de movimento do jogador;
+-T: troca a posição da camêra (entre primeira e terceira pessoa, em relação ao jogador);
+-J: liga/desliga o "jetpack". Inicialmente desligado, o jetpack permite que o jogador se mova no eixo Y.
+    Portanto, ao apontar a qualquer direção você irá nela, possibilitando que o jogador voe.
+-R: inicia um evento de chuva ou cancela um evento de chuva (se um estiver ocorrendo);
+-i: aumenta a intensidade (máxima) da chuva que está acontecendo;
+-k: diminui a intensidade (máxima) da chuva que está acontecendo;
+-ESC ou q: fecha o programa;
+
+E finalmente, movendo o mouse na janela do programa movimenta a direção da camera do jogo, e a camera está localizada aonde estariam
+seus olhos caso você estivesse andando pelo modelo do IME.
+
+
+
+################################
 #  Notas sobre o código fonte
 ################################
 Como você pode ter notado, o código fonte deste EP está dividido em 2 pastas (2 namespaces no C++),
-o Engine e o MundoIME mais o main.cc
+o Engine, o MundoIME, e o main.cc
 A Engine compõe um simples framework para fazer aplicações gráficas (de tempo real) que eu fiz desde o EP1 e melhorei neste EP,
 e minha idéia é reutilizá-lo para os próximos EPs de MAC420, talvez alterando uma coisa ou outra se eu achar algum
 problema durante os próximos EPs.
 O MundoIME contém a verdadeira lógica do EP, contendo as implementações de classes da framework usadas no programa.
 Com isso, o main.cc simplesmente inicializa a framework e cria a cena do MundoIME.
+
+As sombras foram implementadas usando a técnica de Shadow Volumes, usando o método de Depth-Fail (mas também fiz o código, embora comentado,
+para usar o método Depth-Pass). Isso garante sombras "quase" perfeitas: cada modelo projeta sua sombra sobre a cena inteira (todos outros objetos),
+de forma rápida e sem problemas de qualidade, criando hard-shadows bem realistas. Só faltou um problema que não consegui concertar: quando em uma
+sombra, se você olha na direção da luz (sua "nuca" apontando para o Sol), uma "sombra clara", pequena, dos modelos é vísivel dentro da sombra.
+O código para tal escrevi sozinho, mas li alguns tutoriais e artigos (alguns com códigos de exemplo) na internet para aprender mais sobre o método
+para implementá-lo.
+
+A chuva foi implementada usando um algoritmo simples próprio que criei, de forma que todos paramêtros da chuva são escolhidos aleatoriamente, dentro
+de um intervalo de valores hardcoded no código.
+Cada gota é uma linha ligeiramente translucida, passando de azul claro (vértice superior) para azul escuro (vértice inferior), de espessuras diferentes.
+Quando uma delas cai e passa pelo terreno do IME ela é deletada.
+Um evento de chuva normalmente ocorre de forma aleátoria, depois de um tempo aleatório escolhido por uma distribuição exponencial.
+A intensidade máxima da chuva é escolhida aleatóriamente, porém a intensidade atual da chuva num dado momento depende do momento (em relação ao
+intervalo de tempo que a chuva irá durar) seguindo uma entre 3 curvas que ditam a variação da intensidade (uma delas por exemplo é uma curva Normal).
+Direção da chuva e velocidade também são escolhidas aleatóriamente, mas são afetadas pela intensidade.
+Há também a possibilidade de aparecer fog junto com a chuva, e os paramêtros da fog são escolhidos aleatóriamente, e fora isso, a densidade da fog
+muda linearmente junto com a intensidade da chuva.
+A chuva em si funciona criando em intervalos de tempo várias "gotas", ao longo de toda a cena.
 
 Sobre bibliotecas externas usadas, usei 3 bibliotecas externas, todas open-source e livres para usar:
 -libobj/objload: biblioteca usada para carregar e renderizar os modelos .OBJ e seus materiais, usados para carregar os modelos 3D no programa.
@@ -98,9 +125,8 @@ Sobre bibliotecas externas usadas, usei 3 bibliotecas externas, todas open-sourc
 -Bullet: biblioteca usada para detecção de colisão e aplicação da física relacionada.
 	Site: http://www.bulletphysics.org/
 	Inclui o código fonte dos módulos da Bullet que eu uso nesse EP, na pasta /BulletLib/.
-	O processo de compilação do EP irá compilar as bibliotecas da Bullet e linkar elas com o EP.
+	O processo de compilação do EP irá compilar as bibliotecas da Bullet e linkar elas com o EP automaticamente.
 
-	Para a detecção de colisão, são criados "modelos de colisão" na Bullet. A criação do modelo de colisão para o modelo do IME pode levar
-	algum tempo, então como uma forma de otimização, ao criar o modelo de colisão para os modelos 3D do programa, o EP (usando ferramentas
-	da Bullet) irá salvar esse modelo de colisão num arquivo .BULLET localizado em /Models/OptimizedShapes/, e na próxima vez irá usar
-	esses modelos salvos para carregar o modelo de colisão de forma mais rápida.
+	Para a detecção de colisão, são criados "modelos de colisão" na Bullet. Ao compilar o EP em modo Debug, a Bullet realiza diversos testes
+	a mais e a criação do modelo de colisão para o modelo do IME pode levar	algum tempo, porém isso só acontece no inicio da execução do EP.
+	Em Release o programa roda rápido normalmente.

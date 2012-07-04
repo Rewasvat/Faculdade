@@ -1,3 +1,15 @@
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: timer.h                                            **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em 03/07/2012                                     **/
+/*******************************************************************/
 /*
 I wanted to have a simple way to measure time intervals with great accuracy, like greater than a few milliseconds, so I've come up with this.
 

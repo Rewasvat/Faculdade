@@ -1,3 +1,15 @@
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: vector3D.h                                         **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em 03/07/2012                                     **/
+/*******************************************************************/
 
 #ifndef VECTOR3D_H_
 #define VECTOR3D_H_

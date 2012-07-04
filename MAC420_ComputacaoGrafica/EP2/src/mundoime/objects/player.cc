@@ -1,3 +1,15 @@
+/*******************************************************************/
+/**   MAC 420 - Introdução à Computação Gráfica                   **/
+/**   IME-USP - Primeiro Semestre de 2012                         **/
+/**   BCC2009 - Marcel P. Jackowski                               **/
+/**                                                               **/
+/**   Segundo Exercício-Programa                                  **/
+/**   Arquivo: player.cc                                          **/
+/**                                                               **/
+/**   Fernando Omar Aluani             #USP: 6797226              **/
+/**                                                               **/
+/**   Entregado em 03/07/2012                                     **/
+/*******************************************************************/
 #include <mundoime/objects/player.h>
 #include <btBulletDynamicsCommon.h>
 #include <engine/vector3D.h>
@@ -129,9 +141,6 @@ void Player::KeyboardHandler(unsigned char key, int x, int y) {
 
 	if (key == 'T')
 		third_person_ = !third_person_;
-
-	if (key == 'p')
-		printf("position %f %f %f\n", position_.x, position_.y, position_.z);
 }
 
 void Player::MoveForward(double amount, bool forward) {
@@ -181,7 +190,7 @@ Vector3D Player::eye_position() {
 }
 
 Vector3D Player::head_position() {
-	return position_ + Vector3D(0.0, model_height_*0.375, 0.0);
+	return position_ + Vector3D(0.0, model_height_*0.4, 0.0);
 }
 
 void Player::updateSpotlight() {
