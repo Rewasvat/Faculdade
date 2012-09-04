@@ -51,7 +51,7 @@ def teste2(filedata, start, step, duration=-1):
         print "freq=%s [%s->%s]" % (teste(filedata,start,step), start, start+step)
         start += step
     
-sampledir = "C:\\Users\\home\\Documents\\Coisas da Faculdade - IME_BCC\\Faculdade\\MAC300_MetodosNumericosAlgebraLinear\\EP1\\files\\samples\\"
+sampledir = ".\\files\\samples\\"
 import os
 files = [sampledir+nome for nome in os.listdir(sampledir)]
 
