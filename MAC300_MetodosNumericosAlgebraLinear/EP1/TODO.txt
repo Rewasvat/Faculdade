@@ -1,0 +1,51 @@
+##################################################
+ EP1 300 TODO list
+##################################################
+
+#################
+# PROGRAMA
+#################
+- Ler arquivo WAV
+  http://home.roadrunner.com/~jgglatt/tech/wave.htm
+
+>decodificar as informações contidas no arquivo WAV;
+>aplicar a Transformada de Fourier para cada segmento da onda, com intervalos de tempo determinados;
+>analisar o espectro de frequências e obter a frequência fundamental do intervalo;
+>determinar as notas e sobretons correspondentes a cada frequência fundamental; e
+>transcrever a música para um arquivo MIDI, criando eventos MIDI correspondentes a cada intervalo
+analisado.
+
+- Algoritmos de Transformacao Discreta de Fourier (DFT):
+    -Implementar Multiplicacao pela Matriz de Fourier 
+    -Usar FastFourierTransform (FFT) já pronto para a linguagem
+    -Coletar tempo de execução desses algoritmos (não incluir tempo de criação da matriz DFT no método da multiplicação)
+    Dica: testar se y = Wx para qualquer sinal x e W sendo a matriz de DFT que VOCE implementou
+          e comparar se o resultado é o mesmo para o FFT que pegamos.
+          
+-Além disso, devem ser mostrados os gráficos da onda no domínio tempo e no domínio da frequência
+e devem ser coletados os tempos de execução para uma posterior análise de complexidade e comparação
+dos dois algoritmos
+
+- Escrever arquivo MIDI na pasta de execucao do programa
+
+#################
+# RELATORIO
+#################
+- Explique sucintamente a modelagem de um som usando Série de Fourier;
+- Explique como a Transformada de Fourier fornece informações para a transcrição musical feita
+  em seu programa;
+- Faça a comparação do tempo de execução dos dois métodos de cálculo da DFT: 
+  Multiplicação pela Matriz de Fourier e FFT. Mostre dois gráficos comparativos com
+  os tempos médios dos métodos para o mesmo número de execuções. Tome o cuidado de não
+  incluir o tempo de criação da matriz DFT no método da multiplicação.
+- Descreva vantagens e desvantagens entre os métodos Multiplicação pela Matriz de Fourier e FFT.
+- Mostre os gráficos das ondas de áudio no domínio do tempo e no domínio da frequência (frequência
+  no eixo das abscissas e amplitude em decibéis no eixo das ordenadas). Mostre os espectros obtidos
+  para ambos os métodos.
+  
+###############
+# ENTREGA
+###############
+-código fonte
+-README dizendo como compilar e rodar o programa (e falar o que já é falado no enunciado)
+-Relatório

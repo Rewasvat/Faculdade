@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding: cp1252 -*-
+# -*- coding: utf-8 -*-
 
 ########################################################
 #
@@ -27,6 +27,8 @@ if __name__ == "__main__":
         print "EP1.py <file name>.wav"
         Finish()
     arg = sys.argv[1]
-    print arg
+    if arg.lower()[-3:] != "wav":
+        print "Wrong program call. File passed must be .wav sound file."
+        Finish()
     #
     Finish()
