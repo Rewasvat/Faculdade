@@ -31,7 +31,7 @@ def LoadWave(filename):
 from numpy import argmax
 from numpy.fft import fft
 def teste(filedata, starting_sec, length):
-    frameRate = filedata[0]
+    frameRate = float(filedata[0])
     data = filedata[1]
     duration = len(data)/frameRate
     
@@ -54,6 +54,12 @@ def teste2(filedata, start, step, duration=-1):
 sampledir = ".\\files\\samples\\"
 import os
 files = [sampledir+nome for nome in os.listdir(sampledir)]
+
+def run(i, step=0.25):
+	fd = LoadWave(files[i])
+	teste2(fd,0,step)
+	print files[i]
+
 
 import math
 
