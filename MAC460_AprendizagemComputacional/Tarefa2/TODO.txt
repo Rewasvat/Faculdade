@@ -1,0 +1,21 @@
+###########################
+# Programa
+###########################
+
+-Construir classificador de Bayes para classes C1, C2, C3, usando um unico atributo
+-distribuicao do atributo em cada classe segue distribuicao Uniforme, Exponencial ou Normal
+-estimar parametros das distribuicoes candidatas usando Estimador de Maxima Verossimilhanca
+
+
+############################
+#  RELATORIO
+############################
+-resultados de cada teste classes X distribuicoes
+-apontar qual foi a melhor combinacao
+-calcular matriz de confusao da combinacao escolhida
+
+
+############################
+#  ENTREGA
+############################
+-Sources e relatorio

@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 from scipy.stats import *
 import sys
 
