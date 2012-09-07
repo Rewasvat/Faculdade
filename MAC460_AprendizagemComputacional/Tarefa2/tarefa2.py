@@ -82,13 +82,8 @@ class Classifier:
     def __call__(self, value):  return self.Classify(value)
     def Classify(self, value):
         e = self.Evidence(value)
-        #print "---"
-        #print "Class1 (%s) posterior = %s" % (self.c1.dist.name, self.c1.Posterior(value, e))
-        #print "Class2 (%s) posterior = %s" % (self.c2.dist.name, self.c2.Posterior(value, e))
-        #print "Class3 (%s) posterior = %s" % (self.c3.dist.name, self.c3.Posterior(value, e))
         posteriors = [c.Posterior(value, e) for c in self.classes]
         p = max(posteriors)
-        #print "Selected class %s" % (posteriors.index(p) + 1)
         return posteriors.index(p) + 1
         
     def __repr__(self): return self.__str__()
@@ -114,16 +109,23 @@ class ClassifierPool:
         print "Training complete."
                 
     def RunTests(self, dataPointList):
-        print "Running tests (score is #correctClassifications/#tests)..."
+        print "Running tests..."
+        print "\t-Scores are #correctClassifications/#tests. First the total score then the partials for each class."
+        print "\t-Classifiers are printed as (Class1 distribution / Class2 distribution / Class3 distribution)"
         best = []       #list of classifiers with the best score (equal values)
         best_score = 0  #score of the best classifier
         totalSamples = len(dataPointList)
         for cfier in self.classifiers:
             score = 0
+            classScore = [0, 0, 0]
+            classTotals = [0,0,0]
             for dPoint in dataPointList:
-                score += (cfier(dPoint.value) == dPoint.classNum)
+                isTrue = (cfier(dPoint.value) == dPoint.classNum)
+                score += isTrue
+                classScore[dPoint.classNum-1] += isTrue
+                classTotals[dPoint.classNum-1] += 1
 
-            print "%s\tscore: %s/%s" % (cfier, score, totalSamples)
+            print "%s\tscore: %s/%s [C1: %s/%s; C2: %s/%s; C3: %s/%s]" % (cfier, score, totalSamples, classScore[0], classTotals[0], classScore[1], classTotals[1], classScore[2], classTotals[2])
             if score > best_score:
                 best = [cfier]
                 best_score = score
@@ -134,7 +136,7 @@ class ClassifierPool:
         while len(best) > 1:
             best.pop( random.randint(0, len(best)-1) )
         self.selectedClassifier = best[0]
-        print "Selected %s [%s]" % (self.selectedClassifier, 100*float(best_score)/totalSamples)
+        print "Selected %s [Correct %2.2f%%]" % (self.selectedClassifier, 100*float(best_score)/totalSamples)
         
 ####################################################
 class DataPoint:

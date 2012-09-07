@@ -1,0 +1,72 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+
+\title{MAC460 Aprendizagem Computacional - Tarefa 2}
+\author{Fernando Omar Aluani (NUSP: 6797226)}
+
+\begin{document}
+
+\maketitle
+
+\section{Execução e Especificação do Programa}
+Para executar o programa, basta rodar 
+\begin{center}
+\textit{ \textbf{./tarefa2.py} <treino> <teste> }
+\end{center}
+Onde:
+\begin{itemize}
+  \item \textit{<treino>} é o caminho para o arquivo que contém o conjunto de dados que será usado para treinamento.
+  \item \textit{<teste>} é o caminho para o arquivo que contém o conjunto de dados que será usado para testar os classificadores.
+\end{itemize}
+
+O programa aceita conjuntos de dados de qualquer tamanho, mas espera que ele sigam o mesmo padrão do \textit{gerador.py}:
+"valorObservado classe". Ele também supõe que as 3 distribuições estatísticas possíveis são uniforme contínua (\textit{uniform}), 
+normal (\textit{norm}) e exponencial (\textit{expon}), que são as que o \textit{gerador.py} usa.
+
+Com os dados de treinamento, o programa estima os paramêtros das 3 distribuições estatísticas para as 3 classes nos 27 casos possíveis
+de combinações. Com os dados de testes, o programa testa cada um dos 27 classificadores e marca se ele acertou ou errou a classificação,
+e então imprime a "pontuação" de cada classificador nos testes e qual deles foi o que se saiu melhor. Quando há mais de um classificador
+empatado com a maior pontuação, o programa escolhe um desses aleatóriamente como o se saiu melhor.
+
+\section{Resultado dos Testes}
+
+Eis os resultados dos testes da execução do programa para um conjunto de amostras de treinamento e outro conjunto para testes gerados
+pelo \textit{gerador.py}, lembrando que a pontuação é $(acertos)/(total de testes)$, e consequentemente $(total de
+testes - acertos) = (erros)$:\\
+\begin{verbatim}
+Classifier(uniform/uniform/uniform)	score: 47/60
+Classifier(uniform/uniform/   norm)	score: 48/60
+Classifier(uniform/uniform/  expon)	score: 29/60
+Classifier(uniform/   norm/uniform)	score: 46/60
+Classifier(uniform/   norm/   norm)	score: 47/60
+Classifier(uniform/   norm/  expon)	score: 27/60
+Classifier(uniform/  expon/uniform)	score: 39/60
+Classifier(uniform/  expon/   norm)	score: 40/60
+Classifier(uniform/  expon/  expon)	score: 19/60
+Classifier(   norm/uniform/uniform)	score: 48/60
+Classifier(   norm/uniform/   norm)	score: 48/60
+Classifier(   norm/uniform/  expon)	score: 35/60
+Classifier(   norm/   norm/uniform)	score: 47/60
+Classifier(   norm/   norm/   norm)	score: 47/60
+Classifier(   norm/   norm/  expon)	score: 35/60
+Classifier(   norm/  expon/uniform)	score: 39/60
+Classifier(   norm/  expon/   norm)	score: 39/60
+Classifier(   norm/  expon/  expon)	score: 34/60
+Classifier(  expon/uniform/uniform)	score: 47/60
+Classifier(  expon/uniform/   norm)	score: 48/60
+Classifier(  expon/uniform/  expon)	score: 47/60
+Classifier(  expon/   norm/uniform)	score: 46/60
+Classifier(  expon/   norm/   norm)	score: 47/60
+Classifier(  expon/   norm/  expon)	score: 47/60
+Classifier(  expon/  expon/uniform)	score: 39/60
+Classifier(  expon/  expon/   norm)	score: 40/60
+Classifier(  expon/  expon/  expon)	score: 46/60
+\end{verbatim}
+ARRUMAR ISSO AQUI - RECHECAR SAIDA DO PROGRAMA
+
+Como é possível notar, o classificador "certo" (aquele que tem a mesma distribuição das classes geradas pelo \textit{gerador.py}, expon/uniform/norm)
+fez 48 acertos, sendo o classificador que menos errou junto com outros 3 classificadores que também só erraram 12 testes.
+
+\end{document}
