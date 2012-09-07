@@ -7,6 +7,20 @@
 -estimar parametros das distribuicoes candidatas usando Estimador de Maxima Verossimilhanca
 
 
+recebemos 2 arquivos:
+-conjunto de dados usado como amostra para treinamento (CONJUNTO DE AMOSTRA)
+-conjunto de validacao/testes para testarmos nosso negocio (CONJUNTO DE TESTES)
+
+1) Ler AMOSTRA, 20 valores de cada classe
+2) a partir da amostra, estimar verosimilhanca das distribuicoes (uniforme/normal/exponencial) para cada classe
+3) testar as 27 possibilidades de distribuicao/classe (classificador), escolher a melhor
+4) print classificador escolhido
+
+1) Ler TESTES, 60 valores, classe X
+2) Usar o classificador escolhido para definir a classe de cada valor, comparar com a classe real X para ver se acertou/errou
+3) print result
+
+
 ############################
 #  RELATORIO
 ############################

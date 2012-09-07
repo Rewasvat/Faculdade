@@ -1,1 +1,0 @@
-﻿Aqui fica os arquivos de modelos de colisão otimizados que a Bullet gera.
