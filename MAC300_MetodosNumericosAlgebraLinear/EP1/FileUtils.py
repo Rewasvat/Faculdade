@@ -29,7 +29,7 @@ def LoadWave(filename):
     return (waveFile.getframerate(), data)
     
 from numpy import argmax
-from numpy.fft import fft
+from numpy.fft import fft, fftfreq
 def teste(filedata, starting_sec, length):
     frameRate = float(filedata[0])
     data = filedata[1]
@@ -41,7 +41,9 @@ def teste(filedata, starting_sec, length):
     
     freqs = fft(data)
     i = argmax(abs(freqs))
-    return frameRate * i / len(data)
+    freqFactors = fftfreq(len(data))
+    #return frameRate * i / len(data)
+    return abs(frameRate * freqFactors[i])
     
     
 def teste2(filedata, start, step, duration=-1):
@@ -51,8 +53,11 @@ def teste2(filedata, start, step, duration=-1):
         print "freq=%s [%s->%s]" % (teste(filedata,start,step), start, start+step)
         start += step
     
-sampledir = ".\\files\\samples\\"
-import os
+import os, sys
+if sys.platform == "win32":
+    sampledir = ".\\files\\samples\\"
+else:
+    sampledir = "./files/samples/"
 files = [sampledir+nome for nome in os.listdir(sampledir)]
 
 def run(i, step=0.25):
