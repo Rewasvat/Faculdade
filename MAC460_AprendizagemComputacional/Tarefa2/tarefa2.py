@@ -125,7 +125,9 @@ class ClassifierPool:
                 classScore[dPoint.classNum-1] += isTrue
                 classTotals[dPoint.classNum-1] += 1
 
-            print "%s\tscore: %s/%s [C1: %s/%s; C2: %s/%s; C3: %s/%s]" % (cfier, score, totalSamples, classScore[0], classTotals[0], classScore[1], classTotals[1], classScore[2], classTotals[2])
+            digitCount = [len(str(t)) for t in classTotals]
+            partials = "[C1: %"+str(digitCount[0])+"s/%s; C2: %"+str(digitCount[1])+"s/%s; C3: %"+str(digitCount[2])+"s/%s]"
+            print ("%s\tSCORE: %s/%s  "+partials) % (cfier, score, totalSamples, classScore[0], classTotals[0], classScore[1], classTotals[1], classScore[2], classTotals[2])
             if score > best_score:
                 best = [cfier]
                 best_score = score
