@@ -46,19 +46,23 @@ class MIDI:
         self.midi = midiutil.smidi.MidiOutFile(filename)
         self.midi.header()
         self.midi.start_of_track()
+        self.beatsPerMinute = 120
+        self.midi.tempo(roundToNearest(60000000.0/self.beatsPerMinute))
         
     def AddNote(self, note):
         # note should be from class Note
         # we receive start & duration in seconds
         if note.freq == 0.0:    return
         pitch = GetMIDIcode(note.freq)
-        self.midi.update_time(int(note.start))
+        startBeats = 95*note.start * (self.beatsPerMinute/60.0)
+        durationBeats = 95*note.duration * (self.beatsPerMinute/60.0)
+        self.midi.update_time(roundToNearest(startBeats), False)
         self.midi.note_on(note=pitch)
-        self.midi.update_time(int(note.start + note.duration))
+        self.midi.update_time(roundToNearest(startBeats + durationBeats), False)
         self.midi.note_off(note=pitch)
-        self.midi.update_time(0)
         
     def Save(self):
+        self.midi.update_time(0)
         self.midi.end_of_track()
         self.midi.eof()
         
