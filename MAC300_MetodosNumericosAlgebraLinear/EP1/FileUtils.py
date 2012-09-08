@@ -2,8 +2,7 @@
 
 import wave, struct
 import math
-from midiutil.MidiFile import MIDIFile
-import midiutil.smidi
+import MIDILib.smidi
 
 def LoadWave(filename):
     waveFile = wave.open(filename, 'r')
@@ -51,13 +50,13 @@ def GetEquivalentValueInRange(origin_value, origin_range, destination_range):
 class MIDI:
     def __init__(self, filename):
         self.filename = filename
-        self.midi = midiutil.smidi.MidiOutFile(filename)
+        self.midi = MIDILib.smidi.MidiOutFile(filename)
         self.midi.header()
         self.midi.start_of_track()
         self.beatsPerMinute = 120
         self.midi.tempo(roundToNearest(60000000.0/self.beatsPerMinute))
         self.midi.patch_change(0, 79)
-        self.midi.continuous_controller(0, midiutil.smidi.SOUND_CONTROLLER_3, 127) #sound release time
+        self.midi.continuous_controller(0, MIDILib.smidi.SOUND_CONTROLLER_3, 127) #sound release time
         
     def AddNote(self, note):
         # note should be from class Note
