@@ -68,24 +68,15 @@ class Analyzer:
 
 
 ########################################################
-def Finish():
-    if sys.platform == "win32":
-        # workaround para que ao rodar o script diretamente no Windows
-        # e uma janela de console seja aberta (ou não), ela não feche
-        # assim que a execução terminar.
-        print "\nPress ENTER to close..."
-        raw_input()
-    exit()
-
 def Execute(argList):
     if len(argList) <= 0:
         print "Wrong program call. Use: "
         print "EP1.py <file name>.wav"
-        Finish()
+        return
     arg = argList[0]
     if arg.lower()[-3:] != "wav":
         print "Wrong program call. File passed must be .wav sound file."
-        Finish()
+        return
     #
     print "Transcripting \"%s\" to musical notes for MIDI..." % arg
     wavData = FileUtils.LoadWave(arg)
@@ -100,7 +91,7 @@ def Execute(argList):
     mid.Save()
     print "Saved transcripted MIDI file to \"%s\"!" % outputName
     #
-    Finish()
+    return
     
 if __name__ == "__main__":
     Execute( sys.argv[1:] )

@@ -48,18 +48,23 @@ class MIDI:
         self.midi.start_of_track()
         self.beatsPerMinute = 120
         self.midi.tempo(roundToNearest(60000000.0/self.beatsPerMinute))
+        self.midi.patch_change(0, 79)
+        self.midi.continuous_controller(0, midiutil.smidi.SOUND_CONTROLLER_3, 127) #sound release time
         
     def AddNote(self, note):
         # note should be from class Note
         # we receive start & duration in seconds
         if note.freq == 0.0:    return
         pitch = GetMIDIcode(note.freq)
+        print "Adding note (MIDI Code: %s) %s" % (pitch, note)
         startBeats = 95*note.start * (self.beatsPerMinute/60.0)
         durationBeats = 95*note.duration * (self.beatsPerMinute/60.0)
         self.midi.update_time(roundToNearest(startBeats), False)
-        self.midi.note_on(note=pitch)
+        #self.midi.continuous_controller(0, midiutil.smidi.SUSTAIN_ONOFF, 127) # value < 64 -> OFF // value > 64 -> ON
+        self.midi.note_on(note=pitch, velocity=127)
         self.midi.update_time(roundToNearest(startBeats + durationBeats), False)
-        self.midi.note_off(note=pitch)
+        #self.midi.continuous_controller(0, midiutil.smidi.SUSTAIN_ONOFF, 0)
+        self.midi.note_off(note=pitch, velocity=127)
         
     def Save(self):
         self.midi.update_time(0)
