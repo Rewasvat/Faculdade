@@ -6,7 +6,7 @@
 #  MAC300 - EP1
 #  Fernando Omar Aluani  #USP: 6797226
 #
-#   Esse È o principal arquivo do EP, o "main"
+#   Esse √© o principal arquivo do EP, o "main"
 #   Rode-o para executar o programa.
 #
 ########################################################
@@ -71,18 +71,18 @@ class Analyzer:
 def Finish():
     if sys.platform == "win32":
         # workaround para que ao rodar o script diretamente no Windows
-        # e uma janela de console seja aberta (ou n„o), ela n„o feche
-        # assim que a execuÁ„o terminar.
+        # e uma janela de console seja aberta (ou n√£o), ela n√£o feche
+        # assim que a execu√ß√£o terminar.
         print "\nPress ENTER to close..."
         raw_input()
     exit()
 
-if __name__ == "__main__":
-    if len(sys.argv) <= 1:
+def Execute(argList):
+    if len(argList) <= 0:
         print "Wrong program call. Use: "
         print "EP1.py <file name>.wav"
         Finish()
-    arg = sys.argv[1]
+    arg = argList[0]
     if arg.lower()[-3:] != "wav":
         print "Wrong program call. File passed must be .wav sound file."
         Finish()
@@ -93,11 +93,14 @@ if __name__ == "__main__":
     analyzer.Analyze()
     
     outputName = arg.split("\\")[-1].split("/")[-1]
-    outputName = ".".join(outputName.split(".")[:-1]) + ".mid"
+    outputName = ".".join(outputName.split(".")[:-1]) + ".MIDI"
     mid = FileUtils.MIDI()
     for note in analyzer.notes:
         mid.AddNote(note)
     mid.Save(outputName)
-    print "Saved transcripted sMIDI file to \"%s\"!" % outputName
+    print "Saved transcripted MIDI file to \"%s\"!" % outputName
     #
     Finish()
+    
+if __name__ == "__main__":
+    Execute( sys.argv[1:] )
