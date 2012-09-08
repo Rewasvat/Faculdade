@@ -5,19 +5,18 @@
 #################
 # PROGRAMA
 #################
-- Ler arquivo WAV
-  http://home.roadrunner.com/~jgglatt/tech/wave.htm
+[DONE]- Ler arquivo WAV (http://home.roadrunner.com/~jgglatt/tech/wave.htm)
 
->decodificar as informações contidas no arquivo WAV;
->aplicar a Transformada de Fourier para cada segmento da onda, com intervalos de tempo determinados;
+[DONE]>decodificar as informações contidas no arquivo WAV;
+[DONE]>aplicar a Transformada de Fourier para cada segmento da onda, com intervalos de tempo determinados;
 >analisar o espectro de frequências e obter a frequência fundamental do intervalo;
 >determinar as notas e sobretons correspondentes a cada frequência fundamental; e
->transcrever a música para um arquivo MIDI, criando eventos MIDI correspondentes a cada intervalo
-analisado.
+[DONE]>transcrever a música para um arquivo MIDI, criando eventos MIDI correspondentes a cada intervalo
+       analisado.
 
 - Algoritmos de Transformacao Discreta de Fourier (DFT):
     -Implementar Multiplicacao pela Matriz de Fourier 
-    -Usar FastFourierTransform (FFT) já pronto para a linguagem
+    [DONE]-Usar FastFourierTransform (FFT) já pronto para a linguagem
     -Coletar tempo de execução desses algoritmos (não incluir tempo de criação da matriz DFT no método da multiplicação)
     Dica: testar se y = Wx para qualquer sinal x e W sendo a matriz de DFT que VOCE implementou
           e comparar se o resultado é o mesmo para o FFT que pegamos.
@@ -26,7 +25,7 @@ analisado.
 e devem ser coletados os tempos de execução para uma posterior análise de complexidade e comparação
 dos dois algoritmos
 
-- Escrever arquivo MIDI na pasta de execucao do programa
+[DONE]- Escrever arquivo MIDI na pasta de execucao do programa
 
 #################
 # RELATORIO
