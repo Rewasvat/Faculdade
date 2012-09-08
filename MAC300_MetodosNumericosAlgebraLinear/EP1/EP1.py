@@ -94,10 +94,10 @@ def Execute(argList):
     
     outputName = arg.split("\\")[-1].split("/")[-1]
     outputName = ".".join(outputName.split(".")[:-1]) + ".MIDI"
-    mid = FileUtils.MIDI()
+    mid = FileUtils.MIDI(outputName)
     for note in analyzer.notes:
         mid.AddNote(note)
-    mid.Save(outputName)
+    mid.Save()
     print "Saved transcripted MIDI file to \"%s\"!" % outputName
     #
     Finish()

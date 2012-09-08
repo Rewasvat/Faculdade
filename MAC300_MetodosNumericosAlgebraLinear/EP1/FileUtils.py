@@ -39,8 +39,33 @@ def GetMIDIcode(freq):
     return roundToNearest(69 + 12*math.log(freq/440.0, 2))
 
 # simple wrapper around MIDIFile to more easily suit our purposes
+import midiutil.smidi
 class MIDI:
-    def __init__(self):
+    def __init__(self, filename):
+        self.filename = filename
+        self.midi = midiutil.smidi.MidiOutFile(filename)
+        self.midi.header()
+        self.midi.start_of_track()
+        
+    def AddNote(self, note):
+        # note should be from class Note
+        # we receive start & duration in seconds
+        if note.freq == 0.0:    return
+        pitch = GetMIDIcode(note.freq)
+        self.midi.update_time(int(note.start))
+        self.midi.note_on(note=pitch)
+        self.midi.update_time(int(note.start + note.duration))
+        self.midi.note_off(note=pitch)
+        self.midi.update_time(0)
+        
+    def Save(self):
+        self.midi.end_of_track()
+        self.midi.eof()
+        
+###
+class MIDIXXX:
+    def __init__(self, filename):
+        self.filename = filename
         self.midi = MIDIFile(1)
         self.midi.addTrackName(0,0,"MusicTranscription")
         self.beatsPerMinute = 120
@@ -58,8 +83,8 @@ class MIDI:
         volume = 120   #volume/velocity of the note (in [0-127])
         self.midi.addNote(0,0, pitch, startBeats, durationBeats, volume)
         
-    def Save(self, filename):
-        midiFile = open(filename, 'wb')
+    def Save(self):
+        midiFile = open(self.filename, 'wb')
         self.midi.writeFile(midiFile)
         midiFile.close()
 
