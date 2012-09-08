@@ -17,10 +17,18 @@ from numpy import argmax
 from numpy.fft import fft, fftfreq
 
 class Note:
-    def __init__(self, freq, start, duration):
+    def __init__(self, freq, start, duration, initialAmplitude):
         self.freq = freq
         self.start = start
         self.duration = duration
+        self.amplitudeRange = [initialAmplitude]
+        
+    def AddAmplitudeStep(self, a):
+        self.amplitudeRange.append(a)
+        
+    def GetNormalizedAmplitudes(self):
+        m = max(self.amplitudeRange)
+        return [a/m for a in self.amplitudeRange]
         
     def __repr__(self): return self.__str__()
     def __str__(self):  return "%2.2fHz at %s secs lasting for %s secs" % (self.freq, self.start, self.duration)
@@ -41,7 +49,14 @@ class Analyzer:
         i = argmax(abs(spectrum))  # abs(spectrum) gives the amplitude spectrum, argmax returns the index to the maximum value of the array
         freqFactors = fftfreq(len(interval)) #helper function that gives the frequency factors for each position in the array return by the DFT
         
-        return abs(self.frameRate * freqFactors[i])
+        #normalizedAmplitudes = abs(spectrum) / abs(spectrum)[i]
+        #for j in range(len(interval)):
+        #    a = normalizedAmplitudes[j]
+        #    f = abs(self.frameRate * freqFactors[j])
+        #    if a > 0.8:
+        #        print "Amplitude: %s (%s Hz)" % (abs(spectrum)[j], f)
+                
+        return (abs(self.frameRate * freqFactors[i]), abs(spectrum)[i])
     
     def Analyze(self, DFTmethod=fft):
         duration = len(self.data)/self.frameRate
@@ -49,17 +64,18 @@ class Analyzer:
         start = 0.0
         note = None
         while start < duration:
-            # analyze interval
-            f = self.analyzeInterval(start, self.analysisStep, DFTmethod)
-            if note == None:    note = Note(f, start, self.analysisStep)
+            # analyze interval => frequency, amplitude
+            f, a = self.analyzeInterval(start, self.analysisStep, DFTmethod)
+            if note == None:    note = Note(f, start, self.analysisStep, a)
             else:
                 if f != note.freq:
                     # found a different note
                     self.notes.append(note)
-                    note = Note(f, start, self.analysisStep)
+                    note = Note(f, start, self.analysisStep, a)
                 else:
-                    # update note duration
+                    # update note duration and amplitude range
                     note.duration += self.analysisStep
+                    note.AddAmplitudeStep(a)
             ##
             start += self.analysisStep
         if note != None:

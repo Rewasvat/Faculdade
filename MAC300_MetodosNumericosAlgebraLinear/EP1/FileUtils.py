@@ -3,6 +3,7 @@
 import wave, struct
 import math
 from midiutil.MidiFile import MIDIFile
+import midiutil.smidi
 
 def LoadWave(filename):
     waveFile = wave.open(filename, 'r')
@@ -30,7 +31,6 @@ def LoadWave(filename):
         
     return (waveFile.getframerate(), data)
     
-    
 def roundToNearest(x):
     return int(x+0.5)
 
@@ -38,8 +38,16 @@ def GetMIDIcode(freq):
     #calculating basing from note A4 - 440 Hz
     return roundToNearest(69 + 12*math.log(freq/440.0, 2))
 
+def GetEquivalentValueInRange(origin_value, origin_range, destination_range):
+    xa = origin_value - origin_range[0]                 # xa = X - A
+    ba = origin_range[1] - origin_range[0]              # ba = B - A
+    if ba == 0.0:
+        ba = 0.0001
+    dc = destination_range[1] - destination_range[0]    # dc = D - C
+    r = dc * xa / ba                                    # r = (D-C)(X-A)/(B-A)
+    return destination_range[0] + r                     # return C + r
+    
 # simple wrapper around MIDIFile to more easily suit our purposes
-import midiutil.smidi
 class MIDI:
     def __init__(self, filename):
         self.filename = filename
@@ -59,43 +67,45 @@ class MIDI:
         print "Adding note (MIDI Code: %s) %s" % (pitch, note)
         startBeats = 95*note.start * (self.beatsPerMinute/60.0)
         durationBeats = 95*note.duration * (self.beatsPerMinute/60.0)
+        amps = note.GetNormalizedAmplitudes() #we will use the amplitudes to variate the note volume
+        stepBeats = 95*(note.duration/len(amps)) *(self.beatsPerMinute/60.0)
+        
         self.midi.update_time(roundToNearest(startBeats), False)
-        #self.midi.continuous_controller(0, midiutil.smidi.SUSTAIN_ONOFF, 127) # value < 64 -> OFF // value > 64 -> ON
         self.midi.note_on(note=pitch, velocity=127)
+        
+        prevVol = 0
+        for i in range(len(amps)):
+            # this is kinda ugly, but ensures that the volume transitions smoothly between
+            # one point in amps to the next.
+            midvol = roundToNearest(127*amps[i])
+            
+            if i == len(amps)-1:
+                nextvol = 0
+            else:
+                nextvol = roundToNearest(127*(amps[i] + amps[i+1])/2.0)
+            
+            pbv = 0
+            for beatNum in range(roundToNearest(stepBeats)):
+                if beatNum < stepBeats/2:
+                    beatvol = GetEquivalentValueInRange(beatNum, [0, stepBeats/2], [prevVol, midvol])
+                elif beatNum == stepBeats/2:
+                    beatvol = midvol
+                else:
+                    beatvol = GetEquivalentValueInRange(beatNum, [stepBeats/2, stepBeats], [midvol, nextvol])
+                #
+                if pbv == beatvol:  continue
+                pbv = beatvol
+                self.midi.continuous_controller(0, 0x07, beatvol) # 0x07 => code for Main Volume (coarse)
+                self.midi.update_time(roundToNearest(startBeats + i*stepBeats + beatNum), False)
+            prevVol = nextvol
+
         self.midi.update_time(roundToNearest(startBeats + durationBeats), False)
-        #self.midi.continuous_controller(0, midiutil.smidi.SUSTAIN_ONOFF, 0)
         self.midi.note_off(note=pitch, velocity=127)
         
     def Save(self):
         self.midi.update_time(0)
         self.midi.end_of_track()
         self.midi.eof()
-        
-###
-class MIDIXXX:
-    def __init__(self, filename):
-        self.filename = filename
-        self.midi = MIDIFile(1)
-        self.midi.addTrackName(0,0,"MusicTranscription")
-        self.beatsPerMinute = 120
-        self.midi.addTempo(0, 0, self.beatsPerMinute) #tempo, beats per minute
-        
-    def AddNote(self, note):
-        # note should be from class Note
-        # we receive start & duration in seconds
-        # MIDIFile expects start & duration in beats
-        if note.freq == 0.0:    return
-        print "Adding note", note
-        pitch = GetMIDIcode(note.freq)
-        startBeats = note.start * (self.beatsPerMinute/60.0)
-        durationBeats = note.duration * (self.beatsPerMinute/60.0)
-        volume = 120   #volume/velocity of the note (in [0-127])
-        self.midi.addNote(0,0, pitch, startBeats, durationBeats, volume)
-        
-    def Save(self):
-        midiFile = open(self.filename, 'wb')
-        self.midi.writeFile(midiFile)
-        midiFile.close()
 
 
 ########################3
