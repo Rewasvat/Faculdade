@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 import wave, struct
+import math
+from midiutil.MidiFile import MIDIFile
 
 def LoadWave(filename):
     waveFile = wave.open(filename, 'r')
@@ -28,8 +30,42 @@ def LoadWave(filename):
         
     return (waveFile.getframerate(), data)
     
-from numpy import argmax
-from numpy.fft import fft, fftfreq
+    
+def roundToNearest(x):
+    return int(x+0.5)
+
+def GetMIDIcode(freq):
+    #calculating basing from note A4 - 440 Hz
+    return roundToNearest(69 + 12*math.log(freq/440.0, 2))
+
+# simple wrapper around MIDIFile to more easily suit our purposes
+class MIDI:
+    def __init__(self):
+        self.midi = MIDIFile(1)
+        self.midi.addTrackName(0,0,"MusicTranscription")
+        self.beatsPerMinute = 120
+        self.midi.addTempo(0, 0, self.beatsPerMinute) #tempo, beats per minute
+        
+    def AddNote(self, note):
+        # note should be from class Note
+        # we receive start & duration in seconds
+        # MIDIFile expects start & duration in beats
+        if note.freq == 0.0:    return
+        print "Adding note", note
+        pitch = GetMIDIcode(note.freq)
+        startBeats = note.start * (self.beatsPerMinute/60.0)
+        durationBeats = note.duration * (self.beatsPerMinute/60.0)
+        volume = 120   #volume/velocity of the note (in [0-127])
+        self.midi.addNote(0,0, pitch, startBeats, durationBeats, volume)
+        
+    def Save(self, filename):
+        midiFile = open(filename, 'wb')
+        self.midi.writeFile(midiFile)
+        midiFile.close()
+
+
+########################3
+#REMOVE
 def teste(filedata, starting_sec, length):
     frameRate = float(filedata[0])
     data = filedata[1]
@@ -64,14 +100,4 @@ def run(i, step=0.25):
 	fd = LoadWave(files[i])
 	teste2(fd,0,step)
 	print files[i]
-
-
-import math
-
-def roundToNearest(x):
-    return int(x+0.5)
-
-def GetMIDIcode(freq):
-    #calculating basing of note A4 - 440 Hz
-    return roundToNearest(69 + 12*math.log(freq/440.0, 2))
 
