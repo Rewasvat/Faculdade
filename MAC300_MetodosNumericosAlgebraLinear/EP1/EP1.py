@@ -12,9 +12,10 @@
 ########################################################
 import sys
 import FileUtils
+import DFT
 
 from numpy import argmax
-from numpy.fft import fft, fftfreq
+from numpy.fft import fftfreq
 
 class Note:
     def __init__(self, freq, start, duration, initialAmplitude):
@@ -33,14 +34,18 @@ class Note:
     def __repr__(self): return self.__str__()
     def __str__(self):  return "%2.2fHz at %s secs lasting for %s secs" % (self.freq, self.start, self.duration)
         
+        
 class Analyzer:
     def __init__(self, data):
         self.frameRate = data[0]
         self.data = data[1]
         self.notes = []
-        self.analysisStep = 0.2
+        self.analysisStep = 0.1
         
-    def analyzeInterval(self, start, length, DFTmethod=fft):
+    def GetBaseDFTBlockSize(self):
+        return int(self.frameRate * self.analysisStep)
+        
+    def analyzeInterval(self, start, length, DFTmethod):
         startIndex = int( start * self.frameRate )
         endIndex = int( startIndex + length*self.frameRate )
         interval = self.data[startIndex:endIndex]
@@ -58,7 +63,8 @@ class Analyzer:
                 
         return (abs(self.frameRate * freqFactors[i]), abs(spectrum)[i])
     
-    def Analyze(self, DFTmethod=fft):
+    def Analyze(self, DFTmethod):
+        self.notes = [] #reset our previous analysis, in case there is any.
         duration = len(self.data)/self.frameRate
         print "Analyzing... (frameRate: %s :: duration: %2.2f)" % (self.frameRate, duration)
         start = 0.0
@@ -84,6 +90,24 @@ class Analyzer:
 
 
 ########################################################
+def ShowSpectogram(analyzer):
+    try:
+        import pylab
+    except:
+        print "Warning: module pylab (from matplotlib) could not be found. No charts will be displayed."
+        return
+    
+    print "Producing Wave Time-Domain and Frequency-Domain charts... (close graph window to continue)"
+    pylab.subplot(211)
+    pylab.plot(analyzer.data)
+    pylab.title("Time-Domain")
+    
+    pylab.subplot(212)
+    pylab.specgram(analyzer.data, NFFT=analyzer.GetBaseDFTBlockSize(),
+                    Fs=analyzer.frameRate, scale_by_freq=False, sides='default')
+    pylab.title("Spectogram (Frequency-Domain)")
+    pylab.show()
+
 def Execute(argList):
     if len(argList) <= 0:
         print "Wrong program call. Use: "
@@ -96,8 +120,9 @@ def Execute(argList):
     #
     print "Transcripting \"%s\" to musical notes for MIDI..." % arg
     wavData = FileUtils.LoadWave(arg)
+    mFFT = DFT.DFT_FFT()
     analyzer = Analyzer(wavData)
-    analyzer.Analyze()
+    analyzer.Analyze(mFFT)
     
     outputName = arg.split("\\")[-1].split("/")[-1]
     outputName = ".".join(outputName.split(".")[:-1]) + ".MIDI"
@@ -106,6 +131,8 @@ def Execute(argList):
         mid.AddNote(note)
     mid.Save()
     print "Saved transcripted MIDI file to \"%s\"!" % outputName
+    #
+    ShowSpectogram(analyzer)
     #
     return
     
