@@ -66,7 +66,7 @@ class Analyzer:
     def Analyze(self, DFTmethod):
         self.notes = [] #reset our previous analysis, in case there is any.
         duration = len(self.data)/self.frameRate
-        print "Analyzing... (frameRate: %sHz :: duration: %2.2f secs)" % (self.frameRate, duration)
+        print "Analyzing with %s... (frameRate: %sHz :: duration: %2.2f secs)" % (DFTmethod.name, self.frameRate, duration)
         start = 0.0
         note = None
         while start < duration:
