@@ -14,7 +14,7 @@ import sys
 import FileUtils
 import DFT
 
-from numpy import argmax
+from numpy import argmax, abs
 from numpy.fft import fftfreq
 
 class Note:
@@ -66,7 +66,7 @@ class Analyzer:
     def Analyze(self, DFTmethod):
         self.notes = [] #reset our previous analysis, in case there is any.
         duration = len(self.data)/self.frameRate
-        print "Analyzing... (frameRate: %s :: duration: %2.2f)" % (self.frameRate, duration)
+        print "Analyzing... (frameRate: %sHz :: duration: %2.2f secs)" % (self.frameRate, duration)
         start = 0.0
         note = None
         while start < duration:
@@ -113,18 +113,41 @@ def Execute(argList):
         print "Wrong program call. Use: "
         print "EP1.py <file name>.wav"
         return
-    arg = argList[0]
-    if arg.lower()[-3:] != "wav":
-        print "Wrong program call. File passed must be .wav sound file."
+    argFile = ""
+    showGraphs = True
+    dftMethod = "both"
+    while len(argList) > 0:
+        arg = argList.pop()
+        if arg == "-nographs":
+            showGraphs = False
+        elif arg[:5] == "-dft:":
+            dftMethod = arg.split(":")[1].lower()
+            if not dftMethod in ["matrix", "matrixnumpy", "fft", "both", "all"]:
+                print "Invalid DFT Method passed. Defaulting to 'both'"
+                dftMethod = "both"
+        elif arg.lower().find("wav") != -1:
+            argFile = arg
+    
+    if argFile.lower()[-3:] != "wav":
+        print "Wrong program call. A .wav sound file must be passed."
         return
     #
-    print "Transcripting \"%s\" to musical notes for MIDI..." % arg
-    wavData = FileUtils.LoadWave(arg)
-    mFFT = DFT.DFT_FFT()
+    print "Transcripting \"%s\" to musical notes for MIDI..." % argFile
+    wavData = FileUtils.LoadWave(argFile)
     analyzer = Analyzer(wavData)
-    analyzer.Analyze(mFFT)
     
-    outputName = arg.split("\\")[-1].split("/")[-1]
+    mDFTs = []
+    if dftMethod in ["matrix", "both", "all"]:
+        mDFTs.append(  DFT.DFT_Matrix() )
+    if dftMethod in ["matrixnumpy", "all"]:
+        mDFTs.append(  DFT.DFT_Matrix(True) )
+    if dftMethod in ["fft", "both", "all"]:
+        mDFTs.append(  DFT.DFT_FFT() )
+    for mdft in mDFTs:
+        analyzer.Analyze(mdft)
+        mdft.PrintResults()
+    
+    outputName = argFile.split("\\")[-1].split("/")[-1]
     outputName = ".".join(outputName.split(".")[:-1]) + ".MIDI"
     mid = FileUtils.MIDI(outputName)
     for note in analyzer.notes:
@@ -132,7 +155,8 @@ def Execute(argList):
     mid.Save()
     print "Saved transcripted MIDI file to \"%s\"!" % outputName
     #
-    ShowSpectogram(analyzer)
+    if showGraphs:
+        ShowSpectogram(analyzer)
     #
     return
     

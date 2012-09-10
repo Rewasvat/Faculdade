@@ -15,15 +15,16 @@
        analisado.
 
 - Algoritmos de Transformacao Discreta de Fourier (DFT):
-    -Implementar Multiplicacao pela Matriz de Fourier 
+    [DONE]-Implementar Multiplicacao pela Matriz de Fourier 
     [DONE]-Usar FastFourierTransform (FFT) já pronto para a linguagem
-    -Coletar tempo de execução desses algoritmos (não incluir tempo de criação da matriz DFT no método da multiplicação)
+    [DONE]-Coletar tempo de execução desses algoritmos (não incluir tempo de criação da matriz DFT no método da multiplicação)
     Dica: testar se y = Wx para qualquer sinal x e W sendo a matriz de DFT que VOCE implementou
           e comparar se o resultado é o mesmo para o FFT que pegamos.
           
--Além disso, devem ser mostrados os gráficos da onda no domínio tempo e no domínio da frequência
-e devem ser coletados os tempos de execução para uma posterior análise de complexidade e comparação
-dos dois algoritmos
+[DONE]-Mostrar gráficos da onda no domínio tempo e no domínio da frequência
+
+[DONE]-Coletar os tempos de execução para uma posterior análise de complexidade e comparação
+    dos dois algoritmos
 
 [DONE]- Escrever arquivo MIDI na pasta de execucao do programa
 

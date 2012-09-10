@@ -3,8 +3,9 @@ import time
 import numpy
 
 class DFTMethod:
-    def __init__(self):
+    def __init__(self, name):
         self.results = []
+        self.name = name
         self.mark = 0
         
     def __call__(self, data):   return []   #IMPLEMENT THIS in derived class
@@ -22,10 +23,13 @@ class DFTMethod:
     def GetNumExecutions(self):
         return len(self.results)
         
+    def PrintResults(self):
+        print "DFT Method Results for %s: %.5f mean execution time (seconds) for %s calls." % (self.name, self.GetMeanExecutionTime(), self.GetNumExecutions())
+        
 ####
 class DFT_FFT(DFTMethod):
     def __init__(self):
-        DFTMethod.__init__(self)
+        DFTMethod.__init__(self, "FFT")
         
     def __call__(self, data):
         self.markTime()
@@ -36,7 +40,10 @@ class DFT_FFT(DFTMethod):
 ###
 class DFT_Matrix(DFTMethod):
     def __init__(self, useNumPyMatrix=False):
-        DFTMethod.__init__(self)
+        name = "Matrix"
+        if useNumPyMatrix:
+            name += " (NumPy)"
+        DFTMethod.__init__(self, name)
         self.matrices = {} #stores computed DFT matrix for each N (N: matrix)
         self.useNumPyMatrix = useNumPyMatrix
         
