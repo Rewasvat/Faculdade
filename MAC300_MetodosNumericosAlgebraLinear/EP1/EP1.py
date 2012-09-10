@@ -122,7 +122,7 @@ def Execute(argList):
             showGraphs = False
         elif arg[:5] == "-dft:":
             dftMethod = arg.split(":")[1].lower()
-            if not dftMethod in ["matrix", "matrixnumpy", "fft", "both", "all"]:
+            if not dftMethod in ["matrix", "matrixnumpy", "fft", "both", "bothfast", "all"]:
                 print "Invalid DFT Method passed. Defaulting to 'both'"
                 dftMethod = "both"
         elif arg.lower().find("wav") != -1:
@@ -139,9 +139,9 @@ def Execute(argList):
     mDFTs = []
     if dftMethod in ["matrix", "both", "all"]:
         mDFTs.append(  DFT.DFT_Matrix() )
-    if dftMethod in ["matrixnumpy", "all"]:
+    if dftMethod in ["matrixnumpy", "bothfast", "all"]:
         mDFTs.append(  DFT.DFT_Matrix(True) )
-    if dftMethod in ["fft", "both", "all"]:
+    if dftMethod in ["fft", "both", "bothfast", "all"]:
         mDFTs.append(  DFT.DFT_FFT() )
     for mdft in mDFTs:
         analyzer.Analyze(mdft)
