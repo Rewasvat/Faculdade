@@ -39,6 +39,7 @@ class Analyzer:
     def __init__(self, data):
         self.frameRate = data[0]
         self.data = data[1]
+        self.duration = len(self.data)/self.frameRate
         self.notes = []
         self.analysisStep = 0.1
         
@@ -65,11 +66,10 @@ class Analyzer:
     
     def Analyze(self, DFTmethod):
         self.notes = [] #reset our previous analysis, in case there is any.
-        duration = len(self.data)/self.frameRate
         print "Analyzing with %s... (frameRate: %sHz :: duration: %2.2f secs)" % (DFTmethod.name, self.frameRate, duration)
         start = 0.0
         note = None
-        while start < duration:
+        while start < self.duration:
             # analyze interval => frequency, amplitude
             f, a = self.analyzeInterval(start, self.analysisStep, DFTmethod)
             if note == None:    note = Note(f, start, self.analysisStep, a)
@@ -99,7 +99,8 @@ def ShowSpectogram(analyzer):
     
     print "Producing Wave Time-Domain and Frequency-Domain charts... (close graph window to continue)"
     pylab.subplot(211)
-    pylab.plot(analyzer.data)
+    timeRangeData = [analyzer.duration*i/len(analyzer.data) for i in xrange(len(analyzer.data))]
+    pylab.plot(timeRangeData, analyzer.data)
     pylab.title("Time-Domain")
     
     pylab.subplot(212)
