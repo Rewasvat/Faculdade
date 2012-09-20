@@ -21,7 +21,8 @@
     Dica: testar se y = Wx para qualquer sinal x e W sendo a matriz de DFT que VOCE implementou
           e comparar se o resultado é o mesmo para o FFT que pegamos.
           
-[DONE]-Mostrar gráficos da onda no domínio tempo e no domínio da frequência
+-Mostrar gráficos da onda no domínio tempo e no domínio da frequência
+    >ta mostrando errado
 
 [DONE]-Coletar os tempos de execução para uma posterior análise de complexidade e comparação
     dos dois algoritmos

@@ -14,7 +14,7 @@ import sys
 import FileUtils
 import DFT
 
-from numpy import argmax, abs
+from numpy import argmax, abs, mean
 from numpy.fft import fftfreq
 
 class Note:
@@ -52,17 +52,32 @@ class Analyzer:
         interval = self.data[startIndex:endIndex]
         
         spectrum = DFTmethod(interval)
-        i = argmax(abs(spectrum))  # abs(spectrum) gives the amplitude spectrum, argmax returns the index to the maximum value of the array
+        amplitudes = abs(spectrum)
+        i = argmax(amplitudes)  # abs(spectrum) gives the amplitude spectrum, argmax returns the index to the maximum value of the array
         freqFactors = fftfreq(len(interval)) #helper function that gives the frequency factors for each position in the array return by the DFT
         
-        #normalizedAmplitudes = abs(spectrum) / abs(spectrum)[i]
-        #for j in range(len(interval)):
-        #    a = normalizedAmplitudes[j]
-        #    f = abs(self.frameRate * freqFactors[j])
-        #    if a > 0.8:
-        #        print "Amplitude: %s (%s Hz)" % (abs(spectrum)[j], f)
-                
-        return (abs(self.frameRate * freqFactors[i]), abs(spectrum)[i])
+        normalizedAmplitudes = amplitudes / amplitudes[i]
+        #croppedAmps = [amplitudes[j]*(normalizedAmplitudes[j]>0.001) for j in xrange(len(interval))]
+        meanAmp = mean(amplitudes)
+        croppedAmps = [amplitudes[j]*(amplitudes[j]>meanAmp) for j in xrange(len(interval))]
+        prev = 0
+        for j in range(len(interval)):
+            a = croppedAmps[j]
+            if a > croppedAmps[prev]:
+                prev = j
+            elif a < croppedAmps[prev]:
+                f = abs(self.frameRate * freqFactors[prev])
+                if f == 0.0:    continue
+                print "Amplitude: %s (%s Hz)(MIDI: %s) DOWN" % (amplitudes[prev], f, FileUtils.GetMIDIcode(f))
+                break
+            elif a == 0 and croppedAmps[prev] > 0:
+                #we found the first peak - prev is the index of maximum value
+                f = abs(self.frameRate * freqFactors[prev])
+                print "Amplitude: %s (%s Hz)(MIDI: %s)" % (amplitudes[prev], f, FileUtils.GetMIDIcode(f))
+                break
+        i = prev
+
+        return (abs(self.frameRate * freqFactors[i]), amplitudes[i])
     
     def Analyze(self, DFTmethod):
         self.notes = [] #reset our previous analysis, in case there is any.
@@ -77,6 +92,7 @@ class Analyzer:
                 if f != note.freq:
                     # found a different note
                     self.notes.append(note)
+                    print "NOTE (MIDI Code: %s) %s" % (FileUtils.GetMIDIcode(note.freq), note)
                     note = Note(f, start, self.analysisStep, a)
                 else:
                     # update note duration and amplitude range
@@ -84,6 +100,7 @@ class Analyzer:
                     note.AddAmplitudeStep(a)
             ##
             start += self.analysisStep
+        print "NOTE (MIDI Code: %s) %s" % (FileUtils.GetMIDIcode(note.freq), note)
         if note != None:
             self.notes.append(note)
         
@@ -102,6 +119,8 @@ def ShowSpectogram(analyzer):
     timeRangeData = [analyzer.duration*i/len(analyzer.data) for i in xrange(len(analyzer.data))]
     pylab.plot(timeRangeData, analyzer.data)
     pylab.title("Time-Domain")
+    #pylab.xlabel(text)
+    #pylab.ylabel(text)
     
     pylab.subplot(212)
     pylab.specgram(analyzer.data, NFFT=analyzer.GetBaseDFTBlockSize(),
