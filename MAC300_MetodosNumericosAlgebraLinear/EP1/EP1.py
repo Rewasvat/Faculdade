@@ -51,6 +51,9 @@ class Analyzer:
         endIndex = int( startIndex + length*self.frameRate )
         interval = self.data[startIndex:endIndex]
         
+        #from numpy import blackman, hamming, hanning
+        #interval = hamming(len(intervalWAT)) * intervalWAT
+
         spectrum = DFTmethod(interval)
         amplitudes = abs(spectrum)
         i = argmax(amplitudes)  # abs(spectrum) gives the amplitude spectrum, argmax returns the index to the maximum value of the array
@@ -59,23 +62,28 @@ class Analyzer:
         normalizedAmplitudes = amplitudes / amplitudes[i]
         #croppedAmps = [amplitudes[j]*(normalizedAmplitudes[j]>0.001) for j in xrange(len(interval))]
         meanAmp = mean(amplitudes)
+        #print "Mean Amplitude = %s" % (meanAmp)
         croppedAmps = [amplitudes[j]*(amplitudes[j]>meanAmp) for j in xrange(len(interval))]
         prev = 0
         for j in range(len(interval)):
             a = croppedAmps[j]
+            f40 = abs(self.frameRate * freqFactors[j])
+            fMIDI = FileUtils.GetMIDIcode(f40)
+            #if f40 == 43.0:
+            #    print "Amplitude: %s (%s Hz)(MIDI: %s) ====" % (amplitudes[j], f40, FileUtils.GetMIDIcode(f40))
             if a > croppedAmps[prev]:
                 prev = j
             elif a < croppedAmps[prev]:
                 f = abs(self.frameRate * freqFactors[prev])
                 if f == 0.0:    continue
-                print "Amplitude: %s (%s Hz)(MIDI: %s) DOWN" % (amplitudes[prev], f, FileUtils.GetMIDIcode(f))
+                #print "Amplitude: %s (%s Hz)(MIDI: %s) DOWN" % (amplitudes[prev], f, FileUtils.GetMIDIcode(f))
                 break
             elif a == 0 and croppedAmps[prev] > 0:
                 #we found the first peak - prev is the index of maximum value
                 f = abs(self.frameRate * freqFactors[prev])
-                print "Amplitude: %s (%s Hz)(MIDI: %s)" % (amplitudes[prev], f, FileUtils.GetMIDIcode(f))
+                #print "Amplitude: %s (%s Hz)(MIDI: %s)" % (amplitudes[prev], f, FileUtils.GetMIDIcode(f))
                 break
-        i = prev
+        #i = prev
 
         return (abs(self.frameRate * freqFactors[i]), amplitudes[i])
     
@@ -92,7 +100,7 @@ class Analyzer:
                 if f != note.freq:
                     # found a different note
                     self.notes.append(note)
-                    print "NOTE (MIDI Code: %s) %s" % (FileUtils.GetMIDIcode(note.freq), note)
+                    #print "NOTE (MIDI Code: %s) %s" % (FileUtils.GetMIDIcode(note.freq), note)
                     note = Note(f, start, self.analysisStep, a)
                 else:
                     # update note duration and amplitude range
@@ -100,7 +108,7 @@ class Analyzer:
                     note.AddAmplitudeStep(a)
             ##
             start += self.analysisStep
-        print "NOTE (MIDI Code: %s) %s" % (FileUtils.GetMIDIcode(note.freq), note)
+        #print "NOTE (MIDI Code: %s) %s" % (FileUtils.GetMIDIcode(note.freq), note)
         if note != None:
             self.notes.append(note)
         
@@ -116,15 +124,17 @@ def ShowSpectogram(analyzer):
     
     print "Producing Wave Time-Domain and Frequency-Domain charts... (close graph window to continue)"
     pylab.subplot(211)
-    timeRangeData = [analyzer.duration*i/len(analyzer.data) for i in xrange(len(analyzer.data))]
-    pylab.plot(timeRangeData, analyzer.data)
+    size = len(analyzer.data)
+    timeRangeData = [1.0*analyzer.duration*i/size for i in xrange(size)]
+    pylab.plot( timeRangeData, analyzer.data)
     pylab.title("Time-Domain")
-    #pylab.xlabel(text)
-    #pylab.ylabel(text)
+    #pylab.xlabel("time")
+    #pylab.ylabel("dunno")
     
     pylab.subplot(212)
     pylab.specgram(analyzer.data, NFFT=analyzer.GetBaseDFTBlockSize(),
                     Fs=analyzer.frameRate, scale_by_freq=False, sides='default')
+    #pylab.ylim( -10, 5000)
     pylab.title("Spectogram (Frequency-Domain)")
     pylab.show()
 
@@ -182,3 +192,9 @@ def Execute(argList):
     
 if __name__ == "__main__":
     Execute( sys.argv[1:] )
+
+def testall(dftm="fft"):
+    for s in FileUtils.files:
+        Execute([s, "-dft:"+dftm, "-nographs"])
+        print "========================================================="
+
