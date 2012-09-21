@@ -21,8 +21,8 @@
     Dica: testar se y = Wx para qualquer sinal x e W sendo a matriz de DFT que VOCE implementou
           e comparar se o resultado é o mesmo para o FFT que pegamos.
           
--Mostrar gráficos da onda no domínio tempo e no domínio da frequência
-    >ta mostrando errado
+[DONE]-Mostrar gráfico da onda no domínio tempo 
+-Mostrar gráfico da odna no domínio da frequência
 
 [DONE]-Coletar os tempos de execução para uma posterior análise de complexidade e comparação
     dos dois algoritmos
@@ -32,9 +32,9 @@
 #################
 # RELATORIO
 #################
-- Explique sucintamente a modelagem de um som usando Série de Fourier;
-- Explique como a Transformada de Fourier fornece informações para a transcrição musical feita
-  em seu programa;
+[DONE]- Explique sucintamente a modelagem de um som usando Série de Fourier;
+[DONE]- Explique como a Transformada de Fourier fornece informações para a transcrição musical feita
+        em seu programa;
 - Faça a comparação do tempo de execução dos dois métodos de cálculo da DFT: 
   Multiplicação pela Matriz de Fourier e FFT. Mostre dois gráficos comparativos com
   os tempos médios dos métodos para o mesmo número de execuções. Tome o cuidado de não

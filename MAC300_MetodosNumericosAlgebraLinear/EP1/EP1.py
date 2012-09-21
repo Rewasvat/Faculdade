@@ -14,8 +14,45 @@ import sys
 import FileUtils
 import DFT
 
-from numpy import argmax, abs, mean
+from numpy import argmax, abs, mean, concatenate, zeros
 from numpy.fft import fftfreq
+
+###
+def decimate(x, q, n=None, ftype='iir', axis=-1):
+    """downsample the signal x by an integer factor q, using an order n filter
+    By default, an order 8 Chebyshev type I filter is used or a 30 point FIR
+    filter with hamming window if ftype is 'fir'.
+
+    (port to python of the GNU Octave function decimate.)
+
+    Inputs:
+    x -- the signal to be downsampled (N-dimensional array)
+    q -- the downsampling factor
+    n -- order of the filter (1 less than the length of the filter for a 'fir' filter)
+    ftype -- type of the filter; can be 'iir' or 'fir'
+    axis -- the axis along which the filter should be applied
+
+    Outputs:
+    y -- the downsampled signal
+    """
+    from scipy.signal import cheby1, firwin, lfilter
+    if type(q) != type(1):
+        raise Error, "q should be an integer"
+
+    if n is None:
+        if ftype == 'fir':
+            n = 30
+        else:
+            n = 8
+
+    if ftype == 'fir':
+        b = firwin(n+1, 1./q, window='hamming')
+        y = lfilter(b, 1., x, axis=axis)
+    else:
+        (b, a) = cheby1(n, 0.05, 0.8/q)
+        y = lfilter(b, a, x, axis=axis)
+    return y.swapaxes(0,axis)[::q].swapaxes(0,axis)
+###
 
 class Note:
     def __init__(self, freq, start, duration, initialAmplitude):
@@ -45,27 +82,28 @@ class Analyzer:
         
     def GetBaseDFTBlockSize(self):
         return int(self.frameRate * self.analysisStep)
-        
+
     def analyzeInterval(self, start, length, DFTmethod):
         startIndex = int( start * self.frameRate )
         endIndex = int( startIndex + length*self.frameRate )
-        interval = self.data[startIndex:endIndex]
+        intervalWAT = self.data[startIndex:endIndex]
         
-        #from numpy import blackman, hamming, hanning
-        #interval = hamming(len(intervalWAT)) * intervalWAT
+        from numpy import blackman, hamming, hanning
+        interval = hanning(len(intervalWAT)) * intervalWAT
+        size = len(interval)
 
         spectrum = DFTmethod(interval)
         amplitudes = abs(spectrum)
         i = argmax(amplitudes)  # abs(spectrum) gives the amplitude spectrum, argmax returns the index to the maximum value of the array
-        freqFactors = fftfreq(len(interval)) #helper function that gives the frequency factors for each position in the array return by the DFT
+        freqFactors = fftfreq(size) #helper function that gives the frequency factors for each position in the array return by the DFT
         
         normalizedAmplitudes = amplitudes / amplitudes[i]
         #croppedAmps = [amplitudes[j]*(normalizedAmplitudes[j]>0.001) for j in xrange(len(interval))]
         meanAmp = mean(amplitudes)
         #print "Mean Amplitude = %s" % (meanAmp)
-        croppedAmps = [amplitudes[j]*(amplitudes[j]>meanAmp) for j in xrange(len(interval))]
+        croppedAmps = [amplitudes[j]*(amplitudes[j]>meanAmp) for j in xrange(size)]
         prev = 0
-        for j in range(len(interval)):
+        for j in range(size):
             a = croppedAmps[j]
             f40 = abs(self.frameRate * freqFactors[j])
             fMIDI = FileUtils.GetMIDIcode(f40)
@@ -193,8 +231,8 @@ def Execute(argList):
 if __name__ == "__main__":
     Execute( sys.argv[1:] )
 
+###
 def testall(dftm="fft"):
     for s in FileUtils.files:
         Execute([s, "-dft:"+dftm, "-nographs"])
         print "========================================================="
-

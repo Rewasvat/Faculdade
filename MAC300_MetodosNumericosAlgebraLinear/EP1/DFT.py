@@ -65,7 +65,7 @@ class DFT_Matrix(DFTMethod):
             if self.useNumPyMatrix:
                 ret.append( X[0,i] )
             else:
-                ret.append( M[i].dot(V) )
+                ret.append( numpy.dot(M[i], V) )
         return ret
     
     def createMatrix(self, N):
