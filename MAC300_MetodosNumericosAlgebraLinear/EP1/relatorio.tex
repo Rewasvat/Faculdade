@@ -65,4 +65,28 @@ normal demora consideravelmente mais que os outros 2 métodos.
 No entanto em outra máquina que testei (i5) com uma versão mais antiga do NumPy, o método \textit{Matrix} foi mais rápido que o
 método \textit{Matrix(NumPy)}, e nenhum dos dois chegou perto do \textit{FFT}.
 
+Antes de testar os métodos de multiplicação pela matriz com os sons, realizei vários testes comparando os resultados da FFT com
+os outros dois métodos, para garantir que estavam de acordo. Do jeito que estão implementados, pelo que vi os resultados entre os
+dois métodos de multiplicação nunca diferem, e dependendo dos dados, o pior que notei foi diferirem em relação à FFT somente a
+partir da sexta casa decimal.
+
+COLOCAR GRAFICOS COMPARANDO TEMPOS DE EXECUCAO DOS 3 METODOS (no Blackbird)
+
+Obs.: na contagem do tempo foi levado em consideração somente o tempo que levou para aplicar o método de DFT no conjunto de dados
+passado, como a execução da chamada do FFT ou a multiplicação com a matriz DFT. A criação das matriz DFT não foi considerada.
+
+\subsection{Vantagens e Desvantagens dos Métodos}
+
+O FFT é sem duvida o mais eficiente. Tanto em velocidade como em gasto de memória. Porém é um algoritmo bem mais complexo e
+consequentemente mais complicado para implementar.
+
+Já o método da matriz é mais ingênuo. Dependendo de como você implementou poderá ter problemas em velocidade, gasto de memória
+ou ambos. Em compensação é um algoritmo muito mais simples e fácil de entender, e há várias coisas que você pode fazer com o
+algoritmo para mudar sua eficiência, como mostrei aqui com os dois métodos de multiplicação de matriz, mas é altamente improvável
+que ele consiga ser tão eficiente quanto o FFT.
+
+\section{Gráficos da Onda Domínio-Tempo e Domínio-Frequência}
+
+O próprio EP cria os gráficos no término da transcrição musical e mostra eles para o usuário (vide README).
+
 \end{document}
