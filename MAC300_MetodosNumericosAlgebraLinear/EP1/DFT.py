@@ -24,7 +24,9 @@ class DFTMethod:
         return len(self.results)
         
     def PrintResults(self):
-        print "DFT Method Results for %s: %.5f mean execution time (seconds) for %s calls." % (self.name, self.GetMeanExecutionTime(), self.GetNumExecutions())
+        s = "DFT Method Results for %s: %.5f mean execution time (seconds) for %s calls." % (self.name, self.GetMeanExecutionTime(), self.GetNumExecutions())
+        print s
+        return s
         
 ####
 class DFT_FFT(DFTMethod):

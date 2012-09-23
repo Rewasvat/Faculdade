@@ -108,13 +108,3 @@ class MIDI:
         self.midi.update_time(0)
         self.midi.end_of_track()
         self.midi.eof()
-
-
-########################3
-#REMOVE
-import os, sys
-if sys.platform == "win32":
-    sampledir = ".\\files\\samples\\"
-else:
-    sampledir = "./files/samples/"
-files = [sampledir+nome for nome in os.listdir(sampledir)]

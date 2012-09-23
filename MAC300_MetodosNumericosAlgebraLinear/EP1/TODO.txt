@@ -39,7 +39,7 @@
   Multiplicação pela Matriz de Fourier e FFT. Mostre dois gráficos comparativos com
   os tempos médios dos métodos para o mesmo número de execuções. Tome o cuidado de não
   incluir o tempo de criação da matriz DFT no método da multiplicação.
-- Descreva vantagens e desvantagens entre os métodos Multiplicação pela Matriz de Fourier e FFT.
+[DONE]- Descreva vantagens e desvantagens entre os métodos Multiplicação pela Matriz de Fourier e FFT.
 - Mostre os gráficos das ondas de áudio no domínio do tempo e no domínio da frequência (frequência
   no eixo das abscissas e amplitude em decibéis no eixo das ordenadas). Mostre os espectros obtidos
   para ambos os métodos.
@@ -48,5 +48,5 @@
 # ENTREGA
 ###############
 -código fonte
--README dizendo como compilar e rodar o programa (e falar o que já é falado no enunciado)
+[DONE]-README dizendo como compilar e rodar o programa (e falar o que já é falado no enunciado)
 -Relatório

@@ -58,19 +58,17 @@ Os métodos são:
   guardada como uma matriz do NumPy, e a aplicação da DFT consiste numa única operação de multiplicação matriz-vetor do NumPy.
 \end{itemize}
 
-Em todos meus testes, a \textit{FFT} foi sempre a mais rápida (quase instantânea), como esperado. No meu computador (i7) com uma versão
-recente do NumPy, o método \textit{Matrix(NumPy)} é bem eficiente, se aproximando do tempo do FFT, enquanto o método \textit{Matrix}
-normal demora consideravelmente mais que os outros 2 métodos.
+Em todos meus testes, a \textit{FFT} foi sempre a mais rápida (quase instantânea), como esperado. No meu computador (CPU Core i7)
+com uma versão recente do NumPy, o método \textit{Matrix(NumPy)} é bem eficiente, se aproximando do tempo do FFT, enquanto o método
+\textit{Matrix} normal demora consideravelmente mais que os outros 2 métodos.
 
-No entanto em outra máquina que testei (i5) com uma versão mais antiga do NumPy, o método \textit{Matrix} foi mais rápido que o
-método \textit{Matrix(NumPy)}, e nenhum dos dois chegou perto do \textit{FFT}.
+No entanto em outra máquina que testei (CPU Core i5) com uma versão mais antiga do NumPy, o método \textit{Matrix} foi mais rápido
+que o método \textit{Matrix(NumPy)}, e nenhum dos dois chegou perto do \textit{FFT}.
 
 Antes de testar os métodos de multiplicação pela matriz com os sons, realizei vários testes comparando os resultados da FFT com
 os outros dois métodos, para garantir que estavam de acordo. Do jeito que estão implementados, pelo que vi os resultados entre os
 dois métodos de multiplicação nunca diferem, e dependendo dos dados, o pior que notei foi diferirem em relação à FFT somente a
 partir da sexta casa decimal.
-
-COLOCAR GRAFICOS COMPARANDO TEMPOS DE EXECUCAO DOS 3 METODOS (no Blackbird)
 
 Obs.: na contagem do tempo foi levado em consideração somente o tempo que levou para aplicar o método de DFT no conjunto de dados
 passado, como a execução da chamada do FFT ou a multiplicação com a matriz DFT. A criação das matriz DFT não foi considerada.
