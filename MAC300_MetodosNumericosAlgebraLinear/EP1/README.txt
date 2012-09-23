@@ -59,3 +59,11 @@ os gráficos de onda, salvando o resultado como 'teste.MIDI':
     ./EP1 sons/teste.wav -dft:fft -nographs
     
       
+-----------------------------
+ESTRUTURA DO PROGRAMA:
+-----------------------------
+O EP está dividido em 3 scripts python que eu escrevi, e uma pasta com 2 scripts python da biblioteca smidi.
+Os 3 scripts python são:
+EP1.py, que é o script principal, contendo o código para execução do programa e análise do som.
+DFT.py, que contém as implementações dos métodos de DFT e medição de tempo dos mesmos.
+FileUtils.py, que contém o código auxiliar para leitura de arquivos .wav e escrita de arquivos .MIDI
