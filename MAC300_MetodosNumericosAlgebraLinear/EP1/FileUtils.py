@@ -35,6 +35,7 @@ def roundToNearest(x):
 
 def GetMIDIcode(freq):
     #calculating basing from note A4 - 440 Hz
+    if freq == 0.0: return -1
     return roundToNearest(69 + 12*math.log(freq/440.0, 2))
 
 def GetEquivalentValueInRange(origin_value, origin_range, destination_range):
@@ -107,13 +108,3 @@ class MIDI:
         self.midi.update_time(0)
         self.midi.end_of_track()
         self.midi.eof()
-
-
-########################3
-#REMOVE
-import os, sys
-if sys.platform == "win32":
-    sampledir = ".\\files\\samples\\"
-else:
-    sampledir = "./files/samples/"
-files = [sampledir+nome for nome in os.listdir(sampledir)]

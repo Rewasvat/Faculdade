@@ -1,0 +1,110 @@
+FILE: .\files\samples\1notaA4.wav
+DFT Method Results for Matrix: 0.11696 mean execution time (seconds) for 40 calls.
+DFT Method Results for Matrix (NumPy): 0.04578 mean execution time (seconds) for 40 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 40 calls.
+----------------------
+FILE: .\files\samples\1notaA4_1seg.wav
+DFT Method Results for Matrix: 0.26123 mean execution time (seconds) for 11 calls.
+DFT Method Results for Matrix (NumPy): 0.04440 mean execution time (seconds) for 11 calls.
+DFT Method Results for FFT: 0.00042 mean execution time (seconds) for 11 calls.
+----------------------
+FILE: .\files\samples\1notaA4_1seg_4harmonicos.wav
+DFT Method Results for Matrix: 0.37438 mean execution time (seconds) for 11 calls.
+DFT Method Results for Matrix (NumPy): 0.04513 mean execution time (seconds) for 11 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 11 calls.
+----------------------
+FILE: .\files\samples\1notaA4_1seg_4harmonicos2.wav
+DFT Method Results for Matrix: 0.28166 mean execution time (seconds) for 11 calls.
+DFT Method Results for Matrix (NumPy): 0.04283 mean execution time (seconds) for 11 calls.
+DFT Method Results for FFT: 0.00044 mean execution time (seconds) for 11 calls.
+----------------------
+FILE: .\files\samples\1notaA4_1seg_4harmonicos3.wav
+DFT Method Results for Matrix: 0.28631 mean execution time (seconds) for 11 calls.
+DFT Method Results for Matrix (NumPy): 0.04387 mean execution time (seconds) for 11 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 11 calls.
+----------------------
+FILE: .\files\samples\34_60_57_56_43_4harmonicos.wav
+DFT Method Results for Matrix: 0.25464 mean execution time (seconds) for 151 calls.
+DFT Method Results for Matrix (NumPy): 0.04748 mean execution time (seconds) for 151 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 151 calls.
+----------------------
+FILE: .\files\samples\39_39_97_77_41_3harmonicos.wav
+DFT Method Results for Matrix: 0.19219 mean execution time (seconds) for 190 calls.
+DFT Method Results for Matrix (NumPy): 0.04939 mean execution time (seconds) for 190 calls.
+DFT Method Results for FFT: 0.00049 mean execution time (seconds) for 190 calls.
+----------------------
+FILE: .\files\samples\41_97_23_73_56_1seg_4harmonicos.wav
+DFT Method Results for Matrix: 0.28786 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04747 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 51 calls.
+----------------------
+FILE: .\files\samples\50_85_63_96_100.wav
+DFT Method Results for Matrix: 0.24113 mean execution time (seconds) for 181 calls.
+DFT Method Results for Matrix (NumPy): 0.04635 mean execution time (seconds) for 181 calls.
+DFT Method Results for FFT: 0.00045 mean execution time (seconds) for 181 calls.
+----------------------
+FILE: .\files\samples\53_35_94_35_107_1seg.wav
+DFT Method Results for Matrix: 0.18948 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04722 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00045 mean execution time (seconds) for 51 calls.
+----------------------
+FILE: .\files\samples\57_91_98_84_26_4harmonicos.wav
+DFT Method Results for Matrix: 0.28085 mean execution time (seconds) for 91 calls.
+DFT Method Results for Matrix (NumPy): 0.04693 mean execution time (seconds) for 91 calls.
+DFT Method Results for FFT: 0.00046 mean execution time (seconds) for 91 calls.
+----------------------
+FILE: .\files\samples\5notas1segA4.wav
+DFT Method Results for Matrix: 0.23095 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04680 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00045 mean execution time (seconds) for 51 calls.
+----------------------
+FILE: .\files\samples\5notas1segC4.wav
+DFT Method Results for Matrix: 0.25797 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04684 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 51 calls.
+----------------------
+FILE: .\files\samples\5notas1segE4.wav
+DFT Method Results for Matrix: 0.23186 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04790 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 51 calls.
+----------------------
+FILE: .\files\samples\5notasA4.wav
+DFT Method Results for Matrix: 0.26657 mean execution time (seconds) for 200 calls.
+DFT Method Results for Matrix (NumPy): 0.04833 mean execution time (seconds) for 200 calls.
+DFT Method Results for FFT: 0.00046 mean execution time (seconds) for 200 calls.
+----------------------
+FILE: .\files\samples\5notasC4.wav
+DFT Method Results for Matrix: 0.20797 mean execution time (seconds) for 161 calls.
+DFT Method Results for Matrix (NumPy): 0.04689 mean execution time (seconds) for 161 calls.
+DFT Method Results for FFT: 0.00045 mean execution time (seconds) for 161 calls.
+----------------------
+FILE: .\files\samples\5notasE4.wav
+DFT Method Results for Matrix: 0.18781 mean execution time (seconds) for 171 calls.
+DFT Method Results for Matrix (NumPy): 0.04921 mean execution time (seconds) for 171 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 171 calls.
+----------------------
+FILE: .\files\samples\64_75_27_29_84_4harmonicos.wav
+DFT Method Results for Matrix: 0.21957 mean execution time (seconds) for 141 calls.
+DFT Method Results for Matrix (NumPy): 0.04690 mean execution time (seconds) for 141 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 141 calls.
+----------------------
+FILE: .\files\samples\75_77_100_84_73_1seg.wav
+DFT Method Results for Matrix: 0.28425 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04697 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 51 calls.
+----------------------
+FILE: .\files\samples\82_93_107_61_81.wav
+DFT Method Results for Matrix: 0.31140 mean execution time (seconds) for 181 calls.
+DFT Method Results for Matrix (NumPy): 0.04696 mean execution time (seconds) for 181 calls.
+DFT Method Results for FFT: 0.00047 mean execution time (seconds) for 181 calls.
+----------------------
+FILE: .\files\samples\95_81_79_77_76_4harms_com_ruido.wav
+DFT Method Results for Matrix: 0.22626 mean execution time (seconds) for 200 calls.
+DFT Method Results for Matrix (NumPy): 0.04800 mean execution time (seconds) for 200 calls.
+DFT Method Results for FFT: 0.00048 mean execution time (seconds) for 200 calls.
+----------------------
+FILE: .\files\samples\95_85_62_102_52_1seg.wav
+DFT Method Results for Matrix: 0.12133 mean execution time (seconds) for 51 calls.
+DFT Method Results for Matrix (NumPy): 0.04616 mean execution time (seconds) for 51 calls.
+DFT Method Results for FFT: 0.00044 mean execution time (seconds) for 51 calls.
+----------------------
