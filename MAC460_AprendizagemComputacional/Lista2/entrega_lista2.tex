@@ -12,15 +12,37 @@
 
 \section{Exercício 5}
 
+Para simular o algoritmo, escrevi um pequeno script Python (usando a biblioteca \textit{NumPy})
+que ao ser rodado executa o algoritmo para o conjunto de amostras dadas e com valores para os
+paramêtros $\eta$ e $\theta$ passados pela linha de comando. Incluí esse script, \textit{"perceptron.py"}, 
+junto com este PDF com as respostas.
+
+
+
+
 \section{Exercício 7}
 
-por covariância:
-autovetor [-0.9991874 ,  0.04030552] autovalor 0.83864682
-autovetor [-0.04030552, -0.9991874 ] autovalor 100.16135318
+Usando uma biblioteca matemática, calculei os autovetores $v_{i}$ das matrizes, devidamente
+ordenados em ordem decrescente pelos seus respectivos autovalores $a_{i}$:
 
-por correlação:
-autovetor [ 0.70710678,  0.70710678] autovalor 1.4
-autovetor [-0.70710678,  0.70710678] autovalor 0.6
+Para a matriz de covariância $\Sigma$:
+$$v_{1} = (-0.04030552, -0.9991874) $$
+$$a_{1} = 100.16135318 $$
+$$v_{2} = (-0.9991874 ,  0.04030552) $$
+$$a_{2} = 0.83864682 $$
+
+Para a matriz de correlação $\rho $:
+$$v_{1} = (0.70710678,  0.70710678) $$
+$$a_{1} = 1.4 $$
+$$v_{2} = (-0.70710678,  0.70710678) $$
+$$a_{2} = 0.6 $$
+
+Os componentes principais das matrizes são dados pelos autovetores das mesmas, e assim podemos
+usá-los para comparar os componentes. 
+
+Como é possível notar, existe uma grande diferença entre eles. Isso era esperado acontecer,
+pois os componentes principais são baseados na variância das variáveis aleatórias, e no caso
+da matriz de correlação, as variáveis são normalizadas para possuírem variância 1.
 
 \section{Exercício 10}
 
