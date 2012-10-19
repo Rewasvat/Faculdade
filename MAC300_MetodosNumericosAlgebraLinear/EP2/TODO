@@ -1,0 +1,40 @@
+#########################
+# PROGRAMA
+#########################
+Tem que rodar no Linux
+
+Processamento digital de imagens (grayscale)
+
+Métodos:
+-CONTRAST: Ajuste de contraste por equalização de histograma
+-BLUR: Suavização por filtro linear de média ponderada
+-SHARPEN: Aumento de nitidez aplicando o operador Laplaciano
+
+ENTRADA:
+    -indicador do metodo a ser utilizado: -contrast ; -blur ; -sharpen
+    -nome da imagem a ser processada
+
+SAIDA:
+    -salvar na pasta de execução do programa o arquivo da imagem processado
+     com o tal método.
+    -salvar em formato jpg, formato de nome:  "NOME-final.jpg"
+
+
+#########################
+# HELLATÓRIO
+#########################
+-Explique sucintamente o processo utilizado na implementação de cada um dos filtros;
+
+-Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional
+ e desempenho como filtro);
+
+-Mostrar para cada um dos métodos uma imagem antes/depois do processamento.
+-no caso do CONTRAST, apresentar também histograma do antes/depois
+-no caso do SHARPEN, apresentar também a imagem intermediária resultante do operador Laplaciano
+
+#########################
+# ENTREGA
+#########################
+-código fonte
+-README
+-hellatório
