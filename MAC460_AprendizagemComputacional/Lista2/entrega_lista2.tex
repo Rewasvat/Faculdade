@@ -17,25 +17,35 @@ que ao ser rodado executa o algoritmo para o conjunto de amostras dadas e com va
 paramêtros $\eta$ e $\theta$ passados pela linha de comando. Incluí esse script, \textit{"perceptron.py"}, 
 junto com este PDF com as respostas.
 
+O $\eta$ serve para escalar o vetor $\Delta$, construido a partir da soma dos vetores de dados que foram
+classificados erroneamente. Por sua vez, o $\Delta$ é somado ao $a$ para alterá-lo para a próxima iteração.
 
+O $\theta$ é um valor usado como delimitador. Se $\left|\Delta\right| < \theta$, o algoritmo termina.
+Se for um valor muito alto, é provável que o algoritmo termine sem achar a solução correta, Porém um valor
+muito baixo (perto de 0 (positivo) ou qualquer negativo) pode fazer com que o algoritmo entre em loop infinito.
+
+No caso específico desta entrada, para qualquer valor positivo de $\eta$ e $\theta$ só há duas possibilidades
+de sequência de passos do algoritmo. Se $2\eta \geq \theta$, então o algoritmo irá terminar em 5 iterações,
+sendo que na última $\left|\Delta\right| = 0$, e a solução estará correta. Caso contrário o algoritmo irá
+terminar após a primeira iteração, com uma solução errônea.
 
 
 \section{Exercício 7}
 
-Usando uma biblioteca matemática, calculei os autovetores $v_{i}$ das matrizes, devidamente
-ordenados em ordem decrescente pelos seus respectivos autovalores $a_{i}$:
+Usando Python e a biblioteca \textit{NumPy}, calculei os autovetores $v_{i}$ das matrizes, devidamente
+ordenados em ordem decrescente pelos seus respectivos autovalores $\lambda_{i}$:
 
 Para a matriz de covariância $\Sigma$:
 $$v_{1} = (-0.04030552, -0.9991874) $$
-$$a_{1} = 100.16135318 $$
+$$\lambda_{1} = 100.16135318 $$
 $$v_{2} = (-0.9991874 ,  0.04030552) $$
-$$a_{2} = 0.83864682 $$
+$$\lambda_{2} = 0.83864682 $$
 
 Para a matriz de correlação $\rho $:
 $$v_{1} = (0.70710678,  0.70710678) $$
-$$a_{1} = 1.4 $$
+$$\lambda_{1} = 1.4 $$
 $$v_{2} = (-0.70710678,  0.70710678) $$
-$$a_{2} = 0.6 $$
+$$\lambda_{2} = 0.6 $$
 
 Os componentes principais das matrizes são dados pelos autovetores das mesmas, e assim podemos
 usá-los para comparar os componentes. 
