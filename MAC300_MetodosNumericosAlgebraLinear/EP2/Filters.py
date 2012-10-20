@@ -65,7 +65,7 @@ class Filter_CONTRAST(FilterMethod):
         self.ConstructOriginalHistogram(data)
         self.cdf_min = numpy.min( numpy.trim_zeros(self.cdf) )
 
-        new_data = numpy.zeros(data.shape, data.dtype)
+        new_data = numpy.zeros(data.shape, numpy.int32)
         for x in range(width):
             for y in range(height):
                 new_data[x,y] = self.NormalizedHistogram( data[x,y] )
@@ -76,6 +76,7 @@ class Filter_CONTRAST(FilterMethod):
     def ConstructOriginalHistogram(self, data):
         # count occurences of gray level i in image
         width, height = data.shape
+        print "CARALHO", data.dtype
         for x in range(width):
             for y in range(height):
                 self.gray_level[ data[x,y] ] += 1.0
@@ -132,8 +133,33 @@ class Filter_BLUR(FilterMethod):
 class Filter_SHARPEN(FilterMethod):
     def __init__(self):
         FilterMethod.__init__(self, "SHARPEN")
+        self.laplacian_result = None
         
     def __call__(self, data):
-        new_data = numpy.zeros(data.shape, data.dtype)
+        mask8neighLaplace = numpy.asmatrix( [ [-1.0, -1.0, -1.0],
+                                              [-1.0,  8.0, -1.0],
+                                              [-1.0, -1.0, -1.0] ])
+        self.laplacian_result = self.ConvoluteImage(data, mask8neighLaplace)
         
+        width, height = data.shape
+        new_data = numpy.zeros(data.shape, data.dtype)
+        for x in range(width):
+            for y in range(height):
+                new_data[x,y] = data[x,y] + self.laplacian_result[x,y]
         return new_data
+        
+    def ShowComparison(self, image, procImage):
+        #show original image
+        pylab.subplot(131)
+        self.PlotImage(image, "Original Image")
+        
+        #show original histogram
+        pylab.subplot(132)
+        self.PlotImage(self.laplacian_result, "Laplacian Operator")
+        
+        #show processed image
+        pylab.subplot(133)
+        self.PlotImage(procImage, "Processed Image")
+        
+        #show plots
+        pylab.show()
