@@ -6,18 +6,18 @@ Tem que rodar no Linux
 Processamento digital de imagens (grayscale)
 
 Métodos:
--CONTRAST: Ajuste de contraste por equalização de histograma
+[DONE]-CONTRAST: Ajuste de contraste por equalização de histograma
 -BLUR: Suavização por filtro linear de média ponderada
 -SHARPEN: Aumento de nitidez aplicando o operador Laplaciano
 
 ENTRADA:
-    -indicador do metodo a ser utilizado: -contrast ; -blur ; -sharpen
-    -nome da imagem a ser processada
+    [DONE]-indicador do metodo a ser utilizado: -contrast ; -blur ; -sharpen
+    [DONE]-nome da imagem a ser processada
 
 SAIDA:
-    -salvar na pasta de execução do programa o arquivo da imagem processado
+    [DONE]-salvar na pasta de execução do programa o arquivo da imagem processado
      com o tal método.
-    -salvar em formato jpg, formato de nome:  "NOME-final.jpg"
+    [DONE]-salvar em formato jpg, formato de nome:  "NOME-final.jpg"
 
 
 #########################

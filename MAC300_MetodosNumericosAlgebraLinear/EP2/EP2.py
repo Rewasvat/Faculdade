@@ -12,44 +12,57 @@
 ########################################################
 import sys
 import Filters
-import FileUtils
 
-        
-class ImageProcessor:
-    def __init__(self, imagedata):
-        self.data = imagedata
-        
-    def Process(self, method):
-        pass
-        
+from scipy.misc import imread, imsave, lena
+
+def LoadImage(name):
+    return imread(name, flatten=1)
+
+def SaveImage(name, image):
+    imsave(name, image)
+
+def GetTestImage():
+    return lena()
 
 
 ########################################################
 def Execute(argList):
-    if len(argList) <= 2:
+    if len(argList) < 2:
         print "Wrong program call. Use: "
-        print "EP2.py <filter_method> <file_name>"
+        print "EP2.py <filter_method> <file_name> [-compare]"
         return
 
-    filterMethod = argList[0][1:]
+    filterMethod = argList[0][1:].upper()
     existingFilters = [fm[7:] for fm in dir(Filters) if fm[:7]=="Filter_"]
     if not filterMethod in existingFilters:
         print "Unrecognized filter name \'%s\'. Possible filters are: %s" % (filterMethod, ", ".join(existingFilters) )
         return
 
     argFile = argList[1]
+    
+    showComparison = False
+    if len(argList) >= 3:
+        showComparison = argList[2].lower() == "-compare"
 
     #
-    print "Processing image \"%s\" with %s filter..." % (argFile, filterMethod.upper())
-    imageData = FileUtils.LoadImage(argFile)
-    processor = ImageProcessor(imageData)
+    print "Processing image \"%s\" with %s filter..." % (argFile, filterMethod)
+    if argFile == "TEST":
+        imageData = GetTestImage()
+    else:
+        imageData = LoadImage(argFile)
     
-    method = getattr(Filters, "Filter_"+filterMethod.upper() )
-    processor.Process(method)
+    method = getattr(Filters, "Filter_"+filterMethod )()
+    
+    newImageData = method(imageData)
+    if showComparison:
+        print "Showing image comparison..."
+        method.ShowComparison(imageData, newImageData)
     
     outputName = argFile.split("\\")[-1].split("/")[-1]
-    outputName = ".".join(outputName.split(".")[:-1]) + ".jpg"
-    FileUtils.SaveImage(outputName, processor.data)
+    outputName = outputName.split(".")[:-1]
+    if len(outputName) == 0:    outputName.append(argFile)
+    outputName = ".".join(outputName) + "-final.jpg"
+    SaveImage(outputName, newImageData)
     print "Saved processed image file to \"%s\"!" % outputName
     return
     
