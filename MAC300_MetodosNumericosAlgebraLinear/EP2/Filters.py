@@ -13,6 +13,26 @@ class FilterMethod:
         
     def __call__(self, data):   return []   #IMPLEMENT THIS in derived class
     
+    def GetConvolutedPixel(self, x, y, data, mask):
+        pixel = 0
+        S, T = mask.shape
+        W, H = data.shape
+        for s in range(-(S/2), 1 + S/2):
+            for t in range(-(T/2), 1 + T/2):
+                i = x + s
+                j = y + t
+                if i < 0 or j < 0 or i >= W or j >= H:  continue
+                pixel += mask[s,t] * data[i,j]
+        return pixel
+        
+    def ConvoluteImage(self, data, mask):
+        new_data = numpy.zeros(data.shape, data.dtype)
+        width, height = data.shape
+        for x in range(width):
+            for y in range(height):
+                new_data[x,y] = self.GetConvolutedPixel(x, y, data, mask)
+        return new_data
+    
     def PlotImage(self, image, title):
         pylab.imshow(image, cmap=pylab.cm.gray)
         pylab.title(title)
@@ -40,13 +60,14 @@ class Filter_CONTRAST(FilterMethod):
         self.new_gray_level = [0 for i in range(256)] #processed histogram
         
     def __call__(self, data):
-        self.n = len(data) * len(data[0])
+        width, height = data.shape
+        self.n = width * height
         self.ConstructOriginalHistogram(data)
         self.cdf_min = numpy.min( numpy.trim_zeros(self.cdf) )
 
         new_data = numpy.zeros(data.shape, data.dtype)
-        for x in range(len(data)):
-            for y in range(len(data[x])):
+        for x in range(width):
+            for y in range(height):
                 new_data[x,y] = self.NormalizedHistogram( data[x,y] )
                 self.new_gray_level[ new_data[x,y] ] += 1.0
 
@@ -54,8 +75,9 @@ class Filter_CONTRAST(FilterMethod):
 
     def ConstructOriginalHistogram(self, data):
         # count occurences of gray level i in image
-        for x in range(len(data)):
-            for y in range(len(data[x])):
+        width, height = data.shape
+        for x in range(width):
+            for y in range(height):
                 self.gray_level[ data[x,y] ] += 1.0
 
         for i in range(256):
@@ -100,7 +122,11 @@ class Filter_BLUR(FilterMethod):
         FilterMethod.__init__(self, "BLUR")
         
     def __call__(self, data):
-        pass
+        w = numpy.asmatrix( [ [1.0/16, 2.0/16, 1.0/16],
+                              [2.0/16, 4.0/16, 2.0/16],
+                              [1.0/16, 2.0/16, 1.0/16] ])
+        new_data = self.ConvoluteImage(data, w)
+        return new_data
 
 ####
 class Filter_SHARPEN(FilterMethod):
@@ -108,4 +134,6 @@ class Filter_SHARPEN(FilterMethod):
         FilterMethod.__init__(self, "SHARPEN")
         
     def __call__(self, data):
-        pass
+        new_data = numpy.zeros(data.shape, data.dtype)
+        
+        return new_data
