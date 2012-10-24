@@ -6,6 +6,27 @@ import pylab
 def roundToNearest(x):
     return int(x+0.5)
 
+############################################
+#  Filter method Interface for EP2.py
+###
+#  To add another filter such that EP2.py can automatically use it, 
+#  follow these rules:
+#
+# 1) The filter must be a class, in which instances have:
+#       -constructors receive no arguments
+#       -a __call__(ImageData) method, that returns the processed image data
+#       -a name attribute: string with the method name
+#       -a ShowComparison(ImageData, ProcessedImageData) method, that shows,
+#        somehow, the images (and any other stuff pertaining to the method)
+#        for comparison. Use of matplotlib is suggested for this. 
+#   Note that the FilterMethod base class has all this, tho __call__ is abstract
+#
+# 2) The filter class can be implemented anywhere, but it must be available in
+#    this script.
+#
+# 3) The filter class (here) should be named as 'Filter_<>', where <> is the name
+#    of the filter method, in UPPERCASE, as passed as argument to EP2.py.
+############################################
 
 class FilterMethod:
     def __init__(self, name):

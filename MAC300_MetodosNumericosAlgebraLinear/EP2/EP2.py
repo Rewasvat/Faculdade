@@ -56,8 +56,12 @@ def Execute(argList):
     
     newImageData = method(imageData)
     if showComparison:
-        print "Showing image comparison..."
-        method.ShowComparison(imageData, newImageData)
+        try:
+            import pylab
+            print "Showing image comparison..."
+            method.ShowComparison(imageData, newImageData)
+        except:
+            print "Error trying to show comparison. Most likely matplotlib is not installed."
     
     outputName = argFile.split("\\")[-1].split("/")[-1]
     outputName = outputName.split(".")[:-1]
