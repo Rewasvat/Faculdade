@@ -13,10 +13,11 @@
 import sys
 import Filters
 
+import numpy
 from scipy.misc import imread, imsave, lena
 
 def LoadImage(name):
-    return imread(name, flatten=1)
+    return numpy.asarray( imread(name, flatten=1), dtype=numpy.int32 )
 
 def SaveImage(name, image):
     imsave(name, image)
@@ -50,7 +51,7 @@ def Execute(argList):
         imageData = GetTestImage()
     else:
         imageData = LoadImage(argFile)
-    
+
     method = getattr(Filters, "Filter_"+filterMethod )()
     
     newImageData = method(imageData)

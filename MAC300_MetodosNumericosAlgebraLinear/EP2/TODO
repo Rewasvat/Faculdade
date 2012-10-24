@@ -7,8 +7,8 @@ Processamento digital de imagens (grayscale)
 
 Métodos:
 [DONE]-CONTRAST: Ajuste de contraste por equalização de histograma
--BLUR: Suavização por filtro linear de média ponderada
--SHARPEN: Aumento de nitidez aplicando o operador Laplaciano
+[DONE]-BLUR: Suavização por filtro linear de média ponderada
+[DONE]-SHARPEN: Aumento de nitidez aplicando o operador Laplaciano
 
 ENTRADA:
     [DONE]-indicador do metodo a ser utilizado: -contrast ; -blur ; -sharpen

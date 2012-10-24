@@ -76,7 +76,6 @@ class Filter_CONTRAST(FilterMethod):
     def ConstructOriginalHistogram(self, data):
         # count occurences of gray level i in image
         width, height = data.shape
-        print "CARALHO", data.dtype
         for x in range(width):
             for y in range(height):
                 self.gray_level[ data[x,y] ] += 1.0
@@ -136,16 +135,12 @@ class Filter_SHARPEN(FilterMethod):
         self.laplacian_result = None
         
     def __call__(self, data):
-        mask8neighLaplace = numpy.asmatrix( [ [-1.0, -1.0, -1.0],
-                                              [-1.0,  8.0, -1.0],
-                                              [-1.0, -1.0, -1.0] ])
+        mask8neighLaplace = numpy.asmatrix( [ [-1.0/16, -1.0/16, -1.0/16],
+                                              [-1.0/16,  8.0/16, -1.0/16],
+                                              [-1.0/16, -1.0/16, -1.0/16] ])
         self.laplacian_result = self.ConvoluteImage(data, mask8neighLaplace)
         
-        width, height = data.shape
-        new_data = numpy.zeros(data.shape, data.dtype)
-        for x in range(width):
-            for y in range(height):
-                new_data[x,y] = data[x,y] + self.laplacian_result[x,y]
+        new_data = data + self.laplacian_result
         return new_data
         
     def ShowComparison(self, image, procImage):
