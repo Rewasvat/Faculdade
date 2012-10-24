@@ -1,0 +1,57 @@
+\input texbase
+
+\titulo{Exercício Programa 2}
+\materia{MAC300 - Métodos Numéricos da Álgebra Linear}
+
+\aluno{Fernando Omar Aluani}{6797226}
+
+\begin{document}
+\cabecalho
+
+\section{Filtros}
+
+\subsection{Ajuste do Contraste - Equalização de Histograma}
+\subsubsection{Implementação}
+O filtro de contraste é implementado equalizando o histograma da imagem. Inicialmente o algoritmo percorre por cada pixel
+da imagem para contar o nivel de cinza para construir o histograma. Após isso, a função de distribuição acumulada é 
+calculada, armazenando seu resultado para cada nível de cinza em um vetor, e o valor mínimo em uma variável à parte.
+
+Finalmente, a imagem processada é construída, iniciando seus pixeis com valor 0 e indo um-a-um calculando o novo valor
+de cada pixel, normalizando o histograma.
+
+\subsubsection{Vantagens e Desvantagens}
+%Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional e desempenho como filtro)
+\subsubsection{Exemplo}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1.0\textwidth]{../contrast-final.jpg}
+    \caption{O novo site do USPGameDev.}
+    \label{fig:site_01}
+\end{figure}
+
+\subsection{Suavização por Média Ponderada - \textit{Blurring}}
+\subsubsection{Implementação}
+O filtro de \textit{blur} foi implementado usando a técnica de filtro de convolução, com uma máscara $3\times 3$ para tirar
+a média ponderada dos pixeis ao redor do pixel sendo suavizado. O resultado da convolução da imagem já é o resultado
+do processamento.
+
+\subsubsection{Vantagens e Desvantagens}
+%Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional e desempenho como filtro)
+\subsubsection{Exemplo}
+COLOCAR COMPARISON IMAGE HERE
+
+\subsection{Aumento de Nitidez - \textit{Sharpening}}
+\subsubsection{Implementação}
+O filtro de \textit{sharpen} foi implementado usando a técnica de filtro de convolução, com uma máscara $3\times 3$
+conhecida como \textit{8 neighbour Laplacian}. Usando a convolução na imagem original adquirimos o resultado do operador
+laplaciano na imagem. O resultado final da imagem processada é a soma da imagem original com o laplaciano dela.
+
+Caso o programa mostre a comparação das imagens (ver \textit{README}), ele irá mostrar também a imagem do operador 
+laplaciano. 
+
+\subsubsection{Vantagens e Desvantagens}
+%Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional e desempenho como filtro)
+\subsubsection{Exemplo}
+COLOCAR COMPARISON IMAGE HERE
+
+\end{document}
