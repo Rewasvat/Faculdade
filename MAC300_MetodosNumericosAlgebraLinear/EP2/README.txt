@@ -35,8 +35,15 @@ Onde:
              o programa imprime o nome dos métodos existentes. Por padrão estão implementados
              contrast, blur e sharpen.
          NOTE que o método é passado com um '-' na frente, por exemplo: ./EP2 -contrast
+
     nome_do_arquivo: é o nome do arquivo de imagem a ser processado. Vários formatos incluindo
                       jpg e png são aceitos, e a imagem será lida em formato grayscale.
+         Se o nome passado for simplesmente "TEST", o programa não irá abrir um arquivo de imagem,
+         mas irá usar uma funcionalidade do SciPy para criar uma imagem 512x512 em grayscale (aquela
+         clássica imagem da Lena usada em processamento de imagens) para ser usada no processamento.
+         A imagem em si não será salva em disco, mas a imagem resultante do processamento será salva
+         seguindo o funcionamento normal do programa (isto é, será salva como "TEST-final.jpg").
+
     -compare: argumento opcional. Se passado, o programa irá mostrar ao final da execução uma
               comparação das imagens (original/processada), e outros dados relativos ao método
               de processamento usado.

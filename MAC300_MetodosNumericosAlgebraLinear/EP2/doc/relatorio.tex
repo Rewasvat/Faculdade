@@ -10,25 +10,35 @@
 
 \section{Filtros}
 
+%%%%%%%%%%%%%%%%
 \subsection{Ajuste do Contraste - Equalização de Histograma}
 \subsubsection{Implementação}
 O filtro de contraste é implementado equalizando o histograma da imagem. Inicialmente o algoritmo percorre por cada pixel
 da imagem para contar o nivel de cinza para construir o histograma. Após isso, a função de distribuição acumulada é 
 calculada, armazenando seu resultado para cada nível de cinza em um vetor, e o valor mínimo em uma variável à parte.
 
-Finalmente, a imagem processada é construída, iniciando seus pixeis com valor 0 e indo um-a-um calculando o novo valor
-de cada pixel, normalizando o histograma.
+Finalmente, a imagem processada é construída, calculando o valor de cada pixel um-a-um, normalizando o histograma.
+
+Caso o programa mostre a comparação das imagens (ver \textit{README}), ele irá mostrar também o histograma da imagem
+original e o histograma da imagem processada.
 
 \subsubsection{Vantagens e Desvantagens}
-%Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional e desempenho como filtro)
+Computacionalmente, dos três filtros apresentados aqui este é o mais eficiente, tendo uma complexidade de somente $O(NM)$
+(para uma imagem de tamanho $N\times M$). Em relação à memória, descontando a imagem resultante já que todos filtros 
+criam ela, este método não gasta muito, sendo o principal os três vetores com 256 floats que ele guarda internamente.
+
+Quanto ao desempenho como filtro, este é o método no qual a diferença do resultado para a imagem original é mais facilmente
+notada. Porém, este filtro pode criar resultados não-realísticos dependendo da imagem original.
+
 \subsubsection{Exemplo}
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=1.0\textwidth]{../contrast-final.jpg}
-    \caption{O novo site do USPGameDev.}
-    \label{fig:site_01}
+    \includegraphics[width=1.0\textwidth]{contrast_example.png}
+    \caption{Comparação das imagens (original e após o ajuste de contraste) e seus respectivos histogramas.}
+    \label{fig:ex_contraste}
 \end{figure}
 
+%%%%%%%%%%%%%%
 \subsection{Suavização por Média Ponderada - \textit{Blurring}}
 \subsubsection{Implementação}
 O filtro de \textit{blur} foi implementado usando a técnica de filtro de convolução, com uma máscara $3\times 3$ para tirar
@@ -36,10 +46,21 @@ a média ponderada dos pixeis ao redor do pixel sendo suavizado. O resultado da 
 do processamento.
 
 \subsubsection{Vantagens e Desvantagens}
-%Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional e desempenho como filtro)
-\subsubsection{Exemplo}
-COLOCAR COMPARISON IMAGE HERE
+Computacionalmente, este filtro simplesmente aplica a convolução, e ela tem complexidade $O(NMST)$ (Para uma matriz 
+$N\times M$, com uma máscara de tamanho $S\times T$). Em relação à memória, ele não tem gasto adicional de memória.
 
+Quanto ao desempenho como filtro, dependendo da imagem original pode ser difícil notar alguma diferença com o 
+resultado, e o \textit{blurring} pode ocultar detalhes da imagem.
+
+\subsubsection{Exemplo}
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1.0\textwidth]{blur_example.png}
+    \caption{Comparação das imagens (original e após o \textit{blurring}).}
+    \label{fig:ex_blur}
+\end{figure}
+
+%%%%%%%%%%%%%%
 \subsection{Aumento de Nitidez - \textit{Sharpening}}
 \subsubsection{Implementação}
 O filtro de \textit{sharpen} foi implementado usando a técnica de filtro de convolução, com uma máscara $3\times 3$
@@ -50,8 +71,29 @@ Caso o programa mostre a comparação das imagens (ver \textit{README}), ele ir�
 laplaciano. 
 
 \subsubsection{Vantagens e Desvantagens}
-%Descreva vantagens e desvantagens de cada um dos métodos (em relação a desempenho computacional e desempenho como filtro)
+Computacionalmente, dos metodos apresentados aqui este é o mais pesado. Ele roda uma convolução, que tem complexidade 
+$O(NMST)$ (Para uma matriz $N\times M$, com uma máscara de tamanho $S\times T$), e depois ele soma 2 imagens. Em
+relação à memória, ele guarda o resultado da convolução - o laplaciano da imagem.
+
+Quanto ao desempenho como filtro, assim como o \textit{blurring}, a diferença no resultado pode ser difícil de notar,
+sendo mais fácil ver resultados aplicando o filtro a uma imagem suavizada (pelo \textit{blurring}, por exemplo).
+
 \subsubsection{Exemplo}
-COLOCAR COMPARISON IMAGE HERE
+\begin{figure}[htb]
+    \centering
+    \includegraphics[width=1.0\textwidth]{sharpen_example.png}
+    \caption{Comparação das imagens (original e após o \textit{sharpening}) e o laplaciano da imagem original.}
+    \label{fig:ex_sharpen}
+\end{figure}
+
+%%%%%%%%%%%%%%
+\subsection{Convolução}
+A técnica de filtros por convolução que foi utilizada em alguns dos filtros mencionados acima foi implementada como uma
+função, que recebe de parâmetro uma imagem e a máscara a ser utilizada e retorna uma nova imagem, resultado da convolução.
+
+Internamente, a função cria a imagem nova de forma que cada pixel dela seja resultante da aplicação da máscara no mesmo
+pixel (na mesma posição) na imagem passada. Não há limite para o tamanho da máscara, ela pode ser de qualquer tamanho.
+O algoritmo simplesmente ignora os casos em que a convolução tentaria acessar um pixel "fora" da imagem original (perto
+da fronteira da imagem), de tal forma que tais tentativas não causam erros e nem alteram o resultado do pixel sendo processado.
 
 \end{document}
