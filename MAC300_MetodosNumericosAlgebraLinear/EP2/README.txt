@@ -18,9 +18,13 @@ bibliotecas de Python estejam instaladas. São elas:
 -matplotlib: biblioteca para criação de gráficos e visualização de dados.
              Instalação dessa biblioteca é opcional, mas sem ela os gráficos de
              comparação das imagens não poderão ser mostrados.
+-PIL: biblioteca para manipulação de imagens em Python.
              
 
-O programa foi testado na rede-linux com sucesso - NumPy, SciPy e matplotlib estão instalados lá.
+O programa foi testado na rede-linux com sucesso - NumPy, SciPy, matplotlib e PIL estão instalados lá.
+
+A abertura e salvamento de imagens neste EP foi feita usando funções auxiliares do SciPy, que
+internamente usam a biblioteca PIL. A imagem em si é retratada como um array bi-dimensional do NumPy.
 
 
 -----------------------------
