@@ -1,0 +1,38 @@
+#########################
+# PROGRAMA
+#########################
+Tem que rodar no Linux
+
+Compressão de Imagens usando SVD (grayscale)
+
+Métodos:
+-SVD
+
+ENTRADA:
+    -valor do rank K pra usar na compressão (número ou -k N)
+    -nome da imagem a ser processada
+
+SAIDA:
+    -salvar na pasta de execução do programa o arquivo da imagem processado
+     com o tal método.
+    -salvar em formato bmp, formato de nome:  "NOME-compressed.bmp"
+
+
+#########################
+# HELLATÓRIO
+#########################
+-Explique sucintamente o método de decomposição em valores singulares (SVD)
+
+-Descrever as principais melhorias do algoritmo implementado para SVD de M
+ em relação ao método clássico, que usa autovetores/autovalores de MMt e MtM
+ 
+-Faça análise de complexidade do algoritmo SVD implementado 
+
+-Mostre, para uma determinada imagem em RGB, diferentes compressões variando o K
+
+#########################
+# ENTREGA
+#########################
+-código fonte
+-README
+-hellatório

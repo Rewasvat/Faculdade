@@ -1,0 +1,47 @@
+\documentclass[a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[pdftex]{graphicx}
+\usepackage{setspace}
+\usepackage{indentfirst}
+\usepackage[nottoc]{tocbibind}
+\usepackage{courier}
+\usepackage{type1cm}
+\usepackage{listings}
+\usepackage{titletoc}
+\usepackage[fixlanguage]{babelbib}
+\usepackage{ifthen}
+\usepackage{etoolbox}
+
+\newcounter{cnt}
+\newcommand\aluno[2]{%
+  \stepcounter{cnt}%
+  \csdef{nome\thecnt}{#1}%
+  \csdef{nusp\thecnt}{#2}}
+\newcommand\getnome[1]{%
+  \csuse{nome#1}}
+\newcommand\getnusp[1]{%
+  \csuse{nusp#1}}
+\newcommand\titulo[1]{\csdef{vartitulo}{#1}}
+\newcommand\materia[1]{\csdef{varmateria}{#1}}
+
+\newcounter{cttp}
+\newcommand\lolaluno[1]{\getnome{#1} & \getnusp{#1}}
+\newcommand\printalunos{%
+    \noindent
+    \begin{tabular}{l r}
+    \whiledo{\value{cttp}<\value{cnt}}{%
+        \stepcounter{cttp} %
+    \lolaluno{\thecttp}\\ } %
+\end{tabular}} 
+
+\newcommand\cabecalho{
+\begin{center}
+\Large{\textbf{\csuse{vartitulo}}}\\
+\large{\textbf{\csuse{varmateria}}}\\
+\vspace{0.5cm}
+\printalunos
+\end{center}
+}
