@@ -42,43 +42,32 @@ class Compressor:
         A = np.asmatrix(np.copy(M))
         
         m, n = A.shape
-        if n > m:  A = A.T  # We need width >= height, so if not we transpose M
+        if m < n:  A = A.T  # We need width >= height, so if not we transpose M
         m, n = A.shape
         #U = np.asmatrix( np.zeros( (m, m) ) )
         #V = np.asmatrix( np.zeros( (n, n) ) )
-        U = np.asmatrix( np.identity(m) )
+        ##U = np.asmatrix( np.identity(m) )
+        U = np.asmatrix( np.zeros( (m, n) ) )
+        for i in xrange(min(m,n)):
+            U[i,i] = 1
         V = np.asmatrix( np.identity(n) )
         
         for k in xrange(n):
             print "------ K=%s ------" % (k)
             x = np.asmatrix(np.copy(A[k:m, k]))
-            #print "x =", x
-            #print "BaseVector =", GetBasisVector(0, len(x))
-            #print "Sign=%s || Norm=%s" % (np.sign(x[0]), norm(x))
+
             Uk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x))
-            #print "Uk =", Uk
             Uk = Uk / norm(Uk)
-            #print "Uk normalize =", Uk
             #Q = matrix householder de Uk ( Q = I - 2v(vT) )
-            print "A before"
-            print A
             # A = Q * A            
             A[k:m, k:n] = A[k:m, k:n] - 2*Uk*(Uk.T*A[k:m, k:n])
-            print "A after"
-            print A
+
             # U = U * Q
             # U = U * (I - 2*Uk*Uk.T)
             # U = U - 2*(U*Uk)*Uk.T
-            print "U before"
-            print U
             U[0:m, k:n] = U[0:m, k:n] - 2*(U[0:m, k:n]*Uk)*Uk.T
-            print "U after"
-            print U
-            #U[k:m, k:n] = U[k:m, k:n] - 2*Uk*(Uk.T*U[k:m, k:n])
-            print "Calculated Actual U"
-            print M*A.I
             ###
-            if False:#k < n-2:
+            if False:#k <= n-2:
                 A = A.T
                 print "running right"
                 x = np.asmatrix(np.copy(A[k+1:m, k]))
@@ -111,7 +100,7 @@ class Compressor:
                 ####
             removeNearZeroentries(A)
             
-        return (U, A, V)
+        return (U, A, V.T)
         
     def executeGolubReinsch(self, U, B, V):
         pass
