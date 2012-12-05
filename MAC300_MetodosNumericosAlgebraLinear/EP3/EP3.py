@@ -11,7 +11,7 @@
 #
 ########################################################
 import sys
-import Filters
+import Compressor
 
 import numpy
 from scipy.misc import imread, imsave, lena
@@ -24,51 +24,40 @@ def SaveImage(name, image):
 
 def GetTestImage():
     return lena()
+    
+def GetImageFromName(fileName):
+    if fileName == "TEST":
+        return GetTestImage()
+    else:
+        return LoadImage(fileName)
 
 
 ########################################################
+def RunMultiple(fileName, rankList):
+    compressor = Compressor( GetImageFromName() )
+    
+    
+    
 def Execute(argList):
     if len(argList) < 2:
         print "Wrong program call. Use: "
-        print "EP2.py <filter_method> <file_name> [-compare]"
+        print "EP3.py <compression rank> <file_name>"
         return
 
-    filterMethod = argList[0][1:].upper()
-    existingFilters = [fm[7:] for fm in dir(Filters) if fm[:7]=="Filter_"]
-    if not filterMethod in existingFilters:
-        print "Unrecognized filter name \'%s\'. Possible filters are: %s" % (filterMethod, ", ".join(existingFilters) )
-        return
-
+    rank = int(argList[0])
     argFile = argList[1]
     
-    showComparison = False
-    if len(argList) >= 3:
-        showComparison = argList[2].lower() == "-compare"
-
     #
-    print "Processing image \"%s\" with %s filter..." % (argFile, filterMethod)
-    if argFile == "TEST":
-        imageData = GetTestImage()
-    else:
-        imageData = LoadImage(argFile)
-
-    method = getattr(Filters, "Filter_"+filterMethod )()
-    
-    newImageData = method(imageData)
-    if showComparison:
-        try:
-            import pylab
-            print "Showing image comparison..."
-            method.ShowComparison(imageData, newImageData)
-        except:
-            print "Error trying to show comparison. Most likely matplotlib is not installed."
+    print "Compressing image \"%s\" with rank k=%s..." % (argFile, rank)
+    compressor = Compressor( GetImageFromName() )
+    newImageData = compressor.Compress(rank)
     
     outputName = argFile.split("\\")[-1].split("/")[-1]
     outputName = outputName.split(".")[:-1]
     if len(outputName) == 0:    outputName.append(argFile)
-    outputName = ".".join(outputName) + "-final.jpg"
+    outputName = ".".join(outputName) + "-compressed.bmp"
     SaveImage(outputName, newImageData)
-    print "Saved processed image file to \"%s\"!" % outputName
+    print "Saved compressed image file to \"%s\"!" % outputName
     return
     
 if __name__ == "__main__":
