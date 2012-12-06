@@ -21,7 +21,7 @@ def GetBasisVector(index, size, columnVector=True):
     else:
         return np.asmatrix(v)
     
-def removeNearZeroentries(M):
+def removeNearZeroEntries(M):
     for i, j in [(a, b) for a in xrange(M.shape[0]) for b in xrange(M.shape[1])]:
         if np.abs(M[i,j]) < 1.0e-12:
             M[i,j] = 0
@@ -55,6 +55,7 @@ class Compressor:
             # A = Q * A            
             A[k:m, k:n] = A[k:m, k:n] - 2*Uk*(Uk.T*A[k:m, k:n])
 
+            print "Lower Ashape=%s :: Ushape=%s :: UkShape=%s" % (A[k:m, k:n].shape, U[0:m, k:n].shape, Uk.shape)
             # U = U * Q
             # U = U * (I - 2*Uk*Uk.T)
             # U = U - 2*(U*Uk)*Uk.T
@@ -69,8 +70,19 @@ class Compressor:
                 
                 #A[k+1:m, k] = A[k+1:m, k] - 2*(A[k+1:m, k]*Vk)*Vk.T  #check: no algoritmo era 2*(M*Vk)*Vk.T
                 A[k+1:m, k:n] = A[k+1:m, k:n] - 2*Vk*(Vk.T*A[k+1:m, k:n])
-            
-                V[k+1:m, k:n] = V[k+1:m, k:n] - 2*Vk*(Vk.T*V[k+1:m, k:n])
+           
+                #print "Ashape=%s :: Vshape=%s :: VkShape=%s" % (A[k+1:m, k:n].shape, V[k+1:m, k:n].shape, Vk.shape)
+                #print "V.T before"
+                #print V
+                #V[k+1:m, k:n] = V[k+1:m, k:n] - 2*Vk*(Vk.T*V[k+1:m, k:n])
+                V[k+1:m, 0:n] = V[k+1:m, 0:n] - 2*Vk*(Vk.T*V[k+1:m, 0:n])
+                #print "V.T after"
+                #print V
+                #print "Expected V.T"
+                evT = A.I * U.I * M
+                removeNearZeroEntries(evT)
+                #print evT
+                #V[1:m, k:n] = V[1:m, k:n] - 2*(V[1:m, k:n]*Vk.T)*Vk
                 #V[k:m, k+1:n] = V[k:m, k+1:n] - 2*(V[k:m, k+1:n]*Vk)*Vk.T
                 A = A.T
                 ###############################
@@ -92,7 +104,7 @@ class Compressor:
                 #V[k+1:m, k:n] = V[k+1:m, k:n] - 2*Vk*(Vk.T*V[k+1:m, k:n])
                 ##V[k:m, k+1:n] = V[k:m, k+1:n] - 2*(V[k:m, k+1:n]*Vk)*Vk.T
                 ####
-            removeNearZeroentries(A)
+            removeNearZeroEntries(A)
             
         return (U, A, V.T)
         
@@ -136,4 +148,13 @@ def t2(mmmm,nnnn):
     print m
     print "------ UBVt ------"
     print u*b*v.T
+    print "--- expected V.T ---"
+    #m = u*b*v.T
+    #u.I*m = b*v.T
+    #b.I*u.I*m = v.T
+    evT = b.I * u.I * m
+    removeNearZeroEntries(evT)
+    print evT
+    print "-------- V.T ------"
+    print v.T
     return str(m) == str(u*b*v.T)
