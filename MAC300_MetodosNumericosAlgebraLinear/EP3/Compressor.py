@@ -40,6 +40,7 @@ class Compressor:
         #U = np.asmatrix( np.zeros( (m, m) ) )
         #V = np.asmatrix( np.zeros( (n, n) ) )
         ##U = np.asmatrix( np.identity(m) )
+        print m, n
         U = np.asmatrix( np.zeros( (m, n) ) )
         for i in xrange(min(m,n)):
             U[i,i] = 1
