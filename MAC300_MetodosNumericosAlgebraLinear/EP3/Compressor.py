@@ -55,55 +55,29 @@ class Compressor:
             # A = Q * A            
             A[k:m, k:n] = A[k:m, k:n] - 2*Uk*(Uk.T*A[k:m, k:n])
 
-            print "Lower Ashape=%s :: Ushape=%s :: UkShape=%s" % (A[k:m, k:n].shape, U[0:m, k:n].shape, Uk.shape)
             # U = U * Q
             # U = U * (I - 2*Uk*Uk.T)
             # U = U - 2*(U*Uk)*Uk.T
             U[0:m, k:n] = U[0:m, k:n] - 2*(U[0:m, k:n]*Uk)*Uk.T
             ###
             if k <= n-2:
+                #We transpose A here so that this line-zeroing 'right-householder' 
+                #operates 'normally'. A will be transposed back to normal in the end of the IF block
                 A = A.T
-                print "running right"
                 x = np.asmatrix(np.copy(A[k+1:m, k]))
                 Vk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x))
                 Vk = Vk / norm(Vk)
-                
-                #A[k+1:m, k] = A[k+1:m, k] - 2*(A[k+1:m, k]*Vk)*Vk.T  #check: no algoritmo era 2*(M*Vk)*Vk.T
+                # P = matrix householder de Vk  ( P = I - 2v(vT) )
+                # A = A * P
+                # A = A * (I - 2*Vk*Vk.T)
+                # A = A - 2*(A*Vk)*Vk.T
                 A[k+1:m, k:n] = A[k+1:m, k:n] - 2*Vk*(Vk.T*A[k+1:m, k:n])
-           
-                #print "Ashape=%s :: Vshape=%s :: VkShape=%s" % (A[k+1:m, k:n].shape, V[k+1:m, k:n].shape, Vk.shape)
-                #print "V.T before"
-                #print V
-                #V[k+1:m, k:n] = V[k+1:m, k:n] - 2*Vk*(Vk.T*V[k+1:m, k:n])
+                # V = P * V
+                # V = (I - 2*Vk*Vk.T)*V
+                # V = V - 2*Vk*(Vk.T*V)
                 V[k+1:m, 0:n] = V[k+1:m, 0:n] - 2*Vk*(Vk.T*V[k+1:m, 0:n])
-                #print "V.T after"
-                #print V
-                #print "Expected V.T"
-                evT = A.I * U.I * M
-                removeNearZeroEntries(evT)
-                #print evT
-                #V[1:m, k:n] = V[1:m, k:n] - 2*(V[1:m, k:n]*Vk.T)*Vk
-                #V[k:m, k+1:n] = V[k:m, k+1:n] - 2*(V[k:m, k+1:n]*Vk)*Vk.T
                 A = A.T
-                ###############################
-                #x = A[k, k+1:n]
-                #Vk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x), False)
-                #Vk = Vk / norm(Vk)
-                #Vk = Vk.T
                 
-                ##P = matrix householder de Vk  ( P = I - 2v(vT) )
-                ## A = A * P
-                ## A = A * (I - 2*Vk*Vk.T)
-                ## A = A - 2*(A*Vk)*Vk.T
-                #A[k:m, k+1:n] = A[k:m, k+1:n] - 2*(A[k:m, k+1:n]*Vk)*Vk.T  #check: no algoritmo era 2*(M*Vk)*Vk.T
-                
-                ## V = P * V
-                ## V = (I - 2*Vk*Vk.T)*V
-                ## V = V - 2*Vk*(Vk.T*V)
-                ##V[k:m, k+1:n] = V[k:m, k+1:n] - 2*Vk*(Vk.T*V[k:m, k+1:n])
-                #V[k+1:m, k:n] = V[k+1:m, k:n] - 2*Vk*(Vk.T*V[k+1:m, k:n])
-                ##V[k:m, k+1:n] = V[k:m, k+1:n] - 2*(V[k:m, k+1:n]*Vk)*Vk.T
-                ####
             removeNearZeroEntries(A)
             
         return (U, A, V.T)
