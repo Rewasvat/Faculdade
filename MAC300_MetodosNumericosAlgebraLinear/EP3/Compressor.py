@@ -84,8 +84,151 @@ class Compressor:
         return (U, A, V.T)
         
     def executeGolubReinsch(self, U, B, V):
-        pass
+        m, n = B.shape
+        eps = 1.0e-12
+        count = 1
+        while True:
+            print "=================== ITERATION %s ================" % count
+            count += 1        
+        
+            for i in xrange(n-2):
+                if np.abs(B[i,i+1]) <= eps*(np.abs(B[i,i]) + np.abs(B[i+1, i+1])):
+                    B[i, i+1] = 0
+            ###
+            q = 0
+            for i in xrange(n-1, 0, -1):
+                if B[i-1, i] != 0:
+                    break
+                q += 1
+            
+            p = n-q
+            for i in xrange(n-q-1, -1, -1):
+                if i > 0 and B[i-1, i] == 0:
+                    print "fechando p=%s no i=%s" % (p, i)
+                    break
+                print "atualizando p para %s" % (p)
+                p -= 1
+            print "----- B -----"
+            print B
+            print "Q=%s  ::  P=%s" % (q, p)
+            #######
+            # B tem n colunas, achar o menor p e o maior q tal que
+            # elementos nao pertencentes aos blocos sejam 0.
+            # B1,1 = p colunas
+            # B2,2 = n-p-q colunas; nao tem elementos nulos na superdiagonal (diagonal acima da principal)
+            # B3,3 = q colunas; tem que ser diagonal
+            #######
+            
+            ###
+            if q == n:
+                #S é a diagonal de B
+                break
+            ###
+            for i in xrange(p+1, n-q): # range should be [p+1, n-q-1]  # range(start, stop) => [start, stop[
+                # iterando pelas colunas do B2,2
+                if B[i,i] == 0:                    
+                    #aplicar Givens para B[i,i+1] = 0  e B2,2 ainda eh upper bidiagonal
+                    print "AMAGAD"
+                    if i == n-q-1: #ultima coluna do B2,2
+                        pass
+                    else:
+                        pass
+                else:
+                    U, B, V = self.executeGolubKahanSVDstep(n, B, U, V, p, q)
+                    return 0,0,0
+        return U, B, V
 
+    def executeGolubKahanSVDstep(self, n, B, U, V, p, q):
+        #B2,2 -> bloco diagonal de B, com indices de linha/coluna em [p+1, n-q]
+        B2_2 = B[p+1:n-q , p+1:n-q]
+        C = B2_2.T * B2_2
+        C = C[-2:,-2:]
+        eigs = self.getEigenvalueOf2by2Matrix(C)
+        u = self.getClosestValueTo(eigs, C[1,1])
+        k = p+1
+        alpha = (B[k,k]**2) - u
+        beta = B[k,k] * B[k,k+1]
+        for k in xrange(p+1, n-q-1):
+            #alpha = (B[k,k]**2) - u ##
+            #beta = B[k,k] * B[k,k+1]##
+            print "<>--- SVD STEP %s %s---<>" % (k, range(p+1, n-q-1))
+            G = self.getGivensMatrixFor(B.shape, alpha, beta, k, k+1)
+            B = B * G
+            V = V * G
+            
+            print "Alpha=%s   Beta=%s  G:" % (alpha, beta)
+            print G
+            print B
+            
+            alpha = B[k,k]
+            beta = B[k+1,k]
+            G = self.getGivensMatrixFor(B.shape, alpha, beta, k, k+1)
+            B = G.T * B
+            U = U * G.T
+            
+            print "(2) Alpha=%s   Beta=%s  G:" % (alpha, beta)
+            print G
+            print B
+            
+            alpha = B[k,k]
+            beta = B[k,k+1]
+        print "------- B in SVD step -----"
+        print B
+        return U, B, V
+
+    def getEigenvalueOf2by2Matrix(self, M):
+        if M.shape != (2,2):
+            return (0,0)
+            
+        # M is a [ a,  b ]  matrix
+        #        [ c,  d ]
+        ##
+        # its eigenvalues are the roots (solutions) to the equation:
+        #  e^2 - (a+d)e + (b*c + a*d) = 0
+        
+        c1 = -( M[0,0] + M[1,1])
+        c2 = (M[0,1]*M[1,0]) + (M[0,0]*M[1,1])
+        
+        # e = (-c1 +- delta) / 2
+        # delta = sqrt( c1*c1 - 4*c2 )
+        delta = np.sqrt( c1*c1 - 4*c2 )
+        e1 = (-c1 + delta) / 2
+        e2 = (-c1 - delta) / 2
+        
+        #np.linalg.eig(M) = (w, v)
+        # w -> eigenvalue list
+        # v -> matrix, columns are right eigenvectors (column i corrensponds to e-value w[i])
+        return (e1, e2)
+        
+    def getClosestValueTo(self, l, value):
+        ret = l[0]
+        for v in l[1:]:
+            if np.abs(value-v) < np.abs(value-ret):
+                ret = v
+        return ret
+        
+    def getGivensMatrixFor(self, shape, a, b, i, j, r=-1):
+        m, n = shape
+        G = np.asmatrix( np.zeros( (m, n) ) )
+        for x in xrange(min(m,n)):
+            G[x,x] = 1
+
+        if r == -1:
+            r = np.hypot(a, b)
+        else:
+            a = b = r / np.sqrt(2)
+        cos = a / r
+        sin = -b / r
+        G[i,i] = G[j,j] = cos
+        if i > j:
+            G[i,j] = sin
+            G[j,i] = -sin
+        else:
+            G[i,j] = -sin
+            G[j,i] = sin
+        
+        return G
+    
     def executeSVD(self, M):
         # Step1: do bidiagonalization
         U, B, V = executeGolubKahan(M)
@@ -101,7 +244,7 @@ class Compressor:
         
         
         
-########################3
+#########################
 # DEBUG STUFF - REMOVE IT
 
 def randM(w,h):
@@ -133,3 +276,22 @@ def t2(mmmm,nnnn):
     print "-------- V.T ------"
     print v.T
     return str(m) == str(u*b*v.T)
+    
+    
+def testGivens(i, m=4, n=4):
+    M = randM(m,n)
+    comp = Compressor(0)
+    G = comp.getGivensMatrixFor(M.shape, M[i,i], M[i,i+1], i, i+1)
+    
+    print "-----G-----"
+    print G
+    return G
+    
+    
+def svd(m,n):
+    matriz = randM(m,n)
+    comp = Compressor(0)
+    u,b,v = comp.executeGolubKahan(matriz)
+    u2, s, v2 = comp.executeGolubReinsch(u,b,v)
+    return s
+    
