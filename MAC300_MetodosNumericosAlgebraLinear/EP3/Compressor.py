@@ -37,14 +37,9 @@ class Compressor:
         m, n = A.shape
         if m < n:  A = A.T  # We need width >= height, so if not we transpose M
         m, n = A.shape
-        #U = np.asmatrix( np.zeros( (m, m) ) )
-        #V = np.asmatrix( np.zeros( (n, n) ) )
-        ##U = np.asmatrix( np.identity(m) )
         print m, n
-        U = np.asmatrix( np.zeros( (m, n) ) )
-        for i in xrange(min(m,n)):
-            U[i,i] = 1
-        V = np.asmatrix( np.identity(n) )
+        U = np.asmatrix( np.eye(m, m) )
+        V = np.asmatrix( np.eye(n, n) )
         
         for k in xrange(n):
             print "------ K=%s ------" % (k)
