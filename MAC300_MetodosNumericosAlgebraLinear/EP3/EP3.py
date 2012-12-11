@@ -17,7 +17,7 @@ import numpy
 from scipy.misc import imread, imsave, lena
 
 def LoadImage(name):
-    return numpy.asarray( imread(name), dtype=numpy.int32 )
+    return numpy.asarray( imread(name), dtype=numpy.float64 )
 
 def SaveImage(name, image):
     imsave(name, image)
@@ -33,8 +33,45 @@ def GetImageFromName(fileName):
 
 
 ########################################################
-def RunMultiple(fileName, rankList):
-    compressor = Compressor( GetImageFromName() )
+def RunMultiple(fileName):
+    compressor = Compressor.Compressor( GetImageFromName(fileName) )
+    try:
+        import pylab
+    except:
+        print "ERROR: Pylab not found."
+        return
+    def PlotImage(image, title):
+        pylab.imshow(image/255.0, cmap=pylab.cm.gray) #cmap=pylab.cm.gray
+        pylab.title(title)
+        
+    pylab.subplot(231)
+    PlotImage(compressor.data, "Original Image")
+    
+    rankList = [256, 128, 64, 32, 16]
+    for i in xrange(len(rankList)):
+        k = rankList[i]
+        pylab.subplot(232+i)
+        img = compressor.Compress(k)
+        PlotImage(img, "Compressed Image, k=%s"%(k) )
+    
+    #pylab.subplot(233)
+    #img128 = compressor.Compress(128)
+    #PlotImage(img128, "Processed Image")
+    
+    #pylab.subplot(234)
+    #img64 = compressor.Compress(64)
+    #PlotImage(img64, "Processed Histogram")
+    
+    #pylab.subplot(235)
+    #img32 = compressor.Compress(32)
+    #PlotImage(img32, "Processed Histogram")
+    
+    #pylab.subplot(236)
+    #img16 = compressor.Compress(16)
+    #PlotImage(img16, "Processed Histogram")
+    
+    #show plots
+    pylab.show()
     
     
     
@@ -49,7 +86,7 @@ def Execute(argList):
     
     #
     print "Compressing image \"%s\" with rank k=%s..." % (argFile, rank)
-    compressor = Compressor( GetImageFromName() )
+    compressor = Compressor.Compressor( GetImageFromName(argFile) )
     newImageData = compressor.Compress(rank)
     
     outputName = argFile.split("\\")[-1].split("/")[-1]

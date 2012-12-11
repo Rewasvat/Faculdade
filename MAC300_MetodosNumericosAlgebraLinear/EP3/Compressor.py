@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import numpy as np
+np.set_printoptions(suppress=True)
 
 def norm(v):
     value = 0
@@ -35,7 +36,10 @@ class Compressor:
         A = np.asmatrix(np.copy(M))
         
         m, n = A.shape
-        if m < n:  A = A.T  # We need width >= height, so if not we transpose M
+        transposed = False
+        if m < n:  
+            transposed = True
+            A = A.T  # We need width >= height, so if not we transpose M
         m, n = A.shape
         print m, n
         U = np.asmatrix( np.eye(m, m) )
@@ -47,58 +51,79 @@ class Compressor:
 
             Uk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x))
             Uk = Uk / norm(Uk)
+            
+            Q = np.asmatrix( np.eye(m, m) )
+            Q[k:m, k:m] -= 2*Uk*Uk.T
             #Q = matrix householder de Uk ( Q = I - 2v(vT) )
-            # A = Q * A            
+            #A = Q * A            
             A[k:m, k:n] = A[k:m, k:n] - 2*Uk*(Uk.T*A[k:m, k:n])
 
-            # U = U * Q
+            #U = U * Q
             # U = U * (I - 2*Uk*Uk.T)
             # U = U - 2*(U*Uk)*Uk.T
-            U[0:m, k:n] = U[0:m, k:n] - 2*(U[0:m, k:n]*Uk)*Uk.T
+            U[0:m, k:m] = U[0:m, k:m] - 2*(U[0:m, k:m]*Uk)*Uk.T
             ###
             if k <= n-2:
                 #We transpose A here so that this line-zeroing 'right-householder' 
                 #operates 'normally'. A will be transposed back to normal in the end of the IF block
-                A = A.T
-                x = np.asmatrix(np.copy(A[k+1:m, k]))
+                #A = A.T
+                x = np.asmatrix(np.copy(A[k, k+1:n]))
                 Vk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x))
                 Vk = Vk / norm(Vk)
                 # P = matrix householder de Vk  ( P = I - 2v(vT) )
-                # A = A * P
+                P = np.asmatrix( np.eye(n,n) )
+                P[k+1:n, k+1:n] -= 2*Vk.T*Vk
+                #A = A * P
                 # A = A * (I - 2*Vk*Vk.T)
                 # A = A - 2*(A*Vk)*Vk.T
-                A[k+1:m, k:n] = A[k+1:m, k:n] - 2*Vk*(Vk.T*A[k+1:m, k:n])
-                # V = P * V
+                #A[k+1:n, k:n] = A[k+1:n, k:n] - 2*Vk*(Vk.T*A[k+1:n, k:n])
+                A[k:m, k+1:n] = A[k:m, k+1:n] - 2*(A[k:m, k+1:n]*Vk.T)*Vk
+                #V = P * V
                 # V = (I - 2*Vk*Vk.T)*V
                 # V = V - 2*Vk*(Vk.T*V)
-                V[k+1:m, 0:n] = V[k+1:m, 0:n] - 2*Vk*(Vk.T*V[k+1:m, 0:n])
-                A = A.T
+                V[k+1:n, 0:n] = V[k+1:n, 0:n] - 2*Vk.T*(Vk*V[k+1:n, 0:n])
+                #A = A.T
                 
             removeNearZeroEntries(A)
             
-        return (U, A, V.T)
-        
+        if not transposed:
+            return (U, A, V.T)
+        else:
+            return (U.T, A.T, V)
+
+    
     def executeGolubReinsch(self, U, B, V):
         m, n = B.shape
         eps = 1.0e-12
         count = 1
         while True:
+            raw_input()
             print "=================== ITERATION %s ================" % count
             count += 1        
-        
+            
             for i in xrange(n-2):
                 if np.abs(B[i,i+1]) <= eps*(np.abs(B[i,i]) + np.abs(B[i+1, i+1])):
                     B[i, i+1] = 0
             ###
             q = 0
-            for i in xrange(n-1, 0, -1):
-                if B[i-1, i] != 0:
+            for i in xrange(n-1, -1, -1):
+                def checkColumn():
+                    for j in xrange(m):
+                        if B[j,i] != 0 and j!=i:
+                            return False
+                    return True
+                if i > 0 and checkColumn():
                     break
                 q += 1
             
             p = n-q
             for i in xrange(n-q-1, -1, -1):
-                if i > 0 and B[i-1, i] == 0:
+                def checkColumn():
+                    for j in xrange(m):
+                        if B[j,i] != 0 and j!=i:
+                            return False
+                    return True
+                if i > 0 and checkColumn():#B[i-1, i] == 0:
                     print "fechando p=%s no i=%s" % (p, i)
                     break
                 print "atualizando p para %s" % (p)
@@ -130,7 +155,7 @@ class Compressor:
                         pass
                 else:
                     U, B, V = self.executeGolubKahanSVDstep(n, B, U, V, p, q)
-                    return 0,0,0
+                    #return 0,0,0
         return U, B, V
 
     def executeGolubKahanSVDstep(self, n, B, U, V, p, q):
@@ -138,7 +163,7 @@ class Compressor:
         B2_2 = B[p+1:n-q , p+1:n-q]
         C = B2_2.T * B2_2
         C = C[-2:,-2:]
-        eigs = self.getEigenvalueOf2by2Matrix(C)
+        eigs = np.linalg.eig(M)[0]
         u = self.getClosestValueTo(eigs, C[1,1])
         k = p+1
         alpha = (B[k,k]**2) - u
@@ -146,10 +171,10 @@ class Compressor:
         for k in xrange(p+1, n-q-1):
             #alpha = (B[k,k]**2) - u ##
             #beta = B[k,k] * B[k,k+1]##
-            print "<>--- SVD STEP %s %s---<>" % (k, range(p+1, n-q-1))
+            print "<>--- SVD STEP %s %s---<>" % (k, range(p+1, n-q))
             G = self.getGivensMatrixFor(B.shape, alpha, beta, k, k+1)
-            B = B * G
-            V = V * G
+            B = B * G.T
+            V = V * G.T
             
             print "Alpha=%s   Beta=%s  G:" % (alpha, beta)
             print G
@@ -158,42 +183,19 @@ class Compressor:
             alpha = B[k,k]
             beta = B[k+1,k]
             G = self.getGivensMatrixFor(B.shape, alpha, beta, k, k+1)
-            B = G.T * B
-            U = U * G.T
+            B = G * B
+            U = U * G
             
             print "(2) Alpha=%s   Beta=%s  G:" % (alpha, beta)
             print G
             print B
             
-            alpha = B[k,k]
-            beta = B[k,k+1]
+            if k < n-q-1:
+                alpha = B[k,k+1]
+                beta = B[k,k+2]
         print "------- B in SVD step -----"
         print B
         return U, B, V
-
-    def getEigenvalueOf2by2Matrix(self, M):
-        if M.shape != (2,2):
-            return (0,0)
-            
-        # M is a [ a,  b ]  matrix
-        #        [ c,  d ]
-        ##
-        # its eigenvalues are the roots (solutions) to the equation:
-        #  e^2 - (a+d)e + (b*c + a*d) = 0
-        
-        c1 = -( M[0,0] + M[1,1])
-        c2 = (M[0,1]*M[1,0]) + (M[0,0]*M[1,1])
-        
-        # e = (-c1 +- delta) / 2
-        # delta = sqrt( c1*c1 - 4*c2 )
-        delta = np.sqrt( c1*c1 - 4*c2 )
-        e1 = (-c1 + delta) / 2
-        e2 = (-c1 - delta) / 2
-        
-        #np.linalg.eig(M) = (w, v)
-        # w -> eigenvalue list
-        # v -> matrix, columns are right eigenvectors (column i corrensponds to e-value w[i])
-        return (e1, e2)
         
     def getClosestValueTo(self, l, value):
         ret = l[0]
@@ -226,16 +228,44 @@ class Compressor:
     
     def executeSVD(self, M):
         # Step1: do bidiagonalization
-        U, B, V = executeGolubKahan(M)
-        
+        #U, B, V = self.executeGolubKahan(M)
+    
         # Step2: diagonalize
+        U, s, V = np.linalg.svd(M)
+        return np.asmatrix(U), np.asmatrix(np.diag(s)), np.asmatrix(V)
+        
+    def CompressMatrix(self, M, rank):
+        m, n = M.shape
+        transposed = False
+        if m < n:
+            M = M.T
+            transposed = True
+
+        U, S, V = self.executeSVD(M)
+        nU = U[:, :rank]
+        nS = S[:rank, :rank]
+        nV = V[:rank, :]
+        out = nU * nS * nV
+        if transposed:
+            return out.T
+        return out
         
     def Compress(self, rank):
-        # Run SVD - get U, S and V
+        # Run SVD - get U, S and V (of each color submatrix)
         # Cutoff S to be a diagonal matrix of length RANK
         # Fix U and V shape to match size of S (RANKxRANK)
         # Return compressed image = USVt
-        pass
+        if len(self.data.shape) == 3: #imagem com 3 canais de cores - RGB
+            R = np.copy(self.data)
+            for i in range(3):
+                M = self.data[:,:,i]
+                R[:,:,i] = self.CompressMatrix(M, rank)
+            return R                
+        elif len(self.data.shape) == 2: #imagem com um canal de cor (como grayscale, por exemplo)
+            return self.CompressMatrix(self.data, rank)
+        else:
+            print "ERROR: Image format not recognized"
+            return M
         
         
         
