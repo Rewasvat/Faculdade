@@ -1,6 +1,6 @@
 ##################################################
   MAC300 - Métodos Numéricos da Algebra Linear
-  EP2 - Métodos de Processamento de Imagens
+  EP3 - Compressão de Imagens usando SVD
   
   Fernando Omar Aluani
   NUSP: 6797226
@@ -15,13 +15,10 @@ Porém, para o programa funcionar corretamente é necessário que algumas
 bibliotecas de Python estejam instaladas. São elas:
 -NumPy: biblioteca para cálculo númerico eficiente em Python, muito parecida com MATLAB.
 -SciPy: biblioteca para cálculos científicos em Python, usa o NumPy.
--matplotlib: biblioteca para criação de gráficos e visualização de dados.
-             Instalação dessa biblioteca é opcional, mas sem ela os gráficos de
-             comparação das imagens não poderão ser mostrados.
 -PIL: biblioteca para manipulação de imagens em Python.
              
 
-O programa foi testado na rede-linux com sucesso - NumPy, SciPy, matplotlib e PIL estão instalados lá.
+O programa foi testado na rede-linux com sucesso - NumPy, SciPy e PIL estão instalados lá.
 
 A abertura e salvamento de imagens neste EP foi feita usando funções auxiliares do SciPy, que
 internamente usam a biblioteca PIL. A imagem em si é retratada como um array bi-dimensional do NumPy.
@@ -31,43 +28,62 @@ internamente usam a biblioteca PIL. A imagem em si é retratada como um array bi
 EXECUTANDO O PROGRAMA:
 -----------------------------
 Para executar o programa, basta rodar no terminal:
-    ./EP2.py -<metodo> <nome_do_arquivo> [-compare]
+    ./EP3.py <rank> <nome_do_arquivo>
     
 Onde: 
-    -metodo: é o nome do método de processamento (filtro) a ser aplicado na imagem.
-             Pode ser qualquer um que exista no script Filters.py, e ao ser passado errado
-             o programa imprime o nome dos métodos existentes. Por padrão estão implementados
-             contrast, blur e sharpen.
-         NOTE que o método é passado com um '-' na frente, por exemplo: ./EP2 -contrast
+    rank: é o valor a ser usado como rank na compressão. Quanto menor o valor, mais compressa
+          será a imagem e consequente mais detalhes serão perdidos. O rank precisa ser menor que
+          min(largura da imagem, altura da imagem)
 
     nome_do_arquivo: é o nome do arquivo de imagem a ser processado. Vários formatos incluindo
-                      jpg e png são aceitos, e a imagem será lida em formato grayscale.
+                      jpg e png são aceitos, e a imagem será lida no formato que está salva (RGB ou grayscale).
          Se o nome passado for simplesmente "TEST", o programa não irá abrir um arquivo de imagem,
          mas irá usar uma funcionalidade do SciPy para criar uma imagem 512x512 em grayscale (aquela
          clássica imagem da Lena usada em processamento de imagens) para ser usada no processamento.
          A imagem em si não será salva em disco, mas a imagem resultante do processamento será salva
-         seguindo o funcionamento normal do programa (isto é, será salva como "TEST-final.jpg").
+         seguindo o funcionamento normal do programa (isto é, será salva como "TEST-compressed.bmp").
 
-    -compare: argumento opcional. Se passado, o programa irá mostrar ao final da execução uma
-              comparação das imagens (original/processada), e outros dados relativos ao método
-              de processamento usado.
              
     
-No final da execução, caso a opção '-compare' foi passada e a biblioteca matplotlib está instalada,
-ele irá abrir uma janela à parte para mostrar a comparação das imagens (esta janela não é aberta em
-segundo plano - ela precisa ser fechada para terminar a execução).
-Após isso, o programa irá salvar a imagem processada em um arquivo com extensão .jpg
-na pasta onde o EP está sendo executado, com o nome do arquivo original mais o sufixo "-final".
+No final da execução, o programa irá salvar a imagem processada em um arquivo com extensão .bmp
+na pasta onde o EP está sendo executado, com o nome do arquivo original mais o sufixo "-compressed".
     
-Exemplo, o seguinte irá processar a imagem 'fotos/casa.png', usando o método de constraste, mostrando
-a comparação, salvando o resultado como 'casa-final.jpg':
-    ./EP2.py -contrast fotos/casa.png -compare
+Exemplo, o seguinte irá processar a imagem 'fotos/casa.png', com rank 32, salvando o resultado como 'casa-compressed.bmp':
+    ./EP3.py 32 fotos/casa.png
     
       
 -----------------------------
 ESTRUTURA DO PROGRAMA:
 -----------------------------
 O EP está dividido em 2 scripts python que eu escrevi. São eles:
-EP2.py, que é o script principal, contendo o código para execução do programa e load/save das imagens.
-Filters.py, que contém a implementação dos filtros para processamento de imagens. O script também
-contém uma interface simples para definição de novos filtros que o EP2.py pode usar automaticamente.
+EP3.py, que é o script principal, contendo o código para execução do programa e load/save das imagens.
+Compressor.py, que contém a implementação do compressor usando SVD e a decomposição SVD em si.
+
+
+
+=================================
+PROBLEMAS COM O EP
+=================================
+Devido a vários outros trabalhos que tive que entregar neste final do semestre, não tive muito tempo para 
+fazer esse EP.
+
+Consequentemente, o EP não está completo. 
+
+Se executar ele como mostrado aqui, ele irá fazer a decomposição SVD, comprimir e salvar a imagem direito,
+porém somente porque ao ser executado, ele usa uma função do NumPy para fazer a decomposição SVD.
+
+Eu tentei por muito tempo implementar a decomposição SVD sozinho, seguindo o falado no enunciado (e nos
+links lá contidos) e de pesquisas na internet, mas não consegui fazer a decomposição funcionar e como 
+não temos mais tempo, resolvi entregar o EP assim.
+
+Porém, o código que fiz para realizar a decomposição SVD (mesmo não funcionando completamente) existe, e está
+no arquivo Compresor.py
+
+O primeiro passo da decomposição, o algoritmo GolubKahan, eu consegui implementar e segundo meus 
+testes ele funciona (para matrizes quadradas): a matriz é bidiagonalizada corretamente. Matrizes retangulares
+também são bidiagonalizadas, porém testando nota-se que nesses casos A != U*B*Vtransposto
+
+O segundo passo (GolubReinsch) no entanto foi o que não consegui fazer funcionar. Em alguns testes dava erro, 
+em outros o processo não convergia, entrando em loop infinito. Porém eu perdi muito tempo tentando fazer o 
+GolubKahan funcionar, então tive menos tempo ainda para tentar mexer neste algoritmo.
+

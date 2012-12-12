@@ -62,7 +62,7 @@ class Compressor:
             ###
             if k <= n-2:
                 #We transpose A here so that this line-zeroing 'right-householder' 
-                #operates 'normally'. A will be transposed back to normal in the end of the IF block
+                #operates 'normally' (zeroing columns). A will be transposed back to normal in the end of the IF block
                 A = A.T
                 x = np.asmatrix(np.copy(A[k+1:m, k]))
                 Vk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x))
@@ -75,16 +75,20 @@ class Compressor:
                 # A = A - 2*(A*Vk)*Vk.T
                 A[k+1:m, k:n] = A[k+1:m, k:n] - 2*Vk*(Vk.T*A[k+1:m, k:n])
                 #A[k:m, k+1:n] = A[k:m, k+1:n] - 2*(A[k:m, k+1:n]*Vk.T)*Vk
-                V = P * V
+                #print "---p"
+                #print P
+                #print "---v"
+                #print V
+                #V = P * V
                 # V = (I - 2*Vk*Vk.T)*V
                 # V = V - 2*Vk*(Vk.T*V)
                 #V[k+1:n, 0:n] = V[k+1:n, 0:n] - 2*Vk*(Vk.T*V[k+1:n, 0:n])
-                #V[0:n, k+1:n] = V[0:n, k+1:n] - 2*Vk.T*(Vk*V[0:n, k+1:n])
+                V[0:n, k+1:n] = V[0:n, k+1:n] - 2*(V[0:n, k+1:n]*Vk)*Vk.T
                 A = A.T
                 
             removeNearZeroEntries(A)
-            
-        return (U, A, V.T)
+         
+        return (U, A, V)
 
     
     def executeGolubReinsch(self, U, B, V):

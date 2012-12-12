@@ -1,6 +1,6 @@
 \input texbase
 
-\titulo{Exercício Programa 2}
+\titulo{Exercício Programa 23}
 \materia{MAC300 - Métodos Numéricos da Álgebra Linear}
 
 \aluno{Fernando Omar Aluani}{6797226}
@@ -8,97 +8,62 @@
 \begin{document}
 \cabecalho
 
-\section{Filtros}
+\section{Decomposição por Valores Singulares}
+A Decomposição por Valores Singulares (SVD) é um método para fatorar uma matriz A ($m\times n, m >= n$) na
+forma $A = U \varSigma V^{T}$, onde:
+\begin{itemize}
+   \item $U$ é $m\times m$, unitária. Colunas são os vetores singulares à esquerda;
+   \item $\varSigma$ é $m\times n$, diagonal. Cada elemento da diagonal é um valor singular de $A$;
+   \item $V$ é $n\times n$, unitária. Colunas são os vetores singulares à direita;
+\end{itemize}
+Os vetores/valores singulares são relacionados aos autovetores/autovalores de uma matriz, o que faz esse método
+ser muito útil para achar os autovetores e seus respectivos autovalores de uma matriz $A$.
 
-%%%%%%%%%%%%%%%%
-\subsection{Ajuste do Contraste - Equalização de Histograma}
-\subsubsection{Implementação}
-O filtro de contraste é implementado equalizando o histograma da imagem. Inicialmente o algoritmo percorre por cada pixel
-da imagem para contar o nivel de cinza para construir o histograma. Após isso, a função de distribuição acumulada é 
-calculada, armazenando seu resultado para cada nível de cinza em um vetor, e o valor mínimo em uma variável à parte.
+No EP, a decomposição SVD é executada em 2 passos. O propósito do primeiro passo é "simplificar" a matriz para
+a posterior diagonalização, e isso é feito com o algoritmo \textit{Golub-Kahan}. Este passo transforma a matriz
+original $A$ em $A = UBV^{T}$, onde
+\begin{itemize}
+   \item $U$ é $m\times m$, unitária;
+   \item $B$ é $m\times n$, bi-diagonal;
+   \item $V$ é $n\times n$, unitária;
+\end{itemize}
+O segundo passo recebe $U$, $B$ e $V$, e aplicando o algoritmo \textit{Golub-Reinsch} ele diagonaliza a matriz
+$B$, transformando-a na matriz $\varSigma$ e atualizando $U$ e $V$ de tal forma que $A = U \varSigma V^{T}$. 
+Terminando a decomposição SVD.
 
-Finalmente, a imagem processada é construída, calculando o valor de cada pixel um-a-um, normalizando o histograma.
 
-Caso o programa mostre a comparação das imagens (ver \textit{README}), ele irá mostrar também o histograma da imagem
-original e o histograma da imagem processada.
+\subsection{Melhorias ao método clássico}
+As melhorias desse método de decomposição Golub-Kahan-Reinsch do SVD em relação ao método clássico, que usa os autovetores
+e autovalores de $AA^{T}$ e $A^{T}A$, são:
+\begin{itemize}
+  \item É melhor para matrizes mal-condicionadas e de posto incompleto no geral;
+  \item É sempre numericamente estável;
+  \item É mais eficiente que a decomposição por autovalores de $AA^{T}$ ou $A^{T}A$;
+\end{itemize}
 
-\subsubsection{Vantagens e Desvantagens}
-Computacionalmente, dos três filtros apresentados aqui este é o mais eficiente, tendo uma complexidade de somente $O(NM)$
-(para uma imagem de tamanho $N\times M$). Em relação à memória, descontando a imagem resultante já que todos filtros 
-criam ela, este método não gasta muito, sendo o principal os três vetores com 256 floats que ele guarda internamente.
+\subsection{Análise da Complexidade}
+Golub-Kahan é basicamente a aplicação de 2 householders ao mesmo tempo.
 
-Quanto ao desempenho como filtro, este é o método no qual a diferença do resultado para a imagem original é mais facilmente
-notada. Porém, este filtro pode criar resultados não-realísticos dependendo da imagem original.
+Golub-Reinsch vai, seguindo seu algoritmo, aplicando sucessivas rotações de Givens na matriz bidiagonal $B$, até ela
+"convergir" e ser diagonalizada.
 
-\subsubsection{Exemplo}
+\section{Exemplo da Compressão de Imagens}
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=1.0\textwidth]{contrast_example.png}
-    \caption{Comparação das imagens (original e após o ajuste de contraste) e seus respectivos histogramas.}
-    \label{fig:ex_contraste}
+    \includegraphics[width=1.0\textwidth]{grayscaleTest.png}
+    \caption{Comparação de uma imagem original em grayscale e diversas compressões.}
+    \label{fig:ex_gray}
 \end{figure}
 
-\pagebreak
-
-%%%%%%%%%%%%%%
-\subsection{Suavização por Média Ponderada - \textit{Blurring}}
-\subsubsection{Implementação}
-O filtro de \textit{blur} foi implementado usando a técnica de filtro de convolução, com uma máscara $3\times 3$ para tirar
-a média ponderada dos pixeis ao redor do pixel sendo suavizado. O resultado da convolução da imagem já é o resultado
-do processamento.
-
-\subsubsection{Vantagens e Desvantagens}
-Computacionalmente, este filtro simplesmente aplica a convolução, e ela tem complexidade $O(NMST)$ (Para uma matriz 
-$N\times M$, com uma máscara de tamanho $S\times T$). Em relação à memória, ele não tem gasto adicional de memória.
-
-Quanto ao desempenho como filtro, dependendo da imagem original pode ser difícil notar alguma diferença com o 
-resultado, e o \textit{blurring} pode ocultar detalhes da imagem.
-
-\subsubsection{Exemplo}
 \begin{figure}[htb]
     \centering
-    \includegraphics[width=1.0\textwidth]{blur_example.png}
-    \caption{Comparação das imagens (original e após o \textit{blurring}).}
-    \label{fig:ex_blur}
+    \includegraphics[width=1.0\textwidth]{rgbTest.png}
+    \caption{Comparação de uma imagem original em RGB e diversas compressões. Observação: rodando o EP em si para essa 
+            imagem o resultado da compressão não é o mostrado aqui. Por alguma razão que desconheço, o matplotlib desenha
+            errado as imagens coloridas (nesse caso, o 'fundo' da imagem, que era preto, não passa a ser colorido de forma
+            ruidosa assim)}
+    \label{fig:ex_rgb}
 \end{figure}
 
-\pagebreak
-
-%%%%%%%%%%%%%%
-\subsection{Aumento de Nitidez - \textit{Sharpening}}
-\subsubsection{Implementação}
-O filtro de \textit{sharpen} foi implementado usando a técnica de filtro de convolução, com uma máscara $3\times 3$
-conhecida como \textit{8 neighbour Laplacian}. Usando a convolução na imagem original adquirimos o resultado do operador
-laplaciano na imagem. O resultado final da imagem processada é a soma da imagem original com o laplaciano dela.
-
-Caso o programa mostre a comparação das imagens (ver \textit{README}), ele irá mostrar também a imagem do operador 
-laplaciano. 
-
-\subsubsection{Vantagens e Desvantagens}
-Computacionalmente, dos metodos apresentados aqui este é o mais pesado. Ele roda uma convolução, que tem complexidade 
-$O(NMST)$ (Para uma matriz $N\times M$, com uma máscara de tamanho $S\times T$), e depois ele soma 2 imagens. Em
-relação à memória, ele guarda o resultado da convolução - o laplaciano da imagem.
-
-Quanto ao desempenho como filtro, assim como o \textit{blurring}, a diferença no resultado pode ser difícil de notar,
-sendo mais fácil ver resultados aplicando o filtro a uma imagem suavizada (pelo \textit{blurring}, por exemplo).
-
-\subsubsection{Exemplo}
-\begin{figure}[htb]
-    \centering
-    \includegraphics[width=1.0\textwidth]{sharpen_example.png}
-    \caption{Comparação das imagens (original e após o \textit{sharpening}) e o laplaciano da imagem original.}
-    \label{fig:ex_sharpen}
-\end{figure}
-\pagebreak
-
-%%%%%%%%%%%%%%
-\subsection{Convolução}
-A técnica de filtros por convolução que foi utilizada em alguns dos filtros mencionados acima foi implementada como uma
-função, que recebe de parâmetro uma imagem e a máscara a ser utilizada e retorna uma nova imagem, resultado da convolução.
-
-Internamente, a função cria a imagem nova de forma que cada pixel dela seja resultante da aplicação da máscara no mesmo
-pixel (na mesma posição) na imagem passada. Não há limite para o tamanho da máscara, ela pode ser de qualquer tamanho.
-O algoritmo simplesmente ignora os casos em que a convolução tentaria acessar um pixel "fora" da imagem original (perto
-da fronteira da imagem), de tal forma que tais tentativas não causam erros e nem alteram o resultado do pixel sendo processado.
 
 \end{document}
