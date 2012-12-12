@@ -36,10 +36,7 @@ class Compressor:
         A = np.asmatrix(np.copy(M))
         
         m, n = A.shape
-        transposed = False
-        if m < n:  
-            transposed = True
-            A = A.T  # We need width >= height, so if not we transpose M
+        if m < n:  A = A.T  # We need width >= height, so if not we transpose M
         m, n = A.shape
         print m, n
         U = np.asmatrix( np.eye(m, m) )
@@ -66,30 +63,28 @@ class Compressor:
             if k <= n-2:
                 #We transpose A here so that this line-zeroing 'right-householder' 
                 #operates 'normally'. A will be transposed back to normal in the end of the IF block
-                #A = A.T
-                x = np.asmatrix(np.copy(A[k, k+1:n]))
+                A = A.T
+                x = np.asmatrix(np.copy(A[k+1:m, k]))
                 Vk = x + np.sign(x[0,0])*norm(x)*GetBasisVector(0, len(x))
                 Vk = Vk / norm(Vk)
                 # P = matrix householder de Vk  ( P = I - 2v(vT) )
                 P = np.asmatrix( np.eye(n,n) )
-                P[k+1:n, k+1:n] -= 2*Vk.T*Vk
+                P[k+1:n, k+1:n] -= 2*Vk*Vk.T
                 #A = A * P
                 # A = A * (I - 2*Vk*Vk.T)
                 # A = A - 2*(A*Vk)*Vk.T
-                #A[k+1:n, k:n] = A[k+1:n, k:n] - 2*Vk*(Vk.T*A[k+1:n, k:n])
-                A[k:m, k+1:n] = A[k:m, k+1:n] - 2*(A[k:m, k+1:n]*Vk.T)*Vk
-                #V = P * V
+                A[k+1:m, k:n] = A[k+1:m, k:n] - 2*Vk*(Vk.T*A[k+1:m, k:n])
+                #A[k:m, k+1:n] = A[k:m, k+1:n] - 2*(A[k:m, k+1:n]*Vk.T)*Vk
+                V = P * V
                 # V = (I - 2*Vk*Vk.T)*V
                 # V = V - 2*Vk*(Vk.T*V)
-                V[k+1:n, 0:n] = V[k+1:n, 0:n] - 2*Vk.T*(Vk*V[k+1:n, 0:n])
-                #A = A.T
+                #V[k+1:n, 0:n] = V[k+1:n, 0:n] - 2*Vk*(Vk.T*V[k+1:n, 0:n])
+                #V[0:n, k+1:n] = V[0:n, k+1:n] - 2*Vk.T*(Vk*V[0:n, k+1:n])
+                A = A.T
                 
             removeNearZeroEntries(A)
             
-        if not transposed:
-            return (U, A, V.T)
-        else:
-            return (U.T, A.T, V)
+        return (U, A, V.T)
 
     
     def executeGolubReinsch(self, U, B, V):
@@ -300,6 +295,8 @@ def t2(mmmm,nnnn):
     print evT
     print "-------- V.T ------"
     print v.T
+    print "------ B ------"
+    print b
     return str(m) == str(u*b*v.T)
     
     
